@@ -1,4 +1,4 @@
-# SYSTEM_HUB - React Refactor
+# ROTA_404 - PROTOTYPE 2.0
 
 Esta é a versão refatorada do protótipo acadêmico, agora utilizando **React** no frontend e mantendo o **Python (Flask)** no backend.
 
