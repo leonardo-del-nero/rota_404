@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syncopate:wght@700&family=Space+Grotesk:wght@300;500;700&display=swap');
+
+:root {
+  --bg-main: #050505;
+  --bg-card: #0d0d0d;
+  --bg-accent: #1a1a1a;
+  
+  --primary: #ffcc00; /* Amber/Yellow - Route Sign */
+  --secondary: #00f3ff; /* Cyan - Cyber */
+  --danger: #ff3b3b; /* Red - Error/Glitch */
+  --success: #00ff88; /* Green */
+  
+  --text-dim: #888888;
+  --text-bright: #ffffff;
+  
+  --glow-primary: rgba(255, 204, 0, 0.3);
+  --glow-secondary: rgba(0, 243, 255, 0.3);
+  
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-title: 'Syncopate', sans-serif;
+  --font-main: 'Space Grotesk', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-main);
+  color: var(--text-bright);
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-title);
+  text-transform: uppercase;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* ROTA 404 Visual Identity */
+.rota-logo {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  color: var(--primary);
+  text-shadow: 2px 2px 0px var(--danger);
+  position: relative;
+}
+
+.rota-logo::after {
+  content: 'ROTA 404';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--secondary);
+  z-index: -1;
+  transform: translate(-2px, -2px);
+}
+
+.card-404 {
+  background: var(--bg-card);
+  border: 1px solid var(--bg-accent);
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card-404:hover {
+  border-color: var(--primary);
+  box-shadow: 0 0 30px var(--glow-primary);
+  transform: translateY(-5px) scale(1.02);
+}
+
+.btn-404 {
+  background: var(--primary);
+  color: black;
+  border: none;
+  padding: 1rem 2rem;
+  font-family: var(--font-title);
+  font-size: 0.8rem;
+  cursor: pointer;
+  clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
+  transition: 0.3s;
+}
+
+.btn-404:hover {
+  background: var(--secondary);
+  clip-path: polygon(0 0, 90% 0, 100% 100%, 10% 100%);
+  box-shadow: 0 0 20px var(--glow-secondary);
+}
+
+.btn-outline {
+  background: transparent !important;
+  color: var(--text-bright) !important;
+  border: 1px solid var(--bg-accent) !important;
+  clip-path: none !important;
+}
+
+.btn-outline:hover {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 10px var(--glow-primary) !important;
+}
+
+/* Glitch Animation */
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+.glitch:hover {
+  animation: glitch 0.3s infinite linear alternate-reverse;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg-main); }
+::-webkit-scrollbar-thumb { background: var(--primary); }
+
+.input-404 {
+  background: transparent;
+  border: 1px solid var(--bg-accent);
+  padding: 1rem;
+  color: white;
+  font-family: var(--font-mono);
+  outline: none;
+  width: 100%;
+}
+
+.input-404:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 10px var(--glow-primary);
+}
