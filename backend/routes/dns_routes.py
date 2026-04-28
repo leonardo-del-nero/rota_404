@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.services.dns_service import DnsService
+from backend.services.dns_service import DnsService
 
 dns_bp = Blueprint('dns', __name__)
 dns_service = DnsService()
