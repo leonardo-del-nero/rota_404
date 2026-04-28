@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.services.error_service import ErrorService
+from backend.services.error_service import ErrorService
 
 error_bp = Blueprint('error', __name__)
 error_service = ErrorService()

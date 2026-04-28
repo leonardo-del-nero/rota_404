@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.services.hash_service import HashService
+from backend.services.hash_service import HashService
 
 hash_bp = Blueprint('hash', __name__)
 hash_service = HashService()

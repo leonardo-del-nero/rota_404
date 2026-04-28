@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.services.https_service import HttpsService
+from backend.services.https_service import HttpsService
 
 https_bp = Blueprint('https', __name__)
 https_service = HttpsService()
