@@ -2,11 +2,11 @@ from flask import Flask
 from flask_cors import CORS
 
 # Importando os Blueprints especializados (SRP)
-from app.routes.user_routes import user_bp
-from app.routes.hash_routes import hash_bp
-from app.routes.https_routes import https_bp
-from app.routes.dns_routes import dns_bp
-from app.routes.error_routes import error_bp
+from backend.routes.user_routes import user_bp
+from backend.routes.hash_routes import hash_bp
+from backend.routes.https_routes import https_bp
+from backend.routes.dns_routes import dns_bp
+from backend.routes.error_routes import error_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -20,4 +20,3 @@ app.register_blueprint(error_bp, url_prefix='/api')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
-    

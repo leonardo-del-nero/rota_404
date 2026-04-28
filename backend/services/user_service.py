@@ -1,5 +1,5 @@
 import time
-from app.repositories.user_repo import UserRepository
+from backend.repositories.user_repo import UserRepository
 
 class UserService:
     def __init__(self):
