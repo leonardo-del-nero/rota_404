@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syncopate:wght@700&family=Space+Grotesk:wght@300;500;700&display=swap');
 
 :root {
-  --bg-main: #050505;
-  --bg-card: #0d0d0d;
-  --bg-accent: #1a1a1a;
+  --bg-main: #0a0a0a;
+  --bg-card: rgba(20, 20, 20, 0.6);
+  --bg-accent: rgba(255, 255, 255, 0.03);
   
   --primary: #ffcc00; /* Amber/Yellow - Route Sign */
   --secondary: #00f3ff; /* Cyan - Cyber */
@@ -13,12 +13,15 @@
   --text-dim: #888888;
   --text-bright: #ffffff;
   
-  --glow-primary: rgba(255, 204, 0, 0.3);
-  --glow-secondary: rgba(0, 243, 255, 0.3);
+  --glow-primary: rgba(255, 204, 0, 0.4);
+  --glow-secondary: rgba(0, 243, 255, 0.4);
+  --glow-danger: rgba(255, 59, 59, 0.4);
   
   --font-mono: 'JetBrains Mono', monospace;
   --font-title: 'Syncopate', sans-serif;
   --font-main: 'Space Grotesk', sans-serif;
+
+  --glass-border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 * {
@@ -34,18 +37,31 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   background-image: 
+    radial-gradient(circle at 15% 50%, rgba(255, 204, 0, 0.05), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(0, 243, 255, 0.05), transparent 25%),
     linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-  background-size: 40px 40px;
+  background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
 }
 
 h1, h2, h3 {
   font-family: var(--font-title);
   text-transform: uppercase;
+  letter-spacing: 2px;
 }
 
 .mono {
   font-family: var(--font-mono);
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: rgba(20, 20, 20, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: var(--glass-border);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
 }
 
 /* ROTA 404 Visual Identity */
@@ -71,47 +87,66 @@ h1, h2, h3 {
 
 .card-404 {
   background: var(--bg-card);
-  border: 1px solid var(--bg-accent);
-  padding: 2rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: var(--glass-border);
+  border-radius: 24px;
+  padding: 3rem;
   position: relative;
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+
+.card-404::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
 }
 
 .card-404:hover {
-  border-color: var(--primary);
-  box-shadow: 0 0 30px var(--glow-primary);
-  transform: translateY(-5px) scale(1.02);
+  border-color: rgba(255, 204, 0, 0.2);
+  box-shadow: 0 15px 50px rgba(0,0,0,0.6), 0 0 20px rgba(255, 204, 0, 0.05);
 }
 
 .btn-404 {
   background: var(--primary);
   color: black;
   border: none;
-  padding: 1rem 2rem;
+  padding: 1rem 2.5rem;
   font-family: var(--font-title);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 700;
   cursor: pointer;
-  clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
-  transition: 0.3s;
+  clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .btn-404:hover {
   background: var(--secondary);
-  clip-path: polygon(0 0, 90% 0, 100% 100%, 10% 100%);
+  clip-path: polygon(0 0, 92% 0, 100% 100%, 8% 100%);
   box-shadow: 0 0 20px var(--glow-secondary);
+  transform: translateY(-2px);
 }
 
 .btn-outline {
-  background: transparent !important;
+  background: rgba(255,255,255,0.02) !important;
   color: var(--text-bright) !important;
-  border: 1px solid var(--bg-accent) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
   clip-path: none !important;
+  border-radius: 8px;
 }
 
 .btn-outline:hover {
+  background: rgba(255,255,255,0.05) !important;
   border-color: var(--primary) !important;
-  box-shadow: 0 0 10px var(--glow-primary) !important;
+  box-shadow: 0 0 15px var(--glow-primary) !important;
 }
 
 /* Glitch Animation */
@@ -129,21 +164,53 @@ h1, h2, h3 {
 }
 
 /* Custom Scrollbar */
-::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-main); }
-::-webkit-scrollbar-thumb { background: var(--primary); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
 
 .input-404 {
-  background: transparent;
-  border: 1px solid var(--bg-accent);
-  padding: 1rem;
+  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 1.2rem;
   color: white;
   font-family: var(--font-mono);
   outline: none;
   width: 100%;
+  border-radius: 12px;
+  transition: all 0.3s ease;
 }
 
 .input-404:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 10px var(--glow-primary);
+  box-shadow: 0 0 15px rgba(255, 204, 0, 0.15);
+  background: rgba(0,0,0,0.8);
+}
+
+.didactic-bubble {
+  background: rgba(0, 243, 255, 0.1);
+  border: 1px dashed var(--secondary);
+  border-radius: 16px;
+  padding: 1.5rem;
+  color: var(--text-bright);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  position: relative;
+}
+
+.didactic-bubble::before {
+  content: 'i';
+  position: absolute;
+  top: -12px;
+  left: 20px;
+  background: var(--secondary);
+  color: black;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-title);
+  font-weight: bold;
 }
