@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Hash, Cpu, Globe, Lock, AlertCircle, ArrowRight, Minimize2 } from 'lucide-react';
+import { Hash, Cpu, Globe, Lock, AlertCircle, ArrowRight } from 'lucide-react';
 import styles from './Hub.module.css';
 
 const Hub = () => {
@@ -42,15 +42,7 @@ const Hub = () => {
       icon: <Lock size={24} />,
       color: '#00ff88'
     },
-    {
-      id: 'compression',
-      title: 'COMPRESSÃO',
-      tag: 'PERFORMANCE',
-      desc: 'Aprenda como o ZIP faz arquivos gigantes ficarem pequenos para viajar pela rede.',
-      path: '/compression',
-      icon: <Minimize2 size={24} />,
-      color: 'var(--danger)'
-    },
+
     {
       id: 'error404',
       title: 'ERRO 404',

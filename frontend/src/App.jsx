@@ -8,7 +8,6 @@ import ApiModule from './pages/ApiModule/ApiModule';
 import DnsModule from './pages/DnsModule/DnsModule';
 import HttpsModule from './pages/HttpsModule/HttpsModule';
 import Error404Module from './pages/Error404Module/Error404Module';
-import CompressionModule from './pages/CompressionModule/CompressionModule';
 
 const AnimatedRoutes = () => {
   const location = useLocation();
