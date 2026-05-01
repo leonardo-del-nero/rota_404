@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import Intro from './components/Intro';
-import Hub from './pages/Hub';
-import HashModule from './pages/HashModule';
-import ApiModule from './pages/ApiModule';
-import DnsModule from './pages/DnsModule';
-import HttpsModule from './pages/HttpsModule';
-import Error404Module from './pages/Error404Module';
+import Hub from './pages/Hub/Hub';
+import HashModule from './pages/HashModule/HashModule';
+import ApiModule from './pages/ApiModule/ApiModule';
+import DnsModule from './pages/DnsModule/DnsModule';
+import HttpsModule from './pages/HttpsModule/HttpsModule';
+import Error404Module from './pages/Error404Module/Error404Module';
+import CompressionModule from './pages/CompressionModule/CompressionModule';
 
 const AnimatedRoutes = () => {
   const location = useLocation();
