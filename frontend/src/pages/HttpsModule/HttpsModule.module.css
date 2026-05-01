@@ -1,0 +1,203 @@
+/* Intro Section */
+.introAnimation {
+  position: relative;
+  width: 200px;
+  height: 150px;
+}
+
+.introMail {
+  position: absolute;
+  color: var(--text-dim);
+}
+
+.introLock {
+  z-index: 2;
+  color: var(--success);
+  background: var(--bg-main);
+  padding: 10px;
+  border-radius: 50%;
+}
+
+/* Arena Base */
+.arenaLine {
+  position: absolute;
+  top: 40px;
+  left: 100px;
+  right: 100px;
+  height: 2px;
+  z-index: 0;
+}
+
+.arenaLineHttp {
+  background: rgba(255, 59, 59, 0.2);
+}
+
+.arenaLineHttps {
+  background: rgba(0, 255, 136, 0.2);
+}
+
+.arenaVerticalLine {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  width: 2px;
+  height: 160px;
+  background: rgba(255,59,59,0.3);
+  border-left: 2px dashed rgba(255,59,59,0.3);
+}
+
+/* Data Package */
+.dataPackage {
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dataPackageHttp {
+  background: #fff;
+  border: 2px solid #333;
+}
+
+.dataPackageHttps {
+  background: #000;
+  border: 2px solid var(--success);
+}
+
+/* Actors (User & Server) */
+.actorContainer {
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.serverContainer {
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 200px;
+}
+
+.actorIcon {
+  width: 80px;
+  height: 80px;
+  background: var(--bg-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.actorIconUser {
+  border-radius: 50%;
+}
+
+.actorIconServer {
+  border-radius: 12px;
+}
+
+/* Hacker */
+.hackerContainer {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 250px;
+}
+
+.hackerIcon {
+  width: 60px;
+  height: 60px;
+  background: #220000;
+  border-radius: 12px;
+  border: 2px solid var(--danger);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+/* Displays */
+.displayBox {
+  width: 100%;
+  height: 60px;
+  background: #000;
+  border-radius: 4px;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.displayHacker {
+  border: 1px solid #ff3b3b55;
+}
+
+.displayServer {
+  border: 1px solid #333;
+}
+
+.displayText {
+  font-size: 0.7rem;
+  word-break: break-all;
+  text-align: center;
+}
+
+.displayTextServer {
+  font-size: 0.8rem;
+  color: #fff;
+}
+
+/* Toggles & Forms */
+.toggleBtn {
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  clip-path: none;
+  border-radius: 8px;
+}
+
+.toggleBtnHttps {
+  background: var(--success);
+  color: #000;
+  border: 1px solid var(--success);
+}
+
+.toggleBtnHttp {
+  background: transparent;
+  color: #888;
+  border: 1px solid #888;
+}
+
+.formContainer {
+  max-width: 600px;
+  margin: 0 auto;
+  gap: 1rem;
+}
+
+.formInput {
+  flex: 1;
+  height: 60px;
+  margin-bottom: 0;
+}
+
+.formBtn {
+  height: 60px;
+}
+
+.formBtnHttps {
+  background: var(--success);
+  color: #000;
+}
+
+.formBtnHttp {
+  background: #fff;
+  color: #000;
+}

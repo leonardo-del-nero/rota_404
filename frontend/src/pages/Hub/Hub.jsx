@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Hash, Cpu, Globe, Lock, AlertCircle, ArrowRight } from 'lucide-react';
+import { Hash, Cpu, Globe, Lock, AlertCircle, ArrowRight, Minimize2 } from 'lucide-react';
+import styles from './Hub.module.css';
 
 const Hub = () => {
   const modules = [
@@ -42,6 +43,15 @@ const Hub = () => {
       color: '#00ff88'
     },
     {
+      id: 'compression',
+      title: 'COMPRESSÃO',
+      tag: 'PERFORMANCE',
+      desc: 'Aprenda como o ZIP faz arquivos gigantes ficarem pequenos para viajar pela rede.',
+      path: '/compression',
+      icon: <Minimize2 size={24} />,
+      color: 'var(--danger)'
+    },
+    {
       id: 'error404',
       title: 'ERRO 404',
       tag: 'ROTAS',
@@ -53,33 +63,26 @@ const Hub = () => {
   ];
 
   return (
-    <div className="container" style={{ minHeight: '100vh', padding: '4rem 2rem' }}>
-      <header style={{ marginBottom: '5rem', textAlign: 'center' }}>
+    <div className={`container ${styles.hubContainer}`}>
+      <header className={styles.hubHeader}>
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="rota-logo"
-          style={{ fontSize: '4rem', marginBottom: '1rem' }}
+          className={`rota-logo ${styles.logo}`}
         >
           ROTA 404
         </motion.div>
-        <p className="mono" style={{ color: 'var(--text-dim)', letterSpacing: '4px', marginBottom: '2rem' }}>
+        <p className={`mono ${styles.subtitle}`}>
           DESCOMPLICANDO O MUNDO DIGITAL
         </p>
-        <div style={{ maxWidth: '600px', margin: '0 auto', background: 'rgba(255, 204, 0, 0.05)', padding: '1.5rem', borderRadius: '12px', border: '1px dashed var(--primary)' }}>
-          <p style={{ fontSize: '0.9rem', color: 'var(--primary)', lineHeight: '1.5' }}>
+        <div className={styles.introBox}>
+          <p className={styles.introText}>
             <strong>Olá, viajante!</strong> Escolha um dos caminhos abaixo para entender como a internet funciona "por baixo do capô". Não se preocupe, vamos te explicar tudo com calma! 🚀
           </p>
         </div>
       </header>
 
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', 
-        gap: '1.5rem',
-        maxWidth: '1200px',
-        margin: '0 auto'
-      }}>
+      <div className={styles.grid}>
         {modules.map((mod, idx) => (
           <motion.div
             key={mod.id}
@@ -87,24 +90,28 @@ const Hub = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.1, type: 'spring', stiffness: 100 }}
           >
-            <Link to={mod.path} className="card-404" style={{ 
-              display: 'block', 
-              textDecoration: 'none', 
-              color: 'inherit',
-              height: '100%'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
-                <div style={{ color: mod.color, background: `${mod.color}22`, padding: '12px', borderRadius: '4px' }}>
+            <Link to={mod.path} className={`card-404 ${styles.cardLink}`}>
+              <div className={styles.cardHeader}>
+                <div 
+                  className={styles.iconWrapper} 
+                  style={{ color: mod.color, background: `${mod.color}22` }}
+                >
                   {mod.icon}
                 </div>
-                <span className="mono" style={{ fontSize: '0.7rem', color: mod.color, border: `1px solid ${mod.color}`, padding: '2px 8px' }}>
+                <span 
+                  className={`mono ${styles.tag}`} 
+                  style={{ color: mod.color, border: `1px solid ${mod.color}` }}
+                >
                   {mod.tag}
                 </span>
               </div>
-              <h2 style={{ fontSize: '1.2rem', marginBottom: '1rem', letterSpacing: '1px' }}>{mod.title}</h2>
-              <p style={{ color: 'var(--text-dim)', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: '2rem' }}>{mod.desc}</p>
+              <h2 className={styles.cardTitle}>{mod.title}</h2>
+              <p className={styles.cardDesc}>{mod.desc}</p>
               
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', fontWeight: 'bold', color: mod.color }}>
+              <div 
+                className={styles.cardFooter} 
+                style={{ color: mod.color }}
+              >
                 INICIAR PERCURSO <ArrowRight size={16} />
               </div>
             </Link>

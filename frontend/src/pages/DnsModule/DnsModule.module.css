@@ -1,0 +1,211 @@
+.introIconWrapper {
+  position: relative;
+}
+.introIconShadow {
+  filter: drop-shadow(0 0 10px rgba(255,107,0,0.5));
+}
+.introSearchOverlay {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+}
+.introArrow {
+  font-size: 2rem;
+  color: #444;
+}
+.introResult {
+  font-size: 1.5rem;
+  color: var(--success);
+  border: 1px solid rgba(0,255,136,0.2);
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0,255,136,0.2);
+  background: rgba(0,255,136,0.05);
+}
+
+.labTitle {
+  color: #ff6b00;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 20px rgba(255,107,0,0.3);
+}
+.labSubtitle {
+  color: #888;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+
+.arenaContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0 2rem;
+  margin-bottom: 5rem;
+  min-height: 180px;
+}
+
+.nodeContainer {
+  text-align: center;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.serverNodeContainer {
+  text-align: center;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 220px;
+}
+
+.userNodeIcon {
+  border: 1px solid rgba(255,107,0,0.4);
+  background: rgba(255,107,0,0.05);
+  box-shadow: inset 0 0 20px rgba(255,107,0,0.1);
+}
+
+.nodeLabel {
+  color: #ff6b00;
+}
+.serverNodeLabel {
+  color: #ff6b00;
+  margin-bottom: 1rem;
+}
+
+.connectionLine {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255, 107, 0, 0.3), rgba(255, 107, 0, 0.05), rgba(255, 107, 0, 0.3));
+  margin: 45px 2rem 0;
+  position: relative;
+}
+
+.packageWrapper {
+  position: absolute;
+  top: -25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateX(-50%);
+}
+
+.packageIcon {
+  margin-bottom: 5px;
+}
+
+.dataPackageQuery {
+  background: rgba(255,107,0,0.2);
+  border: 1px solid #ff6b00;
+  color: #ffcc00;
+}
+
+.serverNodeIconBase {
+  border-radius: 15px;
+}
+.serverNodeIconActive {
+  border: 1px solid #ff6b00;
+  background: rgba(255,107,0,0.1);
+}
+.serverNodeIconInactive {
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.4);
+}
+
+.logsContainer {
+  height: 100px;
+  width: 100%;
+}
+
+.logsPanel {
+  background: rgba(0,0,0,0.8);
+  border: 1px solid rgba(255,107,0,0.3);
+  padding: 10px;
+  font-size: 0.7rem;
+  color: var(--success);
+  text-align: left;
+}
+.logsTitle {
+  color: #ff6b00;
+  border-bottom: 1px solid rgba(255,107,0,0.3);
+  margin-bottom: 5px;
+}
+
+.formWrapper {
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.inputGroup {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  max-width: 600px;
+}
+
+.inputContainer {
+  flex: 1;
+  position: relative;
+}
+
+.urlInput {
+  padding-left: 3.5rem;
+  height: 60px;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 1.2rem;
+  top: 1.2rem;
+  color: #ff6b00;
+}
+
+.submitBtn {
+  padding: 0 2rem;
+}
+
+.resultPanel {
+  text-align: center;
+  width: 100%;
+  min-width: 600px;
+  background: rgba(0,0,0,0.6);
+}
+
+.resultPanelValid {
+  border: 1px solid rgba(0,255,136,0.3);
+}
+
+.resultPanelInvalid {
+  border: 1px solid rgba(255,59,59,0.3);
+}
+
+.resultLabel {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 1rem;
+}
+
+.resultIp {
+  font-size: 3rem;
+  font-family: var(--font-mono);
+  margin-bottom: 2rem;
+}
+.resultIpValid {
+  color: var(--success);
+}
+.resultIpInvalid {
+  color: var(--danger);
+}
+
+.accessBtn {
+  background: rgba(0,255,136,0.1);
+  border: 1px solid var(--success);
+  color: var(--success);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem 2rem;
+  clip-path: none;
+  border-radius: 8px;
+}
