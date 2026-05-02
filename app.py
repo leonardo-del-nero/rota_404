@@ -7,6 +7,7 @@ from app.routes.hash_routes import hash_bp
 from app.routes.https_routes import https_bp
 from app.routes.dns_routes import dns_bp
 from app.routes.error_routes import error_bp
+from app.routes.player_routes import player_bp
 
 app = Flask(__name__)
 CORS(app)
@@ -17,6 +18,7 @@ app.register_blueprint(hash_bp, url_prefix='/api')
 app.register_blueprint(https_bp, url_prefix='/api')
 app.register_blueprint(dns_bp, url_prefix='/api')
 app.register_blueprint(error_bp, url_prefix='/api')
+app.register_blueprint(player_bp, url_prefix='/api')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

@@ -17,7 +17,13 @@ const hashQuestions = [
       "D. Apenas o caractere correspondente à letra alterada muda no Hash."
     ],
     correct: 0,
-    why: "Isso é o efeito avalanche: qualquer alteração, por menor que seja, gera um resultado totalmente novo e imprevisível."
+    why: "Isso é o efeito avalanche: qualquer alteração, por menor que seja, gera um resultado totalmente novo e imprevisível.",
+    hints: [
+      "",
+      "Se o tamanho diminuísse, como saberíamos a complexidade original? A magia do Hash é que o tamanho da assinatura resultante é sempre fixo, independentemente do arquivo de entrada.",
+      "Se ficasse o mesmo, você nunca saberia que o arquivo foi adulterado! A assinatura existe justamente para dedurar qualquer mudança.",
+      "A matemática do Hash não é localizada. Qualquer pequena alteração não muda apenas uma letra, mas cria um 'efeito avalanche', alterando a assinatura inteira."
+    ]
   },
   {
     q: "2. A função Hash é considerada uma via de mão única. O que isso significa na prática?",
@@ -28,7 +34,13 @@ const hashQuestions = [
       "D. Significa que o Hash só pode ser enviado para um único destino por vez."
     ],
     correct: 1,
-    why: "A função hash é irreversível; você pode validar um dado, mas não pode descriptografar o hash para obter o texto original."
+    why: "A função hash é irreversível; você pode validar um dado, mas não pode descriptografar o hash para obter o texto original.",
+    hints: [
+      "Uma vez gerado, o Hash é apenas um texto. Você pode excluir do computador sempre que quiser, não há mágica nisso.",
+      "",
+      "Não faz sentido ler de um lado ou de outro. O Hash não é uma mensagem invertida, é uma representação irreversível.",
+      "Você pode enviar o Hash para quantos destinos quiser! Ele é só uma 'etiqueta' que comprova a integridade."
+    ]
   },
   {
     q: "3. Se você tem dois arquivos diferentes no seu computador. Qual é a probabilidade de a \"Máquina de Hash\" gerar exatamente a mesma assinatura (SHA-256) para os dois?",
@@ -39,7 +51,13 @@ const hashQuestions = [
       "D. A probabilidade é de 50%, dependendo do tamanho do arquivo."
     ],
     correct: 2,
-    why: "O SHA-256 é tão complexo que a chance de dois arquivos diferentes terem o mesmo hash (colisão) é praticamente zero."
+    why: "O SHA-256 é tão complexo que a chance de dois arquivos diferentes terem o mesmo hash (colisão) é praticamente zero.",
+    hints: [
+      "Não é comum de jeito nenhum. Se fosse comum, o Hash não serviria como uma impressão digital confiável de arquivos.",
+      "O Hash leva em conta o CONTEÚDO do arquivo, não o nome. Dois arquivos de nomes diferentes mas conteúdo igual têm o mesmo Hash.",
+      "",
+      "A probabilidade de colisão no SHA-256 é tão incrivelmente pequena que é considerada matematicamente zero. Não é cara ou coroa!"
+    ]
   }
 ];
 
@@ -243,7 +261,7 @@ const HashModule = () => {
               initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}
               className="card-404"
             >
-              <Quiz questions={hashQuestions} onFinishQuiz={() => setShowQuiz(false)} />
+              <Quiz moduleId="hash" questions={hashQuestions} onFinishQuiz={() => setShowQuiz(false)} />
             </motion.div>
           )}
         </AnimatePresence>

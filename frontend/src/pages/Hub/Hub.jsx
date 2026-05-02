@@ -1,10 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Hash, Cpu, Globe, Lock, AlertCircle, ArrowRight } from 'lucide-react';
 import styles from './Hub.module.css';
 
 const Hub = () => {
+  const navigate = useNavigate();
   const modules = [
     {
       id: 'hash',
@@ -54,6 +55,49 @@ const Hub = () => {
     }
   ];
 
+  const player = JSON.parse(localStorage.getItem('rota404_player') || '{}');
+
+  const handleFinishSimulation = async () => {
+    const saved = JSON.parse(localStorage.getItem('rota404_quiz_progress') || '{}');
+    
+    // Calcula os pontos baseado nas tentativas
+    const TOTAL_QUESTIONS = 18; // Definido na especificação
+    const X = 100 / TOTAL_QUESTIONS;
+    let totalScore = 0;
+    
+    Object.keys(saved).forEach(moduleId => {
+      const { attempts, isCorrectMap } = saved[moduleId];
+      if (!isCorrectMap) return;
+      
+      Object.keys(isCorrectMap).forEach(qIdx => {
+        if (isCorrectMap[qIdx]) {
+          const tries = attempts[qIdx] || 1;
+          if (tries === 1) totalScore += X;
+          else if (tries === 2) totalScore += X * 0.66;
+          else if (tries === 3) totalScore += X * 0.33;
+          else totalScore += X * 0.16;
+        }
+      });
+    });
+
+    if (player.id) {
+      try {
+        await fetch(`http://localhost:5000/api/players/${player.id}/score`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ score: totalScore })
+        });
+        
+        player.progress = { ...player.progress, score: totalScore };
+        localStorage.setItem('rota404_player', JSON.stringify(player));
+      } catch (e) {
+        console.error("Erro ao salvar score:", e);
+      }
+    }
+    
+    navigate('/leaderboard');
+  };
+
   return (
     <div className={`container ${styles.hubContainer}`}>
       <header className={styles.hubHeader}>
@@ -69,7 +113,7 @@ const Hub = () => {
         </p>
         <div className={styles.introBox}>
           <p className={styles.introText}>
-            <strong>Olá, viajante!</strong> Escolha um dos caminhos abaixo para entender como a internet funciona "por baixo do capô". Não se preocupe, vamos te explicar tudo com calma! 🚀
+            <strong>Olá, {player.name || 'Viajante'}!</strong> Escolha um dos caminhos abaixo para entender como a internet funciona "por baixo do capô". Não se preocupe, vamos te explicar tudo com calma!
           </p>
         </div>
       </header>
@@ -109,6 +153,18 @@ const Hub = () => {
             </Link>
           </motion.div>
         ))}
+      </div>
+
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '4rem' }}>
+        <motion.button 
+          className="btn-404" 
+          onClick={handleFinishSimulation} 
+          style={{ fontSize: '1.2rem', padding: '1.5rem 3rem', background: 'var(--secondary)' }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          FINALIZAR SIMULAÇÃO E VER RESULTADO
+        </motion.button>
       </div>
     </div>
   );

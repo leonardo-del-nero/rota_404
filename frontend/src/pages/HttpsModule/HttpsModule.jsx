@@ -245,7 +245,7 @@ const HttpsModule = () => {
               initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}
               className="card-404"
             >
-              <Quiz questions={httpsQuestions} onFinishQuiz={() => setShowQuiz(false)} />
+              <Quiz moduleId="https" questions={httpsQuestions} onFinishQuiz={() => setShowQuiz(false)} />
             </motion.div>
           )}
         </AnimatePresence>

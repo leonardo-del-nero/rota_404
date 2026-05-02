@@ -178,7 +178,7 @@ const Error404Module = () => {
             </motion.div>
           ) : (
             <motion.div key="quiz" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="card-404">
-              <Quiz questions={errorQuestions} onFinishQuiz={() => setShowQuiz(false)} />
+              <Quiz moduleId="error404" questions={errorQuestions} onFinishQuiz={() => setShowQuiz(false)} />
             </motion.div>
           )}
         </AnimatePresence>
