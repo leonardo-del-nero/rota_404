@@ -5,6 +5,7 @@ import ModuleIntro from '../../components/ModuleIntro';
 import LabHeader from '../../components/LabHeader';
 import Quiz from '../../components/Quiz';
 import GlassPanel from '../../components/GlassPanel';
+import Mascot from '../../components/Mascot';
 import styles from './HashModule.module.css';
 
 import cp1 from '../../assets/cp1.png';
@@ -17,17 +18,14 @@ const Typewriter = ({ text }) => {
   useEffect(() => {
     setDisplayedText('');
     let i = 0;
-    
     const timeout = setTimeout(() => {
       const typingInterval = setInterval(() => {
         setDisplayedText(text.slice(0, i + 1));
         i++;
         if (i >= text.length) clearInterval(typingInterval);
       }, 30);
-
       return () => clearInterval(typingInterval);
     }, 100);
-
     return () => {
       clearTimeout(timeout);
       setDisplayedText('');
@@ -168,7 +166,7 @@ const HashModule = () => {
   const resetLab = () => {
     setShowLab(false);
     setInput('');
-    setIsHashingOn(true);
+    setIsHashingOn(false); // Mantendo o padrão de começar desligado
     setStatus('IDLE');
     setHash('...');
     setShowQuiz(false);
@@ -203,64 +201,19 @@ const HashModule = () => {
       <LabHeader showQuiz={showQuiz} setShowQuiz={setShowQuiz} onResetLab={resetLab} />
 
       <div className="content-max-width">
-        <AnimatePresence>
-          {showCastor && (
-            <motion.div 
-              className={styles.mascotNotify}
-              initial={{ opacity: 0, x: 100, scale: 0.8 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 100, scale: 0.8 }}
-            >
-              <div className={styles.mascotFixed}>
-                <AnimatePresence mode="wait">
-                  <motion.img 
-                    key={castorStep} 
-                    src={castorStep === 0 ? cp1 : castorStep === 1 ? cp2 : cp6} 
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.3 }}
-                    alt="Mascote Castor" 
-                    className={styles.castorSideImg} 
-                  />
-                </AnimatePresence>
-              </div>
-
-              <div className={styles.cyberPopup}>
-                <div className={styles.popupHeader}>
-                  <div className={styles.blinkDot} />
-                  <small>CASTOR_LOG // TRANSMISSÃO RECEBIDA</small>
-                </div>
-                
-                <div className={styles.popupBody}>
-                  <AnimatePresence mode="wait">
-                    <motion.p 
-                      key={castorStep}
-                      initial={{ opacity: 0, x: 10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -10 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      {castorStep === 0 && (
-                        <Typewriter text="Ei! Notou algo? Tente mudar apenas uma letra minúscula ou um ponto no seu texto e envie de novo. O Hash será completamente diferente!" />
-                      )}
-                      {castorStep === 1 && (
-                        <Typewriter text="Sabia que o SHA-256 tem tantas combinações que a chance de dois arquivos diferentes terem o mesmo Hash é praticamente ZERO!" />
-                      )}
-                      {castorStep === 2 && (
-                        <Typewriter text="Gerar um Hash é como triturar uma fruta. Você joga a fruta (dado), faz o suco (hash), mas é impossível transformar o suco de volta em fruta." />
-                      )}
-                    </motion.p>
-                  </AnimatePresence>
-                </div>
-
-                <button onClick={handleNextCastor} className={styles.popupBtn}>
-                  {castorStep === 1 ? 'CONTINUAR_' : 'ENTENDI_'}
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Usando o componente Mascot reutilizável */}
+        <Mascot 
+          show={showCastor}
+          step={castorStep}
+          images={[cp1, cp2, cp6]}
+          phrases={[
+            <Typewriter text="Ei! Notou algo? Tente mudar apenas uma letra minúscula ou um ponto no seu texto e envie de novo. O Hash será completamente diferente!" />,
+            <Typewriter text="Sabia que o SHA-256 tem tantas combinações que a chance de dois arquivos diferentes terem o mesmo Hash é praticamente ZERO!" />,
+            <Typewriter text="Gerar um Hash é como triturar uma fruta. Você joga a fruta (dado), faz o suco (hash), mas é impossível transformar o suco de volta em fruta." />
+          ]}
+          onNext={handleNextCastor}
+          buttonLabels={["ENTENDI_", "CONTINUAR_", "ENTENDI_"]}
+        />
 
         <AnimatePresence mode="wait">
           {!showQuiz ? (
