@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Fingerprint, FileText, Zap, Moon, User, Server } from 'lucide-react';
 import ModuleIntro from '../../components/ModuleIntro';
@@ -6,6 +6,36 @@ import LabHeader from '../../components/LabHeader';
 import Quiz from '../../components/Quiz';
 import GlassPanel from '../../components/GlassPanel';
 import styles from './HashModule.module.css';
+
+import cp1 from '../../assets/cp1.png';
+import cp2 from '../../assets/cp2.png';
+import cp6 from '../../assets/cp6.png';
+
+const Typewriter = ({ text }) => {
+  const [displayedText, setDisplayedText] = useState('');
+
+  useEffect(() => {
+    setDisplayedText('');
+    let i = 0;
+    
+    const timeout = setTimeout(() => {
+      const typingInterval = setInterval(() => {
+        setDisplayedText(text.slice(0, i + 1));
+        i++;
+        if (i >= text.length) clearInterval(typingInterval);
+      }, 30);
+
+      return () => clearInterval(typingInterval);
+    }, 100);
+
+    return () => {
+      clearTimeout(timeout);
+      setDisplayedText('');
+    };
+  }, [text]); 
+
+  return <span>{displayedText}</span>;
+};
 
 const hashQuestions = [
   {
@@ -18,12 +48,6 @@ const hashQuestions = [
     ],
     correct: 0,
     why: "Isso é o efeito avalanche: qualquer alteração, por menor que seja, gera um resultado totalmente novo e imprevisível.",
-    hints: [
-      "",
-      "Se o tamanho diminuísse, como saberíamos a complexidade original? A magia do Hash é que o tamanho da assinatura resultante é sempre fixo, independentemente do arquivo de entrada.",
-      "Se ficasse o mesmo, você nunca saberia que o arquivo foi adulterado! A assinatura existe justamente para dedurar qualquer mudança.",
-      "A matemática do Hash não é localizada. Qualquer pequena alteração não muda apenas uma letra, mas cria um 'efeito avalanche', alterando a assinatura inteira."
-    ]
   },
   {
     q: "2. A função Hash é considerada uma via de mão única. O que isso significa na prática?",
@@ -35,12 +59,6 @@ const hashQuestions = [
     ],
     correct: 1,
     why: "A função hash é irreversível; você pode validar um dado, mas não pode descriptografar o hash para obter o texto original.",
-    hints: [
-      "Uma vez gerado, o Hash é apenas um texto. Você pode excluir do computador sempre que quiser, não há mágica nisso.",
-      "",
-      "Não faz sentido ler de um lado ou de outro. O Hash não é uma mensagem invertida, é uma representação irreversível.",
-      "Você pode enviar o Hash para quantos destinos quiser! Ele é só uma 'etiqueta' que comprova a integridade."
-    ]
   },
   {
     q: "3. Se você tem dois arquivos diferentes no seu computador. Qual é a probabilidade de a \"Máquina de Hash\" gerar exatamente a mesma assinatura (SHA-256) para os dois?",
@@ -52,12 +70,6 @@ const hashQuestions = [
     ],
     correct: 2,
     why: "O SHA-256 é tão complexo que a chance de dois arquivos diferentes terem o mesmo hash (colisão) é praticamente zero.",
-    hints: [
-      "Não é comum de jeito nenhum. Se fosse comum, o Hash não serviria como uma impressão digital confiável de arquivos.",
-      "O Hash leva em conta o CONTEÚDO do arquivo, não o nome. Dois arquivos de nomes diferentes mas conteúdo igual têm o mesmo Hash.",
-      "",
-      "A probabilidade de colisão no SHA-256 é tão incrivelmente pequena que é considerada matematicamente zero. Não é cara ou coroa!"
-    ]
   }
 ];
 
@@ -65,9 +77,13 @@ const HashModule = () => {
   const [showLab, setShowLab] = useState(false);
   const [input, setInput] = useState('');
   const [hash, setHash] = useState('...');
-  const [isHashingOn, setIsHashingOn] = useState(true);
+  const [isHashingOn, setIsHashingOn] = useState(false);
   const [status, setStatus] = useState('IDLE');
   const [showQuiz, setShowQuiz] = useState(false);
+
+  const [showCastor, setShowCastor] = useState(false);
+  const [castorStep, setCastorStep] = useState(0); 
+  const [generations, setGenerations] = useState(0);
 
   const handleSend = async () => {
     if (!input || (status !== 'IDLE' && status !== 'DONE')) return;
@@ -84,6 +100,7 @@ const HashModule = () => {
           setTimeout(() => {
             setHash(input);
             setStatus('DONE');
+            triggerCastor();
           }, 1000);
         }, 300);
       } else {
@@ -100,6 +117,7 @@ const HashModule = () => {
             setTimeout(() => {
               setHash(data.hash.toUpperCase());
               setStatus('DONE');
+              triggerCastor();
             }, 1000);
           }, 800);
         } catch (err) {
@@ -108,11 +126,36 @@ const HashModule = () => {
             setTimeout(() => {
               setHash('ERRO_CONEXÃO');
               setStatus('DONE');
+              triggerCastor();
             }, 1000);
           }, 500);
         }
       }
     }, 1000);
+  };
+
+  const triggerCastor = () => {
+    if (!isHashingOn) return; 
+
+    setGenerations(prev => {
+      const newCount = prev + 1;
+      if (newCount === 1) {
+        setCastorStep(0);
+        setShowCastor(true);
+      } else if (newCount === 2) {
+        setCastorStep(1);
+        setShowCastor(true);
+      }
+      return newCount;
+    });
+  };
+
+  const handleNextCastor = () => {
+    if (castorStep === 1) {
+      setCastorStep(2);
+    } else {
+      setShowCastor(false);
+    }
   };
 
   const handleKeyDown = (e) => {
@@ -129,6 +172,7 @@ const HashModule = () => {
     setStatus('IDLE');
     setHash('...');
     setShowQuiz(false);
+    setGenerations(0);
   };
 
   if (!showLab) {
@@ -159,6 +203,65 @@ const HashModule = () => {
       <LabHeader showQuiz={showQuiz} setShowQuiz={setShowQuiz} onResetLab={resetLab} />
 
       <div className="content-max-width">
+        <AnimatePresence>
+          {showCastor && (
+            <motion.div 
+              className={styles.mascotNotify}
+              initial={{ opacity: 0, x: 100, scale: 0.8 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: 100, scale: 0.8 }}
+            >
+              <div className={styles.mascotFixed}>
+                <AnimatePresence mode="wait">
+                  <motion.img 
+                    key={castorStep} 
+                    src={castorStep === 0 ? cp1 : castorStep === 1 ? cp2 : cp6} 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.3 }}
+                    alt="Mascote Castor" 
+                    className={styles.castorSideImg} 
+                  />
+                </AnimatePresence>
+              </div>
+
+              <div className={styles.cyberPopup}>
+                <div className={styles.popupHeader}>
+                  <div className={styles.blinkDot} />
+                  <small>CASTOR_LOG // TRANSMISSÃO RECEBIDA</small>
+                </div>
+                
+                <div className={styles.popupBody}>
+                  <AnimatePresence mode="wait">
+                    <motion.p 
+                      key={castorStep}
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -10 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {castorStep === 0 && (
+                        <Typewriter text="Ei! Notou algo? Tente mudar apenas uma letra minúscula ou um ponto no seu texto e envie de novo. O Hash será completamente diferente!" />
+                      )}
+                      {castorStep === 1 && (
+                        <Typewriter text="Sabia que o SHA-256 tem tantas combinações que a chance de dois arquivos diferentes terem o mesmo Hash é praticamente ZERO!" />
+                      )}
+                      {castorStep === 2 && (
+                        <Typewriter text="Gerar um Hash é como triturar uma fruta. Você joga a fruta (dado), faz o suco (hash), mas é impossível transformar o suco de volta em fruta." />
+                      )}
+                    </motion.p>
+                  </AnimatePresence>
+                </div>
+
+                <button onClick={handleNextCastor} className={styles.popupBtn}>
+                  {castorStep === 1 ? 'CONTINUAR_' : 'ENTENDI_'}
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         <AnimatePresence mode="wait">
           {!showQuiz ? (
             <motion.div 
