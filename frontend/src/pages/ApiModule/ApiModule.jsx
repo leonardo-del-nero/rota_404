@@ -10,20 +10,7 @@ import styles from './ApiModule.module.css';
 
 import cp7 from '../../assets/cp7.png';
 
-const Typewriter = ({ text }) => {
-  const [displayedText, setDisplayedText] = useState('');
-  useEffect(() => {
-    let i = 0;
-    setDisplayedText('');
-    const typingInterval = setInterval(() => {
-      setDisplayedText(text.slice(0, i + 1));
-      i++;
-      if (i >= text.length) clearInterval(typingInterval);
-    }, 30);
-    return () => clearInterval(typingInterval);
-  }, [text]);
-  return <span>{displayedText}</span>;
-};
+import Typewriter from '../../components/Typewriter';
 
 const apiQuestions = [
   {

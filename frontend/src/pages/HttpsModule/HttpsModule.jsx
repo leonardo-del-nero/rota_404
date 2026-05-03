@@ -4,6 +4,7 @@ import { Lock, Unlock, Mail, Server, User, Terminal, Send } from 'lucide-react';
 import ModuleIntro from '../../components/ModuleIntro';
 import LabHeader from '../../components/LabHeader';
 import Quiz from '../../components/Quiz';
+import DataPackage from '../../components/DataPackage';
 import styles from './HttpsModule.module.css';
 
 const httpsQuestions = [
@@ -163,9 +164,11 @@ const HttpsModule = () => {
                 <AnimatePresence>
                   {status === 'SENDING' && (
                     <motion.div initial={{ left: '100px' }} animate={{ left: 'calc(100% - 130px)' }} transition={{ duration: 3, ease: "linear" }} style={{ position: 'absolute', top: '15px', zIndex: 5 }}>
-                      <div className={`${styles.dataPackage} ${isHttpsOn ? styles.dataPackageHttps : styles.dataPackageHttp}`}>
-                        {isHttpsOn ? <Lock size={20} color="var(--success)" /> : <Mail size={20} color="#333" />}
-                      </div>
+                      <DataPackage 
+                        text={isHttpsOn ? "CADEADO" : "CARTA"} 
+                        icon={isHttpsOn ? Lock : Mail} 
+                        type={isHttpsOn ? "success" : "primary"} 
+                      />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -175,9 +178,11 @@ const HttpsModule = () => {
                 <AnimatePresence>
                   {intercepting && (
                     <motion.div initial={{ top: '15px', left: '50%', transform: 'translateX(-50%)' }} animate={{ top: '150px' }} transition={{ duration: 1, ease: "linear" }} style={{ position: 'absolute', zIndex: 4 }}>
-                      <div className={`${styles.dataPackage} ${isHttpsOn ? styles.dataPackageHttps : styles.dataPackageHttp}`}>
-                        {isHttpsOn ? <Lock size={20} color="var(--success)" /> : <Mail size={20} color="#333" />}
-                      </div>
+                      <DataPackage 
+                        text={isHttpsOn ? "CADEADO" : "CARTA"} 
+                        icon={isHttpsOn ? Lock : Mail} 
+                        type={isHttpsOn ? "success" : "primary"} 
+                      />
                     </motion.div>
                   )}
                 </AnimatePresence>

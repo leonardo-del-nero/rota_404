@@ -12,28 +12,8 @@ import cp1 from '../../assets/cp1.png';
 import cp2 from '../../assets/cp2.png';
 import cp6 from '../../assets/cp6.png';
 
-const Typewriter = ({ text }) => {
-  const [displayedText, setDisplayedText] = useState('');
-
-  useEffect(() => {
-    setDisplayedText('');
-    let i = 0;
-    const timeout = setTimeout(() => {
-      const typingInterval = setInterval(() => {
-        setDisplayedText(text.slice(0, i + 1));
-        i++;
-        if (i >= text.length) clearInterval(typingInterval);
-      }, 30);
-      return () => clearInterval(typingInterval);
-    }, 100);
-    return () => {
-      clearTimeout(timeout);
-      setDisplayedText('');
-    };
-  }, [text]); 
-
-  return <span>{displayedText}</span>;
-};
+import Typewriter from '../../components/Typewriter';
+import DataPackage from '../../components/DataPackage';
 
 const hashQuestions = [
   {
@@ -244,7 +224,7 @@ const HashModule = () => {
                         initial={{ left: '0%' }} animate={{ left: '50%' }} transition={{ duration: 1, ease: "linear" }}
                         className={styles.packageContainer}
                       >
-                        <div className={`data-package ${styles.dataPackage} ${styles.primaryPackage}`}>{input}</div>
+                        <DataPackage text={input} type="primary" />
                       </motion.div>
                     )}
                     {status === 'SENDING_TO_DEST' && (
@@ -252,9 +232,10 @@ const HashModule = () => {
                         initial={{ left: '50%' }} animate={{ left: '100%' }} transition={{ duration: 1, ease: "linear" }}
                         className={styles.packageContainer}
                       >
-                        <div className={`data-package ${styles.dataPackage} ${isHashingOn ? styles.successPackage : styles.primaryPackage}`}>
-                          {isHashingOn ? '###' : input}
-                        </div>
+                        <DataPackage 
+                          text={isHashingOn ? '###' : input} 
+                          type={isHashingOn ? 'success' : 'primary'} 
+                        />
                       </motion.div>
                     )}
                   </AnimatePresence>

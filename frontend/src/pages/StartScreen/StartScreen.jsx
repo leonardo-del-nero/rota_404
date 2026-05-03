@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import styles from './StartScreen.module.css';
+import PrimaryLogo from '../../components/PrimaryLogo';
 
 const StartScreen = () => {
   const navigate = useNavigate();
@@ -42,9 +43,7 @@ const StartScreen = () => {
           transition={{ duration: 1.5, ease: "easeOut" }}
           className={styles.logoContainer}
         >
-          <h1 className={`rota-logo ${styles.mainLogo}`}>
-            ROTA 404
-          </h1>
+          <PrimaryLogo size="xl" className={styles.mainLogo} />
           <p className={`mono ${styles.subtitle}`}>A JORNADA CYBERNÉTICA</p>
         </motion.div>
 

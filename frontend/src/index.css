@@ -66,23 +66,10 @@ h1, h2, h3 {
 
 /* ROTA 404 Visual Identity */
 .rota-logo {
-  font-family: var(--font-title);
-  font-size: 2rem;
-  color: var(--primary);
-  text-shadow: 2px 2px 0px var(--danger);
   position: relative;
-}
-
-.rota-logo::after {
-  content: 'ROTA 404';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  color: var(--secondary);
-  z-index: -1;
-  transform: translate(-2px, -2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .card-404 {

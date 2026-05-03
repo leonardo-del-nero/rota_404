@@ -18,18 +18,32 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
   useEffect(() => {
     if (moduleId) {
       const saved = JSON.parse(localStorage.getItem('rota404_quiz_progress') || '{}');
-      if (saved[moduleId]) {
-        setAttempts(saved[moduleId].attempts || {});
-        setIsCorrectMap(saved[moduleId].isCorrectMap || {});
-        setLastSelected(saved[moduleId].lastSelected || {});
+      
+      // Inicializa o módulo e o tempo de início se for a primeira vez
+      if (!saved[moduleId]) {
+        saved[moduleId] = { startTime: Date.now(), attempts: {}, isCorrectMap: {}, lastSelected: {} };
+        localStorage.setItem('rota404_quiz_progress', JSON.stringify(saved));
+      } else if (!saved[moduleId].startTime) {
+        saved[moduleId].startTime = Date.now();
+        localStorage.setItem('rota404_quiz_progress', JSON.stringify(saved));
       }
+
+      setAttempts(saved[moduleId].attempts || {});
+      setIsCorrectMap(saved[moduleId].isCorrectMap || {});
+      setLastSelected(saved[moduleId].lastSelected || {});
     }
   }, [moduleId]);
 
   const saveProgress = (newAttempts, newIsCorrectMap, newLastSelected) => {
     if (!moduleId) return;
     const saved = JSON.parse(localStorage.getItem('rota404_quiz_progress') || '{}');
-    saved[moduleId] = { attempts: newAttempts, isCorrectMap: newIsCorrectMap, lastSelected: newLastSelected };
+    const prevData = saved[moduleId] || {};
+    saved[moduleId] = { 
+      ...prevData, 
+      attempts: newAttempts, 
+      isCorrectMap: newIsCorrectMap, 
+      lastSelected: newLastSelected 
+    };
     localStorage.setItem('rota404_quiz_progress', JSON.stringify(saved));
   };
 
@@ -59,6 +73,51 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
       setCurrentQuestion(currentQuestion + 1);
       setPendingSelection(null);
     } else {
+      // Final do quiz, calcula a pontuação
+      const saved = JSON.parse(localStorage.getItem('rota404_quiz_progress') || '{}');
+      const moduleData = saved[moduleId] || {};
+      
+      // Só calcula se ainda não tiver a pontuação fechada
+      if (!moduleData.score) {
+        const startTime = moduleData.startTime || Date.now();
+        const seg = Math.floor((Date.now() - startTime) / 1000);
+        
+        const un = 16.66666666666667;
+        const max_time = 80;
+        
+        let valor_bonus = 0;
+        if (seg <= 10) {
+          valor_bonus = un;
+        } else if (seg <= max_time) {
+          valor_bonus = (un / (max_time - 10)) * (max_time - seg - 10);
+        } else {
+          valor_bonus = 0;
+        }
+        
+        let perguntasScore = 0;
+        const questionsScoreDetails = {};
+        
+        questions.forEach((q, idx) => {
+          const tent = moduleData.attempts[idx] || 1; 
+          const v = (un * 3) / tent;
+          perguntasScore += v;
+          questionsScoreDetails[idx] = { attempts: tent, score: v };
+        });
+        
+        const valor_quiz = perguntasScore + valor_bonus;
+        
+        // Armazenando a nota por módulo e por tentativa
+        moduleData.score = {
+          total: valor_quiz,
+          bonus: valor_bonus,
+          timeElapsed: seg,
+          questions: questionsScoreDetails
+        };
+        
+        saved[moduleId] = moduleData;
+        localStorage.setItem('rota404_quiz_progress', JSON.stringify(saved));
+      }
+
       setShowCongrats(true);
     }
   };

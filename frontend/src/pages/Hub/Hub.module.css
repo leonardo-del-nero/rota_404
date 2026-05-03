@@ -8,10 +8,8 @@
   text-align: center;
 }
 
-.logo {
-  font-size: 4rem;
-  margin-bottom: 1rem;
-}
+/* .logoImg foi removida pois agora usamos o componente PrimaryLogo */
+
 
 .subtitle {
   color: var(--text-dim);

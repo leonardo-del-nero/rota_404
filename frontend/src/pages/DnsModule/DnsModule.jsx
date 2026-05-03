@@ -5,6 +5,7 @@ import ModuleIntro from '../../components/ModuleIntro';
 import LabHeader from '../../components/LabHeader';
 import Quiz from '../../components/Quiz';
 import GlassPanel from '../../components/GlassPanel';
+import DataPackage from '../../components/DataPackage';
 import styles from './DnsModule.module.css';
 
 const dnsQuestions = [
@@ -181,14 +182,12 @@ const DnsModule = () => {
                   <AnimatePresence>
                     {step === 1 && (
                       <motion.div initial={{ left: 0 }} animate={{ left: '100%' }} transition={{ duration: 1.5, ease: 'linear' }} className={styles.packageWrapper}>
-                        <Search size={24} color="#ff6b00" className={styles.packageIcon} />
-                        <div className={`data-package ${styles.dataPackageQuery}`}>QUEM É {url}?</div>
+                        <DataPackage text={`QUEM É ${url}?`} icon={Search} type="primary" />
                       </motion.div>
                     )}
                     {step === 3 && (
                       <motion.div initial={{ left: '100%' }} animate={{ left: 0 }} transition={{ duration: 1.5, ease: 'linear' }} className={styles.packageWrapper}>
-                        <Globe size={24} color="var(--success)" className={styles.packageIcon} />
-                        <div className="data-package success-package">IP: {result}</div>
+                        <DataPackage text={`IP: ${result}`} icon={Globe} type="success" />
                       </motion.div>
                     )}
                   </AnimatePresence>

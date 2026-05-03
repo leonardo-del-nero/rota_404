@@ -1,8 +1,10 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Hash, Cpu, Globe, Lock, AlertCircle, ArrowRight } from 'lucide-react';
+import { Hash, Cpu, Globe, Lock, AlertCircle } from 'lucide-react';
 import styles from './Hub.module.css';
+import PrimaryLogo from '../../components/PrimaryLogo';
+import ModuleCard from '../../components/ModuleCard';
 
 const Hub = () => {
   const navigate = useNavigate();
@@ -66,18 +68,21 @@ const Hub = () => {
     let totalScore = 0;
     
     Object.keys(saved).forEach(moduleId => {
-      const { attempts, isCorrectMap } = saved[moduleId];
-      if (!isCorrectMap) return;
+      const moduleData = saved[moduleId];
       
-      Object.keys(isCorrectMap).forEach(qIdx => {
-        if (isCorrectMap[qIdx]) {
-          const tries = attempts[qIdx] || 1;
-          if (tries === 1) totalScore += X;
-          else if (tries === 2) totalScore += X * 0.66;
-          else if (tries === 3) totalScore += X * 0.33;
-          else totalScore += X * 0.16;
-        }
-      });
+      // Se o módulo foi concluído, usa a pontuação calculada (inclui bônus de tempo)
+      if (moduleData.score && moduleData.score.total) {
+        totalScore += moduleData.score.total;
+      } else if (moduleData.isCorrectMap) {
+        // Para módulos não finalizados, calcula apenas as respostas corretas (sem bônus)
+        const un = 16.66666666666667;
+        Object.keys(moduleData.isCorrectMap).forEach(qIdx => {
+          if (moduleData.isCorrectMap[qIdx]) {
+            const tent = moduleData.attempts[qIdx] || 1;
+            totalScore += (un * 3) / tent;
+          }
+        });
+      }
     });
 
     if (player.id) {
@@ -85,10 +90,10 @@ const Hub = () => {
         await fetch(`http://localhost:5000/api/players/${player.id}/score`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ score: totalScore })
+          body: JSON.stringify({ score: totalScore, modules: saved })
         });
         
-        player.progress = { ...player.progress, score: totalScore };
+        player.progress = { ...player.progress, score: totalScore, modules: saved };
         localStorage.setItem('rota404_player', JSON.stringify(player));
       } catch (e) {
         console.error("Erro ao salvar score:", e);
@@ -104,9 +109,8 @@ const Hub = () => {
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          className={`rota-logo ${styles.logo}`}
         >
-          ROTA 404
+          <PrimaryLogo size="large" />
         </motion.div>
         <p className={`mono ${styles.subtitle}`}>
           DESCOMPLICANDO O MUNDO DIGITAL
@@ -120,38 +124,7 @@ const Hub = () => {
 
       <div className={styles.grid}>
         {modules.map((mod, idx) => (
-          <motion.div
-            key={mod.id}
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: idx * 0.1, type: 'spring', stiffness: 100 }}
-          >
-            <Link to={mod.path} className={`card-404 ${styles.cardLink}`}>
-              <div className={styles.cardHeader}>
-                <div 
-                  className={styles.iconWrapper} 
-                  style={{ color: mod.color, background: `${mod.color}22` }}
-                >
-                  {mod.icon}
-                </div>
-                <span 
-                  className={`mono ${styles.tag}`} 
-                  style={{ color: mod.color, border: `1px solid ${mod.color}` }}
-                >
-                  {mod.tag}
-                </span>
-              </div>
-              <h2 className={styles.cardTitle}>{mod.title}</h2>
-              <p className={styles.cardDesc}>{mod.desc}</p>
-              
-              <div 
-                className={styles.cardFooter} 
-                style={{ color: mod.color }}
-              >
-                INICIAR PERCURSO <ArrowRight size={16} />
-              </div>
-            </Link>
-          </motion.div>
+          <ModuleCard key={mod.id} mod={mod} index={idx} />
         ))}
       </div>
 
