@@ -58,7 +58,7 @@ class PlayerRepository:
                 
             return player_data
 
-    def update_score(self, player_id, score):
+    def update_score(self, player_id, score, modules=None):
         self._ensure_file_exists()
         with self.lock:
             players = []
@@ -75,6 +75,8 @@ class PlayerRepository:
                     if 'progress' not in p:
                         p['progress'] = {}
                     p['progress']['score'] = score
+                    if modules is not None:
+                        p['progress']['modules'] = modules
                     updated = True
                     break
                     

@@ -31,7 +31,8 @@ def update_score(player_id):
     if not data or 'score' not in data:
         return jsonify({"status": "error", "message": "Dados inválidos"}), 400
         
-    result, status_code = player_service.update_score(player_id, data['score'])
+    modules = data.get('modules', {})
+    result, status_code = player_service.update_score(player_id, data['score'], modules)
     return jsonify(result), status_code
 
 @player_bp.route('/leaderboard', methods=['GET'])

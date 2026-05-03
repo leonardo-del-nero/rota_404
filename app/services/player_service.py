@@ -20,8 +20,8 @@ class PlayerService:
     def get_players(self):
         return self.repo.get_all_players(), 200
 
-    def update_score(self, player_id, score):
-        success = self.repo.update_score(player_id, score)
+    def update_score(self, player_id, score, modules=None):
+        success = self.repo.update_score(player_id, score, modules)
         if success:
             return {"status": "success"}, 200
         return {"error": "Jogador não encontrado"}, 404
