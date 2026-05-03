@@ -1,11 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Server, Utensils, Package, XCircle } from 'lucide-react';
+import { User, Server, Utensils, Package, XCircle, ShieldCheck, ShieldAlert } from 'lucide-react';
 import ModuleIntro from '../../components/ModuleIntro';
 import LabHeader from '../../components/LabHeader';
 import Quiz from '../../components/Quiz';
 import GlassPanel from '../../components/GlassPanel';
+import Mascot from '../../components/Mascot';
 import styles from './ApiModule.module.css';
+
+import cp7 from '../../assets/cp7.png';
+
+const Typewriter = ({ text }) => {
+  const [displayedText, setDisplayedText] = useState('');
+  useEffect(() => {
+    let i = 0;
+    setDisplayedText('');
+    const typingInterval = setInterval(() => {
+      setDisplayedText(text.slice(0, i + 1));
+      i++;
+      if (i >= text.length) clearInterval(typingInterval);
+    }, 30);
+    return () => clearInterval(typingInterval);
+  }, [text]);
+  return <span>{displayedText}</span>;
+};
 
 const apiQuestions = [
   {
@@ -47,44 +65,72 @@ const ApiModule = () => {
   const [showLab, setShowLab] = useState(false);
   const [userId, setUserId] = useState('1');
   const [response, setResponse] = useState(null);
-  const [status, setStatus] = useState('IDLE'); // IDLE, WALKING_TO_STOCK, SEARCHING, WALKING_BACK
+  const [status, setStatus] = useState('IDLE'); 
   const [showQuiz, setShowQuiz] = useState(false);
+  
+  const [showCastor, setShowCastor] = useState(false);
+  const [castorStep, setCastorStep] = useState(0);
+  const [isMaliciousAction, setIsMaliciousAction] = useState(false);
 
-  const handleSend = async () => {
+  const handleSend = async (isMalicious = false) => {
     if (status !== 'IDLE') return;
     
-    setStatus('WALKING_TO_STOCK');
     setResponse(null);
+    setIsMaliciousAction(isMalicious);
+    setStatus('WALKING_TO_FIREWALL');
 
     setTimeout(async () => {
-      setStatus('SEARCHING');
-      
-      try {
-        const res = await fetch(`/api/users/${userId}`);
-        const data = await res.json();
+      if (isMalicious) {
+        setStatus('BLOCKED');
+        setResponse({ error: "403 Forbidden: Tentativa de acesso direto bloqueada." });
+        setCastorStep(0); 
+        setShowCastor(true);
+        setTimeout(() => {
+          setStatus('IDLE');
+          setIsMaliciousAction(false);
+        }, 3000);
+      } else {
+        setStatus('WALKING_TO_STOCK');
         
-        setTimeout(() => {
-          setResponse(res.ok ? (data.data || data) : { error: "Box not found" });
-          setStatus('WALKING_BACK');
+        setTimeout(async () => {
+          setStatus('SEARCHING');
           
-          setTimeout(() => {
-            setStatus('IDLE');
-          }, 2000);
-        }, 1500);
-      } catch (err) {
-        setTimeout(() => {
-          setResponse({ error: "Falha na conexão" });
-          setStatus('WALKING_BACK');
-          setTimeout(() => setStatus('IDLE'), 2000);
+          try {
+            const res = await fetch(`/api/users/${userId}`);
+            const data = await res.json();
+            
+            setTimeout(() => {
+              const isNotFound = !res.ok || parseInt(userId) > 5;
+              
+              if (isNotFound) {
+                setResponse({ error: "A requisição não existe." });
+              } else {
+                setResponse(data.data || data);
+              }
+
+              setStatus('WALKING_BACK');
+              
+              setTimeout(() => {
+                setStatus('IDLE');
+              }, 2000);
+            }, 1500);
+
+          } catch (err) {
+            setTimeout(() => {
+              setResponse({ error: "Falha na conexão" });
+              setStatus('WALKING_BACK');
+              setTimeout(() => setStatus('IDLE'), 2000);
+            }, 1500);
+          }
         }, 1500);
       }
-    }, 2000);
+    }, 1500);
   };
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
-      handleSend();
+      handleSend(false);
     }
   };
 
@@ -94,6 +140,8 @@ const ApiModule = () => {
     setResponse(null);
     setStatus('IDLE');
     setShowQuiz(false);
+    setShowCastor(false);
+    setIsMaliciousAction(false);
   };
 
   if (!showLab) {
@@ -128,62 +176,64 @@ const ApiModule = () => {
       <LabHeader showQuiz={showQuiz} setShowQuiz={setShowQuiz} onResetLab={resetLab} />
 
       <div className="content-max-width">
+        <Mascot 
+          show={showCastor}
+          step={castorStep}
+          images={[cp7]}
+          phrases={[
+            <Typewriter text="SEGURANÇA! Tentar acessar arquivos sensíveis sem permissão ativa o Firewall da API. Ela protege o servidor!" />
+          ]}
+          onNext={() => setShowCastor(false)}
+          buttonLabels={["ENTENDI_"]}
+        />
+
         <AnimatePresence mode="wait">
           {!showQuiz ? (
-            <motion.div 
-              key="lab"
-              initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
-              className="card-404"
-            >
+            <motion.div key="lab" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="card-404">
               <h2 className={`text-center lab-title ${styles.labTitle}`}>ESTOQUE DE DADOS</h2>
 
               <div className={`animation-arena ${styles.arenaContainer}`}>
-                
-                {/* Stockroom (Left) */}
                 <div className={styles.stockroom}>
                   <GlassPanel className={styles.shelfPanel}>
-                    {boxes.map(id => {
-                      const isTarget = status === 'SEARCHING' && parseInt(userId) === id;
-                      const isTaken = response && response.id === id && status === 'WALKING_BACK';
-                      return (
-                        <motion.div 
-                          key={id} 
-                          animate={{ scale: isTarget ? [1, 1.1, 1] : 1, rotate: isTarget ? [0, 5, -5, 0] : 0 }}
-                          transition={{ repeat: isTarget ? Infinity : 0, duration: 0.5 }}
-                          className={`${styles.boxItem} ${isTarget ? styles.boxActive : styles.boxDefault}`}
-                          style={{ 
-                            opacity: isTaken ? 0.3 : 1, position: 'relative'
-                          }}
-                        >
-                          <Package size={20} color={isTarget ? 'var(--secondary)' : '#444'} />
-                          <span className={`mono ${styles.boxLabel}`} style={{ color: isTarget ? 'var(--secondary)' : '#444' }}>#{id}</span>
-                        </motion.div>
-                      );
-                    })}
+                    {boxes.map(id => (
+                      <motion.div key={id} 
+                        className={`${styles.boxItem} ${status === 'SEARCHING' && parseInt(userId) === id ? styles.boxActive : styles.boxDefault}`}
+                        style={{ opacity: response && response.id === id && status === 'WALKING_BACK' ? 0.3 : 1 }}>
+                        <Package size={20} />
+                        <span className={`mono ${styles.boxLabel}`}>#{id}</span>
+                      </motion.div>
+                    ))}
                   </GlassPanel>
                   <div className="node-label secondary-text">PRATELEIRAS</div>
                 </div>
 
-                {/* Path & Clerk (Server) */}
                 <div className={styles.pathContainer}>
                   <div className={styles.pathLine} />
-                  
+                  <div className={styles.firewallHub}>
+                    {status === 'BLOCKED' ? <ShieldAlert size={35} color="var(--danger)" /> : <ShieldCheck size={30} color="rgba(0,243,255,0.3)" />}
+                    <div className={styles.firewallLabel}>API FIREWALL</div>
+                  </div>
+
                   <motion.div
-                    animate={{ left: status === 'IDLE' ? '100%' : (status === 'WALKING_TO_STOCK' || status === 'SEARCHING' ? '0%' : '100%') }}
-                    transition={{ duration: status === 'SEARCHING' ? 0 : 2, ease: "easeInOut" }}
+                    animate={{ 
+                        left: (isMaliciousAction || status === 'IDLE') ? '100%' : 
+                              (status === 'WALKING_TO_FIREWALL') ? '50%' : 
+                              (status === 'WALKING_TO_STOCK' || status === 'SEARCHING') ? '0%' : '100%' 
+                    }}
+                    transition={{ duration: 1.5 }}
                     className={styles.clerkWrapper}
                   >
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                       <GlassPanel className={styles.clerkPanel}>
-                        <Server size={35} color="var(--secondary)" className={styles.serverIcon} />
+                        <Server size={35} color="var(--secondary)" />
                         <AnimatePresence>
                           {status === 'WALKING_BACK' && response && !response.error && (
-                            <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} className={`${styles.clerkBadge} ${styles.clerkBadgeSuccess}`}>
+                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className={`${styles.clerkBadge} ${styles.clerkBadgeSuccess}`}>
                               <Package size={20} color="var(--success)" />
                             </motion.div>
                           )}
-                          {status === 'WALKING_BACK' && response && response.error && (
-                            <motion.div initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} className={`${styles.clerkBadge} ${styles.clerkBadgeError}`}>
+                          {(status === 'WALKING_BACK' || (status === 'BLOCKED' && !isMaliciousAction)) && response && response.error && (
+                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className={`${styles.clerkBadge} ${styles.clerkBadgeError}`}>
                               <XCircle size={20} color="var(--danger)" />
                             </motion.div>
                           )}
@@ -194,17 +244,24 @@ const ApiModule = () => {
                   </motion.div>
                 </div>
 
-                {/* User (Right) */}
-                <div className={styles.userContainer}>
-                  <div className={`node-icon node-secondary ${styles.userIcon}`}>
-                    <User size={40} color="var(--secondary)" />
-                  </div>
+                <motion.div 
+                  className={styles.userContainer}
+                  style={{ position: 'relative' }} 
+                  animate={{ 
+                    x: (isMaliciousAction && (status === 'WALKING_TO_FIREWALL' || status === 'BLOCKED')) ? '-275%' : 0 
+                  }}
+                  transition={{ duration: 1.5 }}
+                >
+                  <div className={`node-icon node-secondary ${styles.userIcon}`}><User size={40} color="var(--secondary)" /></div>
                   <div className="node-label secondary-text">USUÁRIO</div>
-                </div>
+                </motion.div>
               </div>
 
               <div className={styles.formWrapper}>
-                <div className={`io-label secondary-label`}>SOLICITAR CAIXA (ID):</div>
+                <div className={styles.outputLabel} style={{ color: 'var(--secondary)' }}>
+                  SISTEMA_DE_REQUISIÇÃO // ENTRADA_DE_ID
+                </div>
+                
                 <div className={styles.inputRow}>
                   <input 
                     className={`input-404 ${styles.idInput}`} 
@@ -213,19 +270,36 @@ const ApiModule = () => {
                     onChange={(e) => { setUserId(e.target.value); setResponse(null); }} 
                     onKeyDown={handleKeyDown}
                     min="1" max="10" 
+                    placeholder="ID"
                     disabled={status !== 'IDLE'} 
                   />
-                  <button className={`btn-404 ${styles.submitBtn}`} onClick={handleSend} disabled={status !== 'IDLE'}>
-                    {status === 'IDLE' ? 'FAZER REQUISIÇÃO' : 'AGUARDANDO...'}
+                  
+                  <button 
+                    className={`btn-404 ${styles.submitBtn}`} 
+                    onClick={() => handleSend(false)} 
+                    disabled={status !== 'IDLE'}
+                  >
+                    {status === 'IDLE' ? 'FAZER REQUISIÇÃO' : 'PROCESSANDO...'}
+                  </button>
+
+                  <button 
+                    className={`btn-404 ${styles.maliciousBtn}`} 
+                    onClick={() => handleSend(true)} 
+                    disabled={status !== 'IDLE'}
+                  >
+                    TENTAR ACESSO DIRETO
                   </button>
                 </div>
+
                 <AnimatePresence>
                   {response && status === 'IDLE' && (
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-                      <div className={`mono ${styles.outputLabel}`} style={{ color: response.error ? 'var(--danger)' : 'var(--success)' }}>CONTEÚDO:</div>
+                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+                      <div className={styles.outputLabel} style={{ color: response.error ? 'var(--danger)' : 'var(--success)' }}>
+                        LOG_DO_SERVIDOR // {response.error ? 'ERRO_DETECTADO' : 'JSON'}
+                      </div>
                       <GlassPanel className={`${styles.outputPanel} ${response.error ? styles.outputError : styles.outputSuccess}`}>
                         {response.error ? (
-                          <div className={styles.errorMessage}>A requisição não existe.</div>
+                          <div className={styles.errorMessage}>{response.error}</div>
                         ) : (
                           <pre className={styles.jsonDisplay}>{JSON.stringify(response, null, 2)}</pre>
                         )}
@@ -236,13 +310,7 @@ const ApiModule = () => {
               </div>
             </motion.div>
           ) : (
-            <motion.div 
-              key="quiz"
-              initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
-              className="card-404"
-            >
-              <Quiz moduleId="api" questions={apiQuestions} onFinishQuiz={() => setShowQuiz(false)} />
-            </motion.div>
+            <Quiz moduleId="api" questions={apiQuestions} onFinishQuiz={() => setShowQuiz(false)} />
           )}
         </AnimatePresence>
       </div>

@@ -166,7 +166,7 @@ const HashModule = () => {
   const resetLab = () => {
     setShowLab(false);
     setInput('');
-    setIsHashingOn(false); // Mantendo o padrão de começar desligado
+    setIsHashingOn(false); 
     setStatus('IDLE');
     setHash('...');
     setShowQuiz(false);
@@ -201,7 +201,6 @@ const HashModule = () => {
       <LabHeader showQuiz={showQuiz} setShowQuiz={setShowQuiz} onResetLab={resetLab} />
 
       <div className="content-max-width">
-        {/* Usando o componente Mascot reutilizável */}
         <Mascot 
           show={showCastor}
           step={castorStep}
