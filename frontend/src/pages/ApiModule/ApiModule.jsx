@@ -58,6 +58,14 @@ const ApiModule = () => {
   const [showCastor, setShowCastor] = useState(false);
   const [castorStep, setCastorStep] = useState(0);
   const [isMaliciousAction, setIsMaliciousAction] = useState(false);
+  const [apiStep, setApiStep] = useState(0);
+
+  useEffect(() => {
+    if (showLab && apiStep === 0) {
+      setCastorStep(0);
+      setShowCastor(true);
+    }
+  }, [showLab]);
 
   const handleSend = async (isMalicious = false) => {
     if (status !== 'IDLE') return;
@@ -70,7 +78,7 @@ const ApiModule = () => {
       if (isMalicious) {
         setStatus('BLOCKED');
         setResponse({ error: "403 Forbidden: Tentativa de acesso direto bloqueada." });
-        setCastorStep(0); 
+        setCastorStep(3); 
         setShowCastor(true);
         setTimeout(() => {
           setStatus('IDLE');
@@ -78,30 +86,32 @@ const ApiModule = () => {
         }, 3000);
       } else {
         setStatus('WALKING_TO_STOCK');
-        
         setTimeout(async () => {
           setStatus('SEARCHING');
-          
           try {
             const res = await fetch(`/api/users/${userId}`);
             const data = await res.json();
             
             setTimeout(() => {
               const isNotFound = !res.ok || parseInt(userId) > 5;
-              
               if (isNotFound) {
                 setResponse({ error: "A requisição não existe." });
+                if (apiStep === 1) { 
+                  setCastorStep(2);
+                  setApiStep(2);
+                  setShowCastor(true);
+                }
               } else {
                 setResponse(data.data || data);
+                if (apiStep === 0) { 
+                  setCastorStep(1);
+                  setApiStep(1);
+                  setShowCastor(true);
+                }
               }
-
               setStatus('WALKING_BACK');
-              
-              setTimeout(() => {
-                setStatus('IDLE');
-              }, 2000);
+              setTimeout(() => setStatus('IDLE'), 2000);
             }, 1500);
-
           } catch (err) {
             setTimeout(() => {
               setResponse({ error: "Falha na conexão" });
@@ -168,10 +178,19 @@ const ApiModule = () => {
           step={castorStep}
           images={[cp7]}
           phrases={[
-            <Typewriter text="SEGURANÇA! Tentar acessar arquivos sensíveis sem permissão ativa o Firewall da API. Ela protege o servidor!" />
+            /* Passo 0 */ <Typewriter text="Olá! Bem-vindo ao módulo de API. Escolha um ID entre 1 e 5 e clique em 'Fazer Requisição' para ver o garçom em ação!" />,
+            /* Passo 1 */ <Typewriter text="Viu só? O Servidor foi até o estoque e trouxe exatamente o pacote JSON que você pediu. Agora, tente pedir um ID que não existe (como o 6)!" />,
+            /* Passo 2 */ <Typewriter text="A API retornou um erro porque você pediu algo que não está no estoque. APIs são rígidas! Agora, tente clicar em 'Tentar Acesso Direto' para ver o que acontece." />,
+            /* Passo 3 */ <Typewriter text="SEGURANÇA! Tentar acessar arquivos sensíveis sem permissão ativa o Firewall da API. Ela protege o servidor! Seria como tentar acessar a cozinha de um restaurante, não sendo um garçom. Não tem motivos para você estar lá!" />
           ]}
-          onNext={() => setShowCastor(false)}
-          buttonLabels={["ENTENDI_"]}
+          onNext={() => {
+            if (castorStep === 1) {
+              setShowCastor(false); 
+            } else {
+              setShowCastor(false);
+            }
+          }}
+          buttonLabels={["VAMOS LÁ_", "ENTENDI_", "OK!_", "ENTENDI_"]}
         />
 
         <AnimatePresence mode="wait">

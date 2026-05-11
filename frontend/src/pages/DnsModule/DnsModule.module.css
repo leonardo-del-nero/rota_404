@@ -209,3 +209,118 @@
   clip-path: none;
   border-radius: 8px;
 }
+
+.serverDown {
+  border: 2px solid var(--danger) !important;
+  background: rgba(255, 59, 59, 0.1) !important;
+  animation: shake 0.5s infinite;
+}
+
+.fireOverlayBackdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 10000;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.firePopup {
+  background: #1a1a1a;
+  border: 2px solid #ff3b3b;
+  padding: 2.5rem;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 0 50px rgba(255, 59, 59, 0.3);
+  position: relative;
+}
+
+.fireIconContainer {
+  margin-bottom: 1rem;
+  animation: pulse 1s infinite;
+}
+
+.flameAnimate {
+  color: #ff3b3b;
+  filter: drop-shadow(0 0 10px #ff3b3b);
+}
+
+.ipBox {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #000;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-top: 1.5rem;
+  border: 1px solid #333;
+}
+
+.ipBox code {
+  color: var(--success);
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+}
+
+.ipBox button {
+  background: none; border: none; cursor: pointer; color: #888;
+}
+
+.serverOffline {
+  border: 2px solid var(--danger) !important;
+  background: rgba(255, 59, 59, 0.1) !important;
+  box-shadow: 0 0 20px var(--danger) !important;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.poisonRoutesWrapper {
+  position: absolute;
+  top: -80px; 
+  right: calc(100%);
+  width: 400px;
+  height: 200px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.poisonSvg {
+  overflow: visible;
+  display: block;
+}
+
+.poisonSvg path {
+  filter: drop-shadow(0 0 4px rgba(255, 107, 0, 0.3));
+}
+
+.miniIconNode {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.9);
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 107, 0, 0.2);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+}
+
+.miniNodeRow {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #000;
+  padding: 8px 15px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 107, 0, 0.3);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  white-space: nowrap;
+  box-shadow: -5px 5px 20px rgba(0, 0, 0, 0.8);
+}
+

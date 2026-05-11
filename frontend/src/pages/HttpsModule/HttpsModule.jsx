@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, Unlock, Mail, Server, User, Terminal, Send } from 'lucide-react';
+import { Lock, Unlock, Mail, Server, User, Terminal, Send, FileText, AlertTriangle, Globe } from 'lucide-react';
 import ModuleIntro from '../../components/ModuleIntro';
 import LabHeader from '../../components/LabHeader';
 import Quiz from '../../components/Quiz';
 import DataPackage from '../../components/DataPackage';
+import Mascot from '../../components/Mascot';
+import Typewriter from '../../components/Typewriter';
 import styles from './HttpsModule.module.css';
+
+import cp1 from '../../assets/cp1.png';
+import cp2 from '../../assets/cp2.png';
+import cp6 from '../../assets/cp6.png';
 
 const httpsQuestions = [
   {
@@ -28,7 +34,7 @@ const httpsQuestions = [
       "D. Criptografia: o ato de transformar a informação em um código que só pode ser lido por quem tem a chave correta."
     ],
     correct: 3,
-    why: "A criptografia garante a confidencialidade; mesmo que o dado seja capturado, ele permanece incompreensível para quem não possui a chave de decifração."
+    why: "A criptografia garante a confidencialidade; mesmo que o dado seja capturado, ele permanece incompreensível para quem não possui a chave de decifração." 
   },
   {
     q: "3. Qual é a principal diferença visual que um usuário percebe em seu navegador ao acessar um site com HTTPS?",
@@ -47,13 +53,22 @@ const HttpsModule = () => {
   const [showLab, setShowLab] = useState(false);
   const [input, setInput] = useState('');
   const [isHttpsOn, setIsHttpsOn] = useState(false);
-  const [status, setStatus] = useState('IDLE'); // IDLE, SENDING, DONE
-  
+  const [status, setStatus] = useState('IDLE');
   const [intercepting, setIntercepting] = useState(false);
   const [interceptedText, setInterceptedText] = useState('');
   const [receivedText, setReceivedText] = useState('');
-
   const [showQuiz, setShowQuiz] = useState(false);
+  const [isButtonFlashing, setIsButtonFlashing] = useState(false);
+  const [showCastor, setShowCastor] = useState(false);
+  const [castorStep, setCastorStep] = useState(0);
+  const [hasExplainedHttps, setHasExplainedHttps] = useState(false);
+
+  useEffect(() => {
+    if (showLab) {
+      setCastorStep(0);
+      setShowCastor(true);
+    }
+  }, [showLab]);
 
   const handleSend = async () => {
     if (!input) return;
@@ -76,6 +91,13 @@ const HttpsModule = () => {
         
         setTimeout(() => {
           setIntercepting(true);
+          
+          if (!hasExplainedHttps) {
+            setCastorStep(1); 
+            setShowCastor(true);
+            setHasExplainedHttps(true);
+          }
+
           setTimeout(() => {
             setInterceptedText(data.encrypted);
             setIntercepting(false);
@@ -86,16 +108,20 @@ const HttpsModule = () => {
           setReceivedText(input);
           setStatus('DONE');
         }, totalTime);
-
       } catch (err) {
         setStatus('DONE');
       }
     } else {
       setTimeout(() => {
         setIntercepting(true);
+        
         setTimeout(() => {
-          setInterceptedText(input);
+          setInterceptedText(input); 
           setIntercepting(false);
+          
+          setCastorStep(2); 
+          setShowCastor(true);
+          setIsButtonFlashing(true); 
         }, 1000);
       }, midWayTime);
 
@@ -118,6 +144,7 @@ const HttpsModule = () => {
     setStatus('IDLE');
     setInput('');
     setShowQuiz(false);
+    setHasExplainedHttps(false);
   };
 
   if (!showLab) {
@@ -147,109 +174,139 @@ const HttpsModule = () => {
       <LabHeader showQuiz={showQuiz} setShowQuiz={setShowQuiz} onResetLab={resetLab} />
 
       <div className="content-max-width">
+        <Mascot 
+          show={showCastor}
+          step={castorStep}
+          images={[cp1, cp2, cp6, cp1]}
+          phrases={[
+            /* 0 */ <Typewriter text="Olá! Bem-vindo ao simulador de HTTPS. Digite uma mensagem e clique em enviar para ver como os dados viajam pela rede!" />,
+            /* 1 */ <Typewriter text="Ótimo! Com HTTPS, a Criptografia embaralhou seus dados. Tornando difícil que um invasor roube-os!" />,
+            /* 2 */ <Typewriter text="CUIDADO! Como você usou HTTP, seus dados viajaram como 'texto puro'. Isso significa que o Hacker conseguiu ler tudo! Tente ativar o botão HTTPS para proteger sua mensagem." />,
+            /* 3 */ <Typewriter text="Excelente! Agora que estamos utilizando o protocolo seguro (HTTPS), seus dados serão protegidos por criptografia. Digite sua mensagem novamente." />
+          ]}
+          onNext={() => setShowCastor(false)}
+          buttonLabels={["VAMOS LÁ_", "ENTENDI!_", "VOU ATIVAR!_"]}
+        />
+
         <AnimatePresence mode="wait">
           {!showQuiz ? (
             <motion.div 
-              key="lab"
-              initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
+              key="lab" 
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              exit={{ opacity: 0, y: -20 }} 
               className="card-404"
+              style={{ padding: 0, overflow: 'hidden' }}
             >
-              <h2 className="text-center lab-title" style={{ color: isHttpsOn ? 'var(--success)' : 'var(--danger)' }}>
-                SIMULADOR DE REDE ({isHttpsOn ? 'HTTPS' : 'HTTP'})
-              </h2>
-
-              <div className="animation-arena" style={{ marginBottom: '4rem', height: '300px' }}>
-                <div className={`${styles.arenaLine} ${isHttpsOn ? styles.arenaLineHttps : styles.arenaLineHttp}`} />
-
-                <AnimatePresence>
-                  {status === 'SENDING' && (
-                    <motion.div initial={{ left: '100px' }} animate={{ left: 'calc(100% - 130px)' }} transition={{ duration: 3, ease: "linear" }} style={{ position: 'absolute', top: '15px', zIndex: 5 }}>
-                      <DataPackage 
-                        text={isHttpsOn ? "CADEADO" : "CARTA"} 
-                        icon={isHttpsOn ? Lock : Mail} 
-                        type={isHttpsOn ? "success" : "primary"} 
-                      />
-                    </motion.div>
+              <div className={styles.searchBar}>
+                <div className={styles.windowDots}>
+                  <div className={`${styles.dot} ${styles.dotRed}`}></div>
+                  <div className={`${styles.dot} ${styles.dotYellow}`}></div>
+                  <div className={`${styles.dot} ${styles.dotGreen}`}></div>
+                </div>
+                <div className={`${styles.inputWrapper} ${isHttpsOn ? styles.inputWrapperSecure : styles.inputWrapperUnsecure}`}>
+                  {isHttpsOn ? (
+                    <Lock size={16} color="var(--success)" style={{ marginRight: '0.5rem' }} />
+                  ) : (
+                    <AlertTriangle size={16} color="var(--danger)" style={{ marginRight: '0.5rem' }} />
                   )}
-                </AnimatePresence>
-
-                <div className={styles.arenaVerticalLine} />
-
-                <AnimatePresence>
-                  {intercepting && (
-                    <motion.div initial={{ top: '15px', left: '50%', transform: 'translateX(-50%)' }} animate={{ top: '150px' }} transition={{ duration: 1, ease: "linear" }} style={{ position: 'absolute', zIndex: 4 }}>
-                      <DataPackage 
-                        text={isHttpsOn ? "CADEADO" : "CARTA"} 
-                        icon={isHttpsOn ? Lock : Mail} 
-                        type={isHttpsOn ? "success" : "primary"} 
-                      />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                <div className={styles.actorContainer}>
-                  <div className={`${styles.actorIcon} ${styles.actorIconUser}`} style={{ border: `2px solid ${isHttpsOn ? 'var(--success)' : '#888'}` }}>
-                    <User size={40} color={isHttpsOn ? "var(--success)" : "#888"} />
-                  </div>
-                  <div className="node-label" style={{ color: isHttpsOn ? 'var(--success)' : '#888' }}>USUÁRIO</div>
-                  <div style={{ marginTop: '1rem' }}>
-                    <button 
-                      className={`btn-404 ${styles.toggleBtn} ${isHttpsOn ? styles.toggleBtnHttps : styles.toggleBtnHttp}`} 
-                      onClick={() => setIsHttpsOn(!isHttpsOn)} 
-                      disabled={status === 'SENDING'}
-                    >
-                      {isHttpsOn ? <><Lock size={14} style={{ marginRight: '5px' }}/> HTTPS ON</> : <><Unlock size={14} style={{ marginRight: '5px' }}/> HTTPS OFF</>}
-                    </button>
+                  <div className={styles.inputField}>
+                    {isHttpsOn ? 'https://' : 'http://'}rota404.com.br
                   </div>
                 </div>
-
-                <div className={styles.hackerContainer}>
-                  <div className={styles.hackerIcon}>
-                    <Terminal size={30} color="var(--danger)" />
-                  </div>
-                  <div className="node-label" style={{ color: 'var(--danger)', marginBottom: '0.5rem' }}>HACKER</div>
-                  <div className={`${styles.displayBox} ${styles.displayHacker}`}>
-                    <span className={`mono ${styles.displayText}`} style={{ color: isHttpsOn ? 'var(--text-dim)' : 'var(--danger)' }}>
-                      {interceptedText || 'Escutando rede...'}
-                    </span>
-                  </div>
-                </div>
-
-                <div className={styles.serverContainer}>
-                  <div className={`${styles.actorIcon} ${styles.actorIconServer}`} style={{ border: `2px solid ${isHttpsOn ? 'var(--success)' : '#888'}` }}>
-                    <Server size={40} color={isHttpsOn ? "var(--success)" : "#888"} />
-                  </div>
-                  <div className="node-label" style={{ color: isHttpsOn ? 'var(--success)' : '#888', marginBottom: '1rem' }}>DESTINO</div>
-                  <div className={`${styles.displayBox} ${styles.displayServer}`}>
-                    <span className={`mono ${styles.displayTextServer}`}>{receivedText || 'Aguardando...'}</span>
-                  </div>
+                <div className={styles.statusBadge}>
+                   {isHttpsOn ? 'SEGURO' : 'INSEGURO'}
                 </div>
               </div>
 
-              <div className={`flex-center ${styles.formContainer}`}>
-                <input 
-                  className={`input-404 ${styles.formInput}`} 
-                  value={input} 
-                  onChange={(e) => { setInput(e.target.value); setStatus('IDLE'); }} 
-                  onKeyDown={handleKeyDown}
-                  placeholder="Digite uma mensagem secreta..." 
-                  disabled={status === 'SENDING'} 
-                />
-                <button 
-                  className={`btn-404 ${styles.formBtn} ${isHttpsOn ? styles.formBtnHttps : styles.formBtnHttp}`} 
-                  onClick={handleSend} 
-                  disabled={status === 'SENDING' || !input}
-                >
-                  <Send size={18} /> {status === 'SENDING' ? 'ENVIANDO...' : 'ENVIAR'}
-                </button>
+              <div style={{ padding: '2rem' }}>
+                <h2 className="text-center lab-title" style={{ color: isHttpsOn ? 'var(--success)' : 'var(--danger)' }}>
+                  SIMULADOR DE REDE ({isHttpsOn ? 'HTTPS' : 'HTTP'})
+                </h2>
+
+                <div className="animation-arena" style={{ marginBottom: '4rem', height: '300px' }}>
+                  <div className={`${styles.arenaLine} ${isHttpsOn ? styles.arenaLineHttps : styles.arenaLineHttp}`} />
+
+                  <AnimatePresence>
+                    {status === 'SENDING' && (
+                      <motion.div initial={{ left: '100px' }} animate={{ left: 'calc(100% - 130px)' }} transition={{ duration: 3, ease: "linear" }} style={{ position: 'absolute', top: '15px', zIndex: 5 }}>
+                        <DataPackage
+                          icon={isHttpsOn ? Lock : Mail} 
+                          type={isHttpsOn ? "success" : "danger"} 
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <div className={styles.arenaVerticalLine} />
+
+                  <AnimatePresence>
+                    {intercepting && (
+                      <motion.div initial={{ top: '15px', left: '50%', transform: 'translateX(-50%)' }} animate={{ top: '150px' }} transition={{ duration: 1, ease: "linear" }} style={{ position: 'absolute', zIndex: 4 }}>
+                        <DataPackage 
+                          icon={isHttpsOn ? Lock : Mail} 
+                          type={isHttpsOn ? "success" : "danger"} 
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <div className={styles.actorContainer}>
+                    <div className={`${styles.actorIcon} ${styles.actorIconUser}`} style={{ border: `2px solid ${isHttpsOn ? 'var(--success)' : '#888'}` }}>
+                      <User size={40} color={isHttpsOn ? "var(--success)" : "#888"} />
+                    </div>
+                    <div className="node-label" style={{ color: isHttpsOn ? 'var(--success)' : '#888' }}>USUÁRIO</div>
+                    <div style={{ marginTop: '1rem' }}>
+                      <button 
+                        className={`btn-404 ${styles.toggleBtn} ${isHttpsOn ? styles.toggleBtnHttps : styles.toggleBtnHttp} ${isButtonFlashing ? styles.flashAnimation : ''}`} 
+                        onClick={() => {
+                          const newState = !isHttpsOn;
+                          setIsHttpsOn(newState);
+                          setIsButtonFlashing(false); 
+                          
+                          if (newState) { 
+                            setCastorStep(3);
+                            setShowCastor(true);
+                          }
+                        }} 
+                        disabled={status === 'SENDING'}
+                      >
+                        {isHttpsOn ? <><Lock size={14} style={{ marginRight: '5px' }}/> HTTPS ON</> : <><Unlock size={14} style={{ marginRight: '5px' }}/> HTTPS OFF</>}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className={styles.hackerContainer}>
+                    <div className={styles.hackerIcon}><Terminal size={30} color="var(--danger)" /></div>
+                    <div className="node-label" style={{ color: 'var(--danger)', marginBottom: '0.5rem' }}>HACKER</div>
+                    <div className={`${styles.displayBox} ${styles.displayHacker}`}>
+                      <span className={`mono ${styles.displayText}`} style={{ color: isHttpsOn ? 'var(--text-dim)' : 'var(--danger)' }}>
+                        {interceptedText || 'Escutando rede...'}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className={styles.serverContainer}>
+                    <div className={`${styles.actorIcon} ${styles.actorIconServer}`} style={{ border: `2px solid ${isHttpsOn ? 'var(--success)' : '#888'}` }}>
+                      <Server size={40} color={isHttpsOn ? "var(--success)" : "#888"} />
+                    </div>
+                    <div className="node-label" style={{ color: isHttpsOn ? 'var(--success)' : '#888', marginBottom: '1rem' }}>DESTINO</div>
+                    <div className={`${styles.displayBox} ${styles.displayServer}`}>
+                      <span className={`mono ${styles.displayTextServer}`}>{receivedText || 'Aguardando...'}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className={`flex-center ${styles.formContainer}`}>
+                  <input className={`input-404 ${styles.formInput}`} value={input} onChange={(e) => { setInput(e.target.value); setStatus('IDLE'); }} onKeyDown={handleKeyDown} placeholder="Digite uma mensagem secreta..." disabled={status === 'SENDING'} />
+                  <button className={`btn-404 ${styles.formBtn} ${isHttpsOn ? styles.formBtnHttps : styles.formBtnHttp}`} onClick={handleSend} disabled={status === 'SENDING' || !input}>
+                    <Send size={18} /> {status === 'SENDING' ? 'ENVIANDO...' : 'ENVIAR'}
+                  </button>
+                </div>
               </div>
             </motion.div>
           ) : (
-            <motion.div 
-              key="quiz"
-              initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}
-              className="card-404"
-            >
+            <motion.div key="quiz" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="card-404">
               <Quiz moduleId="https" questions={httpsQuestions} onFinishQuiz={() => setShowQuiz(false)} />
             </motion.div>
           )}

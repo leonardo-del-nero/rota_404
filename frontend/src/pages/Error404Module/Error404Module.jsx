@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, AlertCircle, HelpCircle, Server, DoorOpen, DoorClosed, Globe, CheckCircle, FileX, Search } from 'lucide-react';
 import ModuleIntro from '../../components/ModuleIntro';
 import LabHeader from '../../components/LabHeader';
 import Quiz from '../../components/Quiz';
+import Mascot from '../../components/Mascot';
+import Typewriter from '../../components/Typewriter';
 import styles from './Error404Module.module.css';
+
+import cp1 from '../../assets/cp1.png';
+import cp2 from '../../assets/cp2.png';
+import cp6 from '../../assets/cp6.png';
 
 const errorQuestions = [
   {
@@ -50,20 +56,36 @@ const Error404Module = () => {
   const [showQuiz, setShowQuiz] = useState(false);
 
   const validDoors = ['/api/users/1', '/api/hash', '/api/dns-lookup'];
+  const [showMascot, setShowMascot] = useState(false);
+  const [mascotStep, setMascotStep] = useState(0);
 
-  const handleSearch = async () => {
-    if (!path) return;
+  useEffect(() => {
+    if (showLab) {
+      setMascotStep(0);
+      setShowMascot(true);
+    }
+  }, [showLab]);
+
+  const handleSearch = () => {
+    if (!path || status === 'SCANNING') return; 
+    
     setStatus('SCANNING');
-    setBackendMsg('');
+    
     setTimeout(() => {
-      if (validDoors.includes(path)) {
-        setStatus('FOUND');
-        setBackendMsg('Rota mapeada com sucesso. O servidor entregou o recurso!');
+      const match = validDoors.find(door => door === path.toLowerCase());
+      
+      if (match) {
+        setBackendMsg("Recurso encontrado! Servidor enviando dados...");
+        setStatus('FOUND'); 
+        setMascotStep(1); 
+        setShowMascot(true);
       } else {
-        setStatus('NOT_FOUND');
-        setBackendMsg('O servidor não reconhece este caminho.');
+        setBackendMsg("Erro: O servidor não encontrou nada nesse endereço.");
+        setStatus('NOT_FOUND'); 
+        setMascotStep(2);
+        setShowMascot(true);
       }
-    }, 2000);
+    }, 2000); 
   };
 
   const handleKeyDown = (e) => {
@@ -105,6 +127,19 @@ const Error404Module = () => {
       <LabHeader showQuiz={showQuiz} setShowQuiz={setShowQuiz} onResetLab={resetLab} />
 
       <div className="content-max-width">
+        <Mascot 
+          show={showMascot}
+          step={mascotStep}
+          images={[cp1, cp2, cp6]}
+          phrases={[
+            /* 0 */ <Typewriter text="Olá, bem-vindo ao módulo de Erro 404! Tente pesquisar uma das URLs mapeadas na nossa tabela para ver o servidor funcionando." />,
+            /* 1 */ <Typewriter text="Perfeito! Como essa rota existe no servidor, ele retornou o status 200 (OK). Agora, tente digitar algo que não esteja na lista para ver o que acontece!" />,
+            /* 2 */ <Typewriter text="Viu só? O servidor está ativo, mas ele não encontrou esse caminho. O 404 é exclusivo para rotas inexistentes, mas existem outros códigos como 403 ou 500!" />
+          ]}
+          onNext={() => setShowMascot(false)}
+          buttonLabels={["VAMOS LÁ_", "ENTENDI!_", "ENTENDI_"]}
+        />
+
         <AnimatePresence mode="wait">
           {!showQuiz ? (
             <motion.div 

@@ -62,6 +62,15 @@ const HashModule = () => {
   const [showCastor, setShowCastor] = useState(false);
   const [castorStep, setCastorStep] = useState(0); 
   const [generations, setGenerations] = useState(0);
+  const [hashGenerations, setHashGenerations] = useState(0);
+  const [isButtonFlashing, setIsButtonFlashing] = useState(false);
+
+  useEffect(() => {
+    if (showLab && generations === 0) {
+      setCastorStep(0);
+      setShowCastor(true);
+    }
+  }, [showLab]);
 
   const handleSend = async () => {
     if (!input || (status !== 'IDLE' && status !== 'DONE')) return;
@@ -113,25 +122,34 @@ const HashModule = () => {
   };
 
   const triggerCastor = () => {
-    if (!isHashingOn) return; 
+    setGenerations(prev => prev + 1);
 
-    setGenerations(prev => {
-      const newCount = prev + 1;
-      if (newCount === 1) {
-        setCastorStep(0);
+    if (!isHashingOn) {
+      if (generations === 0) {
+        setCastorStep(1); 
         setShowCastor(true);
-      } else if (newCount === 2) {
-        setCastorStep(1);
-        setShowCastor(true);
+        setIsButtonFlashing(true); 
       }
-      return newCount;
-    });
+    } else {
+      setIsButtonFlashing(false);
+      setCastorStep(prev => {
+        if (prev < 3) return 3;
+        if (prev < 5) return prev + 1;
+        return prev;
+      });
+      setShowCastor(true);
+    }
   };
 
   const handleNextCastor = () => {
     if (castorStep === 1) {
-      setCastorStep(2);
+      // Apenas fecha e espera o clique no botão que está piscando
+      setShowCastor(false);
+    } else if (castorStep === 4) {
+      // Se clicou em continuar no SHA-256, avança para a Fruta!
+      setCastorStep(5);
     } else {
+      // Para os outros passos, fecha o Mascot
       setShowCastor(false);
     }
   };
@@ -184,14 +202,17 @@ const HashModule = () => {
         <Mascot 
           show={showCastor}
           step={castorStep}
-          images={[cp1, cp2, cp6]}
+          images={[cp1, cp2, cp6, cp1, cp2, cp6]}
           phrases={[
-            <Typewriter text="Ei! Notou algo? Tente mudar apenas uma letra minúscula ou um ponto no seu texto e envie de novo. O Hash será completamente diferente!" />,
-            <Typewriter text="Sabia que o SHA-256 tem tantas combinações que a chance de dois arquivos diferentes terem o mesmo Hash é praticamente ZERO!" />,
-            <Typewriter text="Gerar um Hash é como triturar uma fruta. Você joga a fruta (dado), faz o suco (hash), mas é impossível transformar o suco de volta em fruta." />
+            /* Passo 0 */ <Typewriter text="Olá! Bem-vindo ao módulo de Hash. Digite qualquer mensagem ali embaixo e clique em enviar para começarmos!" />,
+            /* Passo 1 */ <Typewriter text="Notou? Como o Hashing está DESLIGADO, a informação chegou ao destino exatamente como você a escreveu. Tente ligar o Hashing agora!" />,
+            /* Passo 2 */ <Typewriter text="Ótimo! Agora com o Hashing LIGADO, digite uma nova mensagem e veja o que vai acontecer." />,
+            /* Passo 3 */ <Typewriter text="Ei! Notou algo? Mude apenas uma letra ou um ponto e envie de novo. O Hash será completamente diferente!" />,
+            /* Passo 4 */ <Typewriter text="O SHA-256 é tão complexo que a chance de dois arquivos diferentes terem o mesmo Hash é praticamente ZERO!" />,
+            /* Passo 5 */ <Typewriter text="Gerar um Hash é como triturar uma fruta. Você joga a fruta (dado), faz o suco (hash), mas é impossível transformar o suco de volta em fruta." />
           ]}
           onNext={handleNextCastor}
-          buttonLabels={["ENTENDI_", "CONTINUAR_", "ENTENDI_"]}
+          buttonLabels={["VAMOS LÁ_", "ENTENDI_", "OK!_", "INCRÍVEL_", "CONTINUAR_", "ENTENDI_"]}
         />
 
         <AnimatePresence mode="wait">
@@ -207,8 +228,21 @@ const HashModule = () => {
 
               <div className="flex-center mb-4">
                 <button 
-                  className={`glass-panel ${styles.toggleBtn} ${isHashingOn ? styles.activePrimary : styles.inactive}`} 
-                  onClick={() => { if(status === 'IDLE' || status === 'DONE') setIsHashingOn(!isHashingOn); }}
+                  className={`glass-panel ${styles.toggleBtn} ${isHashingOn ? styles.activePrimary : styles.inactive} ${isButtonFlashing ? styles.flashAnimation : ''}`} 
+                  onClick={() => { 
+                    if(status === 'IDLE' || status === 'DONE') {
+                      const nextHashingState = !isHashingOn; 
+                      setIsHashingOn(nextHashingState);
+                      setIsButtonFlashing(false); 
+
+                      if (nextHashingState) {
+                        setCastorStep(2); 
+                        setShowCastor(true);  
+                      } else {
+                        setShowCastor(false);
+                      }
+                    }
+                  }}
                   disabled={status !== 'IDLE' && status !== 'DONE'}
                 >
                   {isHashingOn ? <Zap size={18} /> : <Moon size={18} />}

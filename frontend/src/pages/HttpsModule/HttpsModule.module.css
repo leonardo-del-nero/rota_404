@@ -201,3 +201,89 @@
   background: #fff;
   color: #000;
 }
+
+.searchBar {
+  background: rgba(0,0,0,0.5);
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.windowDots {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.dotRed { background: var(--danger); }
+.dotYellow { background: var(--primary); }
+.dotGreen { background: var(--success); }
+
+.inputWrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.05);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.inputWrapperSecure {
+  border-color: rgba(0, 255, 136, 0.2);
+  background: rgba(0, 255, 136, 0.05);
+}
+
+.inputWrapperUnsecure {
+  border-color: rgba(255, 59, 59, 0.2);
+  background: rgba(255, 59, 59, 0.05);
+}
+
+.inputField {
+  background: transparent;
+  border: none;
+  color: #fff;
+  outline: none;
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+
+.statusBadge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.1);
+  color: #888;
+}
+
+.flashAnimation {
+  animation: pulseGlow 2s infinite ease-in-out;
+  border-color: var(--success) !important;
+  box-shadow: 0 0 0px rgba(0, 255, 136, 0);
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0px rgba(0, 255, 136, 0);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+    transform: scale(1.05);
+    background: rgba(0, 255, 136, 0.1);
+  }
+  100% {
+    box-shadow: 0 0 0px rgba(0, 255, 136, 0);
+    transform: scale(1);
+  }
+}
