@@ -1,0 +1,301 @@
+/* Intro Section */
+.introAnimation {
+  position: relative;
+  width: 200px;
+  height: 150px;
+}
+
+.introMail {
+  position: absolute;
+  color: var(--text-dim);
+}
+
+.introLock {
+  z-index: 2;
+  color: var(--success);
+  background: var(--bg-main);
+  padding: 10px;
+  border-radius: 50%;
+}
+
+/* Arena Base */
+.arenaLine {
+  position: absolute;
+  top: 40px;
+  left: 100px;
+  right: 100px;
+  height: 2px;
+  z-index: 0;
+}
+
+.arenaLineHttp {
+  background: rgba(255, 59, 59, 0.2);
+}
+
+.arenaLineHttps {
+  background: rgba(0, 255, 136, 0.2);
+}
+
+.arenaVerticalLine {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  width: 2px;
+  height: 160px;
+  background: rgba(255,59,59,0.3);
+  border-left: 2px dashed rgba(255,59,59,0.3);
+}
+
+/* Data Package */
+.dataPackage {
+  padding: 8px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dataPackageHttp {
+  background: #fff;
+  border: 2px solid #333;
+}
+
+.dataPackageHttps {
+  background: #000;
+  border: 2px solid var(--success);
+}
+
+/* Actors (User & Server) */
+.actorContainer {
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.serverContainer {
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 200px;
+}
+
+.actorIcon {
+  width: 80px;
+  height: 80px;
+  background: var(--bg-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.actorIconUser {
+  border-radius: 50%;
+}
+
+.actorIconServer {
+  border-radius: 12px;
+}
+
+/* Hacker */
+.hackerContainer {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 250px;
+}
+
+.hackerIcon {
+  width: 60px;
+  height: 60px;
+  background: #220000;
+  border-radius: 12px;
+  border: 2px solid var(--danger);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+/* Displays */
+.displayBox {
+  width: 100%;
+  height: 60px;
+  background: #000;
+  border-radius: 4px;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.displayHacker {
+  border: 1px solid #ff3b3b55;
+}
+
+.displayServer {
+  border: 1px solid #333;
+}
+
+.displayText {
+  font-size: 0.7rem;
+  word-break: break-all;
+  text-align: center;
+}
+
+.displayTextServer {
+  font-size: 0.8rem;
+  color: #fff;
+}
+
+/* Toggles & Forms */
+.toggleBtn {
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  clip-path: none;
+  border-radius: 8px;
+}
+
+.toggleBtnHttps {
+  background: var(--success);
+  color: #000;
+  border: 1px solid var(--success);
+}
+
+.toggleBtnHttp {
+  background: transparent;
+  color: #888;
+  border: 1px solid #888;
+}
+
+.formContainer {
+  max-width: 600px;
+  margin: 0 auto;
+  gap: 1rem;
+}
+
+.formInput {
+  flex: 1;
+  height: 60px;
+  margin-bottom: 0;
+}
+
+.formBtn {
+  height: 60px;
+}
+
+.formBtnHttp:hover {
+  background: var(--danger);
+  box-shadow: 0 0 15px var(--glow-danger);
+}
+
+.glitchText {
+  animation: glitchTextAnim 0.2s infinite;
+}
+
+@keyframes glitchTextAnim {
+  0% { transform: translate(0); text-shadow: -2px 0 var(--secondary), 2px 0 var(--danger); }
+  25% { transform: translate(-1px, 1px); }
+  50% { transform: translate(1px, -1px); text-shadow: 2px 0 var(--secondary), -2px 0 var(--danger); }
+  75% { transform: translate(-1px, -1px); }
+  100% { transform: translate(0); }
+}
+
+.formBtnHttp {
+  background: #fff;
+  color: #000;
+}
+
+.searchBar {
+  background: rgba(0,0,0,0.5);
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.windowDots {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.dotRed { background: var(--danger); }
+.dotYellow { background: var(--primary); }
+.dotGreen { background: var(--success); }
+
+.inputWrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.05);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.inputWrapperSecure {
+  border-color: rgba(0, 255, 136, 0.2);
+  background: rgba(0, 255, 136, 0.05);
+}
+
+.inputWrapperUnsecure {
+  border-color: rgba(255, 59, 59, 0.2);
+  background: rgba(255, 59, 59, 0.05);
+}
+
+.inputField {
+  background: transparent;
+  border: none;
+  color: #fff;
+  outline: none;
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+
+.statusBadge {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.1);
+  color: #888;
+}
+
+.flashAnimation {
+  animation: pulseGlow 2s infinite ease-in-out;
+  border-color: var(--success) !important;
+  box-shadow: 0 0 0px rgba(0, 255, 136, 0);
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0px rgba(0, 255, 136, 0);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+    transform: scale(1.05);
+    background: rgba(0, 255, 136, 0.1);
+  }
+  100% {
+    box-shadow: 0 0 0px rgba(0, 255, 136, 0);
+    transform: scale(1);
+  }
+}

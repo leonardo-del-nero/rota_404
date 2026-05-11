@@ -1,0 +1,259 @@
+.selectContainer {
+  min-height: 100vh;
+  padding: 4rem 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg-main);
+  background-image: radial-gradient(circle at 50% 0%, rgba(0, 243, 255, 0.05), transparent 50%);
+}
+
+.contentWrapper {
+  width: 100%;
+  max-width: 1200px;
+}
+
+.title {
+  text-align: center;
+  font-family: var(--font-title);
+  color: var(--secondary);
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+  text-shadow: 0 0 15px var(--glow-secondary);
+}
+
+.formContainer {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 3rem;
+}
+
+@media (max-width: 900px) {
+  .formContainer {
+    grid-template-columns: 1fr;
+  }
+}
+
+.leftPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.label {
+  color: var(--primary);
+  font-size: 1.1rem;
+}
+
+.nameInput {
+  height: 60px;
+  font-size: 1.5rem;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+.charGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1.5rem;
+}
+
+.charCard {
+  background: rgba(20, 20, 20, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.charCard:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--char-color);
+  transform: translateY(-5px);
+}
+
+.charCard.selected {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--char-color);
+  box-shadow: 0 0 20px calc(var(--char-color) + '44'); /* Simulating hex alpha */
+}
+
+.iconWrapper {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.charAvatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.charCard.selected .iconWrapper {
+  border-color: var(--char-color);
+  box-shadow: inset 0 0 10px calc(var(--char-color) + '44');
+}
+
+.charName {
+  font-size: 0.9rem;
+  color: var(--text-bright);
+}
+
+.rightPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.previewPanel {
+  flex-grow: 1;
+  min-height: 400px;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emptyPreview {
+  color: var(--text-dim);
+  text-align: center;
+  opacity: 0.5;
+}
+
+.previewContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+.previewAvatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 3px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  background: rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+
+.previewAvatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.previewName {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.previewRole {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: 2px;
+}
+
+.divider {
+  width: 50px;
+  height: 2px;
+  background: rgba(255,255,255,0.2);
+  margin-bottom: 1.5rem;
+}
+
+.previewDesc {
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+.submitBtn {
+  width: 100%;
+  height: 60px;
+  font-size: 1.2rem;
+  justify-content: center;
+}
+
+.submitBtn:disabled {
+  background: var(--bg-card);
+  color: var(--text-dim);
+  cursor: not-allowed;
+  clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
+  box-shadow: none;
+}
+
+.errorMessage {
+  color: var(--danger);
+  font-size: 0.9rem;
+  text-align: center;
+}
+@media (max-width: 768px) {
+  .selectContainer {
+    padding: 2rem 1rem;
+  }
+  
+  .title {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+  }
+  
+  .leftPanel {
+    gap: 2rem;
+  }
+  
+  .nameInput {
+    height: 50px;
+    font-size: 1.2rem;
+  }
+  
+  .charGrid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 1rem;
+  }
+  
+  .charCard {
+    padding: 1rem;
+  }
+  
+  .previewPanel {
+    min-height: 300px;
+    padding: 1.5rem;
+  }
+  
+  .previewName {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.5rem;
+  }
+  
+  .charGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

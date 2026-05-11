@@ -1,0 +1,183 @@
+.container {
+  min-height: 100vh;
+  padding: 4rem 2rem;
+  background: var(--bg-main);
+  background-image: 
+    radial-gradient(circle at 50% 20%, rgba(255, 204, 0, 0.05), transparent 50%),
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 40px 40px, 40px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.topButtons {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  right: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.scoreSection {
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.scoreCard {
+  background: rgba(20, 20, 20, 0.8);
+  border: 2px solid var(--primary);
+  border-radius: 20px;
+  padding: 3rem 5rem;
+  text-align: center;
+  box-shadow: 0 0 50px rgba(255, 204, 0, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.scoreCard h2 {
+  color: var(--text-dim);
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.scoreValue {
+  font-family: var(--font-title);
+  font-size: 6rem;
+  color: var(--primary);
+  text-shadow: 0 0 20px var(--glow-primary);
+  margin-bottom: 0.5rem;
+  line-height: 1;
+}
+
+.scoreText {
+  color: var(--secondary);
+  font-family: var(--font-mono);
+  letter-spacing: 2px;
+}
+
+.boardSection {
+  width: 100%;
+  max-width: 800px;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  padding: 1.2rem 2rem;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.row:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateX(10px);
+}
+
+.highlightRow {
+  background: rgba(255, 204, 0, 0.1);
+  border-color: var(--primary);
+  box-shadow: inset 0 0 20px rgba(255, 204, 0, 0.05);
+}
+
+.rank {
+  width: 50px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--text-dim);
+  display: flex;
+  justify-content: center;
+}
+
+.name {
+  flex-grow: 1;
+  font-size: 1.2rem;
+  color: #fff;
+  padding-left: 1rem;
+}
+
+.highlightRow .name {
+  color: var(--primary);
+  font-weight: bold;
+}
+
+.points {
+  font-size: 1.2rem;
+  color: var(--secondary);
+}
+
+.achievements {
+  margin-right: 2rem;
+  display: flex;
+  align-items: center;
+}
+@media (max-width: 768px) {
+  .container {
+    padding: 6rem 1rem 2rem;
+  }
+  
+  .topButtons {
+    flex-direction: column;
+    gap: 1rem;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+  }
+  
+  .scoreCard {
+    padding: 1.5rem;
+    width: 100%;
+  }
+  
+  .scoreValue {
+    font-size: 3.5rem;
+  }
+  
+  .row {
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+  
+  .rank {
+    width: 30px;
+    font-size: 1rem;
+  }
+  
+  .name {
+    font-size: 0.9rem;
+  }
+  
+  .points {
+    font-size: 0.9rem;
+  }
+  
+  .achievements {
+    margin-right: 0.5rem;
+    font-size: 0.65rem !important;
+  }
+}

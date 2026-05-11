@@ -1,0 +1,289 @@
+.labTitle {
+  color: var(--primary);
+  margin-bottom: 2rem;
+  letter-spacing: 2px;
+}
+
+.arenaContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 3rem 0;
+  position: relative;
+  min-height: 250px;
+  padding: 0 2rem;
+}
+
+.localContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+
+.localIcon {
+  width: 80px;
+  height: 80px;
+  background: rgba(0, 243, 255, 0.1);
+  border: 2px solid var(--primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+}
+
+.pathContainer {
+  flex-grow: 1;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 2rem;
+}
+
+.pathLine {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(0, 243, 255, 0.5) 0%, rgba(255, 0, 255, 0.5) 100%);
+  transform: translateY(-50%);
+  z-index: 1;
+  border-style: dashed;
+  border-width: 2px 0 0 0;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.cloudIconWrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--bg-card);
+  padding: 10px;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.packageWrapper {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+}
+
+.packageBox {
+  background: var(--bg-card);
+  border: 1px solid var(--primary);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+}
+
+.serverContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+}
+
+.serverPanel {
+  padding: 2rem;
+  border: 2px solid var(--secondary);
+  border-radius: 12px;
+  background: rgba(255, 0, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  min-width: 150px;
+  box-shadow: 0 0 20px rgba(255, 0, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.serverActive {
+  background: rgba(0, 255, 136, 0.1);
+  border-color: var(--success);
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+}
+
+.statusBadge {
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.statusOffline {
+  background: rgba(255, 59, 59, 0.2);
+  color: var(--danger);
+  border: 1px solid var(--danger);
+}
+
+.statusOnline {
+  background: rgba(0, 255, 136, 0.2);
+  color: var(--success);
+  border: 1px solid var(--success);
+}
+
+.controlsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.controlSection {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+  border-radius: 12px;
+}
+
+.sectionTitle {
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
+}
+
+.buttonRow {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btnBuild {
+  background: transparent;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+}
+
+.btnBuild:hover:not(:disabled) {
+  background: rgba(0, 243, 255, 0.1);
+}
+
+.btnDeploy {
+  background: var(--secondary);
+  color: white;
+  border: none;
+}
+
+.btnDeploy:hover:not(:disabled) {
+  background: #cc00cc;
+}
+
+.terminalOutput {
+  background: #0a0a0a;
+  border-radius: 8px;
+  padding: 1rem;
+  font-family: monospace;
+  color: #00ff88;
+  min-height: 100px;
+  font-size: 0.9rem;
+  border: 1px solid #333;
+  overflow-y: auto;
+  max-height: 150px;
+}
+
+.terminalLine {
+  margin-bottom: 0.3rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.terminalPrefix {
+  color: #555;
+}
+
+.terminalAction {
+  color: #00f3ff;
+}
+
+.introContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.introArrow {
+  font-size: 2rem;
+  color: var(--secondary);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.1); }
+  100% { opacity: 0.5; transform: scale(0.9); }
+}
+@media (max-width: 768px) {
+  .arenaContainer {
+    flex-direction: column;
+    gap: 3rem;
+    min-height: auto;
+    padding: 0;
+  }
+  
+  .pathContainer {
+    width: 2px;
+    height: 80px;
+    margin: 0;
+    flex-grow: 0;
+  }
+  
+  .pathLine {
+    top: 0;
+    left: 50%;
+    right: auto;
+    bottom: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(0, 243, 255, 0.5) 0%, rgba(255, 0, 255, 0.5) 100%);
+    transform: translateX(-50%);
+  }
+
+  .cloudIconWrapper {
+    top: 50%;
+    left: 50%;
+  }
+
+  .packageWrapper {
+    left: 50% !important;
+    transform: translate(-50%, -50%);
+    top: 0;
+  }
+
+  .buttonRow {
+    flex-direction: column;
+  }
+
+  .btnBuild, .btnDeploy {
+    width: 100%;
+  }
+  
+  .serverPanel {
+    min-width: auto;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .introContainer {
+    gap: 1rem;
+  }
+  
+  .terminalOutput {
+    font-size: 0.75rem;
+  }
+}

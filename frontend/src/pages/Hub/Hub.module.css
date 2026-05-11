@@ -1,0 +1,105 @@
+.hubContainer {
+  min-height: 100vh;
+  padding: 4rem 2rem;
+}
+
+.hubHeader {
+  margin-bottom: 5rem;
+  text-align: center;
+}
+
+/* .logoImg foi removida pois agora usamos o componente PrimaryLogo */
+
+
+.subtitle {
+  color: var(--text-dim);
+  letter-spacing: 4px;
+  margin-bottom: 2rem;
+}
+
+.introBox {
+  max-width: 600px;
+  margin: 0 auto;
+  background: rgba(255, 204, 0, 0.05);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px dashed var(--primary);
+}
+
+.introText {
+  font-size: 0.9rem;
+  color: var(--primary);
+  line-height: 1.5;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.cardLink {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  height: 100%;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.iconWrapper {
+  padding: 12px;
+  border-radius: 4px;
+}
+
+.tag {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+}
+
+.cardTitle {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
+}
+
+.cardDesc {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+@media (max-width: 768px) {
+  .hubContainer {
+    padding: 2rem 1rem;
+  }
+  
+  .hubHeader {
+    margin-bottom: 3rem;
+  }
+  
+  .subtitle {
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}

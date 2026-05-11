@@ -4,7 +4,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 const Intro = ({ onFinish }) => {
   const [text, setText] = useState('');
   const [showSkip, setShowSkip] = useState(false);
-  const fullText = "CONECTANDO AO MUNDO DIGITAL...\nPREPARANDO SUAS FERRAMENTAS...\nMAPA DA ROTA CARREGADO.\n\nBEM-VINDO À ROTA 404.\nO LUGAR ONDE VOCÊ DESCOBRE COMO A WEB FUNCIONA.";
+  const player = JSON.parse(localStorage.getItem('rota404_player') || '{}');
+  const playerName = player.name ? player.name.toUpperCase() : 'VIAJANTE';
+
+  const fullText = `C ONECTANDO AO MUNDO DIGITAL...\nPREPARANDO SUAS FERRAMENTAS...\nMAPA DA ROTA CARREGADO.\n\nBEM-VINDO, ${playerName}, À ROTA 404.\nO LUGAR ONDE VOCÊ DESCOBRE COMO A WEB FUNCIONA.`;
 
   useEffect(() => {
     let index = 0;
@@ -14,12 +17,18 @@ const Intro = ({ onFinish }) => {
         index++;
       } else {
         clearInterval(interval);
-        setTimeout(() => setShowSkip(true), 1000);
+        // Após terminar o texto, espera um pouco e vai para o hub automaticamente
+        setTimeout(() => {
+          setShowSkip(true);
+          setTimeout(() => {
+            onFinish();
+          }, 3000); // Voltando para 3 segundos para ler
+        }, 1000);
       }
-    }, 60); // 60ms per char is much better for reading
+    }, 60); 
 
     return () => clearInterval(interval);
-  }, []);
+  }, [onFinish]);
 
   return (
     <motion.div 

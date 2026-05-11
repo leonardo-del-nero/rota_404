@@ -1,0 +1,462 @@
+.introIconWrapper {
+  position: relative;
+}
+.introIconShadow {
+  filter: drop-shadow(0 0 10px rgba(255,107,0,0.5));
+}
+.introSearchOverlay {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+}
+.introArrow {
+  font-size: 2rem;
+  color: #444;
+}
+.introResult {
+  font-size: 1.5rem;
+  color: var(--success);
+  border: 1px solid rgba(0,255,136,0.2);
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0,255,136,0.2);
+  background: rgba(0,255,136,0.05);
+}
+
+.labTitle {
+  color: #ff6b00;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 20px rgba(255,107,0,0.3);
+}
+.labSubtitle {
+  color: #888;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+
+.arenaContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0 2rem;
+  margin-bottom: 5rem;
+  min-height: 180px;
+}
+
+.nodeContainer {
+  text-align: center;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.serverNodeContainer {
+  text-align: center;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 220px;
+}
+
+.userNodeIcon {
+  border: 1px solid rgba(255,107,0,0.4);
+  background: rgba(255,107,0,0.05);
+  box-shadow: inset 0 0 20px rgba(255,107,0,0.1);
+}
+
+.nodeLabel {
+  color: #ff6b00;
+}
+.serverNodeLabel {
+  color: #ff6b00;
+  margin-bottom: 1rem;
+}
+
+.connectionLine {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255, 107, 0, 0.3), rgba(255, 107, 0, 0.05), rgba(255, 107, 0, 0.3));
+  margin: 45px 2rem 0;
+  position: relative;
+}
+
+.packageWrapper {
+  position: absolute;
+  top: -25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateX(-50%);
+}
+
+.packageIcon {
+  margin-bottom: 5px;
+}
+
+.dataPackageQuery {
+  background: rgba(255,107,0,0.2);
+  border: 1px solid #ff6b00;
+  color: #ffcc00;
+}
+
+.serverNodeIconBase {
+  border-radius: 15px;
+}
+.serverNodeIconActive {
+  border: 1px solid #ff6b00;
+  background: rgba(255,107,0,0.1);
+}
+.serverNodeIconInactive {
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.4);
+}
+
+.logsContainer {
+  height: 100px;
+  width: 100%;
+}
+
+.logsPanel {
+  background: rgba(0,0,0,0.8);
+  border: 1px solid rgba(255,107,0,0.3);
+  padding: 10px;
+  font-size: 0.7rem;
+  color: var(--success);
+  text-align: left;
+}
+.logsTitle {
+  color: #ff6b00;
+  border-bottom: 1px solid rgba(255,107,0,0.3);
+  margin-bottom: 5px;
+}
+
+.formWrapper {
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.inputGroup {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  max-width: 600px;
+}
+
+.inputContainer {
+  flex: 1;
+  position: relative;
+}
+
+.urlInput {
+  padding-left: 3.5rem;
+  height: 60px;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 1.2rem;
+  top: 1.2rem;
+  color: #ff6b00;
+}
+
+.submitBtn {
+  padding: 0 2rem;
+}
+
+.resultPanel {
+  text-align: center;
+  width: 100%;
+  max-width: 800px;
+  background: rgba(0,0,0,0.6);
+}
+
+.resultPanelValid {
+  border: 1px solid rgba(0,255,136,0.3);
+}
+
+.resultPanelInvalid {
+  border: 1px solid rgba(255,59,59,0.3);
+}
+
+.resultLabel {
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 1rem;
+}
+
+.resultIp {
+  font-size: 3rem;
+  font-family: var(--font-mono);
+  margin-bottom: 2rem;
+}
+.resultIpValid {
+  color: var(--success);
+}
+.resultIpInvalid {
+  color: var(--danger);
+}
+
+.accessBtn {
+  background: rgba(0,255,136,0.1);
+  border: 1px solid var(--success);
+  color: var(--success);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem 2rem;
+  clip-path: none;
+  border-radius: 8px;
+}
+
+.serverDown {
+  border: 2px solid var(--danger) !important;
+  background: rgba(255, 59, 59, 0.1) !important;
+  animation: shake 0.5s infinite;
+}
+
+.fireOverlayBackdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 10000;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.firePopup {
+  background: #1a1a1a;
+  border: 2px solid #ff3b3b;
+  padding: 2.5rem;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 0 50px rgba(255, 59, 59, 0.3);
+  position: relative;
+}
+
+.fireIconContainer {
+  margin-bottom: 1rem;
+  animation: pulse 1s infinite;
+}
+
+.flameAnimate {
+  color: #ff3b3b;
+  filter: drop-shadow(0 0 10px #ff3b3b);
+}
+
+.ipBox {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #000;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-top: 1.5rem;
+  border: 1px solid #333;
+}
+
+.ipBox code {
+  color: var(--success);
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+}
+
+.ipBox button {
+  background: none; border: none; cursor: pointer; color: #888;
+}
+
+.serverOffline {
+  border: 2px solid var(--danger) !important;
+  background: rgba(255, 59, 59, 0.1) !important;
+  box-shadow: 0 0 20px var(--danger) !important;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.poisonRoutesWrapper {
+  position: absolute;
+  top: -80px; 
+  right: calc(100%);
+  width: 400px;
+  height: 200px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.poisonSvg {
+  overflow: visible;
+  display: block;
+}
+
+.poisonSvg path {
+  filter: drop-shadow(0 0 4px rgba(255, 107, 0, 0.3));
+}
+
+.miniIconNode {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.9);
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 107, 0, 0.2);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+}
+
+.miniNodeRow {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #000;
+  padding: 8px 15px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 107, 0, 0.3);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  white-space: nowrap;
+  box-shadow: -5px 5px 20px rgba(0, 0, 0, 0.8);
+}
+
+@media (max-width: 768px) {
+  .arenaContainer {
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    padding: 0;
+  }
+  
+  .connectionLine {
+    width: 2px;
+    height: 100px;
+    background: linear-gradient(180deg, rgba(255, 107, 0, 0.3), rgba(255, 107, 0, 0.05), rgba(255, 107, 0, 0.3));
+    margin: 0;
+    flex: none;
+  }
+  
+  .packageWrapper {
+    top: auto;
+    left: 50% !important;
+    transform: translate(-50%, -50%);
+  }
+  
+  .serverNodeContainer {
+    width: 100%;
+  }
+  
+  .resultIp {
+    font-size: 1.8rem;
+  }
+  
+  .inputGroup {
+    flex-direction: column;
+  }
+  
+  .submitBtn {
+    height: 50px;
+  }
+  
+  .resultPanel {
+    min-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .labTitle {
+    font-size: 1.5rem;
+  }
+  
+  .ipBox {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+.suggestions {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: -1rem;
+  margin-bottom: 1rem;
+}
+
+.suggestions span {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+
+.suggestionBtn {
+  background: rgba(255, 107, 0, 0.05);
+  border: 1px solid rgba(255, 107, 0, 0.2);
+  color: #ff6b00;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.suggestionBtn:hover {
+  background: rgba(255, 107, 0, 0.15);
+  border-color: #ff6b00;
+  box-shadow: 0 0 10px rgba(255, 107, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.historySection {
+  width: 100%;
+  max-width: 600px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.historyTitle {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-bottom: 0.8rem;
+  letter-spacing: 1px;
+}
+
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.historyItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 4px;
+}
+
+.historyUrl {
+  color: #fff;
+  flex: 1;
+}
+
+.historyArrow {
+  color: var(--text-dim);
+}
+
+.historyResult {
+  color: var(--success);
+}
