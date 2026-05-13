@@ -3,6 +3,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Trophy, Medal, Star, ArrowLeft, LogOut, Zap, RefreshCcw, LayoutGrid } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { createPortal } from 'react-dom';
 import { useAchievement } from '../../context/AchievementContext';
 import styles from './Leaderboard.module.css';
 
@@ -10,6 +11,7 @@ const Leaderboard = () => {
   const [leaderboard, setLeaderboard] = useState([]);
   const [loading, setLoading] = useState(true);
   const [displayScore, setDisplayScore] = useState(0);
+  const [showFinishExpConfirm, setShowFinishExpConfirm] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { unlockAchievement } = useAchievement();
@@ -73,10 +75,7 @@ const Leaderboard = () => {
   const playerRank = leaderboard.findIndex(p => p.id === player.id) + 1;
 
   const handleLogout = () => {
-    localStorage.removeItem('rota404_player');
-    localStorage.removeItem('rota404_quiz_progress');
-    localStorage.removeItem('rota404_achievements');
-    navigate('/');
+    setShowFinishExpConfirm(true);
   };
 
   return (
@@ -109,7 +108,8 @@ const Leaderboard = () => {
             initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             style={{ background: 'rgba(255,59,59,0.1)', color: 'var(--danger)', border: '1px solid var(--danger)' }}
           >
-            <LogOut size={16} /> 
+            <LogOut size={16} style={{ marginRight: '8px', verticalAlign: 'middle' }} /> 
+            FINALIZAR EXPERIÊNCIA
           </motion.button>
         </div>
       </div>
@@ -206,6 +206,53 @@ const Leaderboard = () => {
           </div>
         )}
       </div>
+
+      {createPortal(
+        <AnimatePresence>
+          {showFinishExpConfirm && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', zIndex: 10000, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+            >
+              <motion.div 
+                initial={{ scale: 0.8, y: 50 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.8, y: 50 }}
+                style={{ background: '#111', border: '2px solid var(--danger)', padding: '2.5rem', borderRadius: '16px', maxWidth: '500px', textAlign: 'center', boxShadow: '0 0 30px rgba(255,59,59,0.2)' }}
+              >
+                <h2 style={{ fontFamily: 'var(--font-mono)', color: 'var(--danger)', margin: '0 0 1.5rem 0' }}>ENCERRAR SIMULAÇÃO?</h2>
+                <p style={{ color: '#ccc', fontSize: '1.1rem', lineHeight: '1.5', marginBottom: '2rem' }}>
+                  Você está prestes a finalizar sua jornada na Rota 404.
+                  <br/><br/>
+                  <b>Todo o seu progresso local será apagado (Reset Total)!</b>
+                  <br/><br/>
+                  No entanto, seu nome e pontuação continuarão salvos na Leaderboard da nuvem. Tem certeza?
+                </p>
+                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+                  <button 
+                    onClick={() => setShowFinishExpConfirm(false)}
+                    style={{ background: 'transparent', color: '#fff', border: '2px solid #555', padding: '0.8rem 1.5rem', borderRadius: '8px', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '1.1rem' }}
+                  >
+                    CANCELAR
+                  </button>
+                  <button 
+                    onClick={() => {
+                      setShowFinishExpConfirm(false);
+                      navigate('/credits');
+                    }}
+                    style={{ background: 'var(--danger)', color: '#fff', border: 'none', padding: '0.8rem 1.5rem', borderRadius: '8px', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontWeight: 'bold', fontSize: '1.1rem' }}
+                  >
+                    CONFIRMAR RESET
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </div>
   );
 };
