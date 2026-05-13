@@ -1,3 +1,8 @@
+import { useEffect } from 'react';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Zap } from 'lucide-react';
+
 import commonBadge from '../badges/c_model.png';
 import rareBadge from '../badges/r_model.png';
 import legendaryBadge from '../badges/l_model.png';

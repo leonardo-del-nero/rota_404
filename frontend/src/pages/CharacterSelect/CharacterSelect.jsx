@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState  } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { User, Cpu, Zap, Shield, Sparkles } from 'lucide-react';
@@ -58,6 +59,10 @@ const CharacterSelect = () => {
       if (localStorage.getItem('rota404_secret_start_pending') === 'true') {
         unlockAchievement('DIGITAR_START', 'ACESSO PRIVILEGIADO', 'Você digitou START na tela inicial!', 'SECRETAS');
         localStorage.removeItem('rota404_secret_start_pending');
+      }
+
+      if (name.trim().toLowerCase() === 'piaba' && selectedChar.id === '4') {
+        unlockAchievement('EASTER_EGG_PIABA', 'A VERDADEIRA PIABA', 'Você revelou a verdadeira identidade da Piaba!', 'SECRETAS');
       }
 
       // Sucesso! Vamos para a Intro

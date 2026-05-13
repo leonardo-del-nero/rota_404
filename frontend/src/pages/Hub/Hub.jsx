@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo  } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, useAnimation, AnimatePresence } from 'framer-motion';
+import { Trophy } from 'lucide-react';
 import { useAchievement } from '../../context/AchievementContext';
 import styles from './Hub.module.css';
 import PrimaryLogo from '../../components/PrimaryLogo';
@@ -8,19 +10,42 @@ import Typewriter from '../../components/Typewriter';
 
 import bonziIdle from '../../bonzi/bonzi_upscaled_0.png';
 import bonziTalk from '../../bonzi/bonzi_upscaled_1.png';
+import Mascot from '../../components/Mascot';
+
+import neoImg from '../../avatars/ghost_spec_upscaled_0.png';
+import trinityImg from '../../avatars/pucca_upscaled_0.png';
+import morpheusImg from '../../avatars/stormtrooper_upscaled_0.png';
+import piabaImg from '../../avatars/piaba_upscaled_0.png';
+import pipocaImg from '../../avatars/tigrinho_upscaled_0.png';
+import castorImg from '../../avatars/castor_upscaled_0.png';
+
+const AVATARS = {
+  '1': neoImg,
+  '2': trinityImg,
+  '3': morpheusImg,
+  '4': piabaImg,
+  '5': pipocaImg,
+  '6': castorImg,
+};
 
 const Hub = () => {
   const navigate = useNavigate();
   const controls = useAnimation();
   
-  const [shipPos, setShipPos] = useState({ x: 500, y: 100 });
-  const [shipRot, setShipRot] = useState(0);
-  const [shipIndex, setShipIndex] = useState(-1);
+  const savedPos = JSON.parse(localStorage.getItem('rota404_ship_pos') || 'null');
+  const [shipPos, setShipPos] = useState(savedPos || { x: 500, y: 180 });
+  const [shipRot, setShipRot] = useState(Number(localStorage.getItem('rota404_ship_rot')) || 0);
+  const [shipIndex, setShipIndex] = useState(Number(localStorage.getItem('rota404_ship_index')) || -1);
   const [isAnimating, setIsAnimating] = useState(false);
   const [selectedNode, setSelectedNode] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
   const [isTalking, setIsTalking] = useState(false);
   const [talkFrame, setTalkFrame] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  const handleTypewriterComplete = React.useCallback(() => {
+    setIsTalking(false);
+  }, []);
 
   useEffect(() => {
     let interval;
@@ -85,11 +110,31 @@ const Hub = () => {
     }
   ], []);
 
-  const INITIAL_SHIP_POS = { x: 500, y: 100 };
+  const INITIAL_SHIP_POS = { x: 500, y: 180 };
 
   const player = JSON.parse(localStorage.getItem('rota404_player') || '{}');
   const { unlockAchievement } = useAchievement();
   const progressData = JSON.parse(localStorage.getItem('rota404_quiz_progress') || '{}');
+
+  const currentScore = useMemo(() => {
+    const saved = progressData;
+    let totalScore = 0;
+    Object.keys(saved).forEach(moduleId => {
+      const moduleData = saved[moduleId];
+      if (moduleData.score && moduleData.score.total) {
+        totalScore += moduleData.score.total;
+      } else if (moduleData.isCorrectMap) {
+        const un = 16.66666666666667;
+        Object.keys(moduleData.isCorrectMap).forEach(qIdx => {
+          if (moduleData.isCorrectMap[qIdx]) {
+            const tent = moduleData.attempts[qIdx] || 1;
+            totalScore += (un * 3) / tent;
+          }
+        });
+      }
+    });
+    return Math.floor(totalScore);
+  }, [progressData]);
 
   useEffect(() => {
     if (!localStorage.getItem('rota404_journey_start')) {
@@ -239,6 +284,11 @@ const Hub = () => {
     setShipPos({ x: finalX, y: finalY });
     setShipRot(finalRotations[finalRotations.length - 1]);
     setShipIndex(targetIndex);
+    
+    localStorage.setItem('rota404_ship_pos', JSON.stringify({ x: finalX, y: finalY }));
+    localStorage.setItem('rota404_ship_rot', finalRotations[finalRotations.length - 1].toString());
+    localStorage.setItem('rota404_ship_index', targetIndex.toString());
+    
     setIsAnimating(false);
     setSelectedNode(node);
     setIsTalking(true);
@@ -319,18 +369,56 @@ const Hub = () => {
     return paths;
   }, [modules]);
 
+  const handleScroll = (e) => {
+    setIsScrolled(e.target.scrollTop > 50);
+  };
+
   return (
     <div className={styles.spaceContainer}>
       <div className={styles.topNav}>
-        <div className={styles.logoWrapper}>
-          <PrimaryLogo size="small" />
+        <motion.div 
+          className={styles.logoWrapper}
+          initial={false}
+          animate={{
+            left: isScrolled ? "2rem" : "50%",
+            x: isScrolled ? "0%" : "-50%",
+            y: "-50%",
+            scale: isScrolled ? 0.7 : 1.2
+          }}
+          transition={{ type: "spring", stiffness: 200, damping: 25 }}
+          style={{ position: 'absolute', top: '50%', originX: isScrolled ? 0 : 0.5, originY: 0.5 }}
+        >
+          <PrimaryLogo size="large" />
+        </motion.div>
+        
+        <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
+          <button 
+            className={styles.trophyBtn} 
+            onClick={() => navigate('/achievements')}
+            title="Conquistas"
+          >
+            <Trophy size={24} />
+          </button>
+          
+          <div className={styles.arcadeProfile}>
+            <div className={styles.avatarCircle}>
+              <img src={AVATARS[player.character_id] || AVATARS['1']} alt="Avatar" />
+            </div>
+            <div className={styles.profileInfo}>
+              <p className={styles.playerName}>{player.name || 'VIAJANTE'}</p>
+              <p className={styles.playerScore}>{currentScore} PTS</p>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div className={styles.bottomNav}>
         <button className={styles.finalizarBtn} onClick={handleFinishSimulation}>
-          Finalizar
+          Finalizar Sessão
         </button>
       </div>
 
-      <div className={styles.scrollArea}>
+      <div className={styles.scrollArea} onScroll={handleScroll}>
         <svg viewBox="0 0 1000 1400" className={styles.mapSvg} preserveAspectRatio="xMidYMin slice">
           {/* Background Stars (Diamonds) */}
           {stars.map((star, i) => (
@@ -433,48 +521,26 @@ const Hub = () => {
         </svg>
       </div>
 
-      {/* Bonzi Dialog Overlay */}
-      <AnimatePresence>
-        {showDialog && selectedNode && (
-          <motion.div 
-            className={styles.dialogOverlay}
-            initial={{ y: 200, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 200, opacity: 0 }}
-            transition={{ type: "spring", damping: 20, stiffness: 100 }}
-          >
-            <div className={styles.dialogBox}>
-              <div className={styles.bonziAvatar}>
-                <img 
-                  src={talkFrame === 0 ? bonziIdle : bonziTalk} 
-                  alt="Bonzi" 
-                  style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                />
-              </div>
-              
-              <div className={styles.dialogContent}>
-                <h3 className={styles.dialogTitle}>{selectedNode.title}</h3>
-                <p className={styles.dialogText}>
-                  <Typewriter 
-                    text={selectedNode.desc} 
-                    speed={25} 
-                    onComplete={() => setIsTalking(false)} 
-                  />
-                </p>
-              </div>
-              
-              <div className={styles.dialogAction}>
-                <button 
-                  className={styles.iniciarBtn} 
-                  onClick={() => navigate(selectedNode.path)}
-                >
-                  Iniciar
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Bonzi Mascot overlay from modules */}
+      <Mascot 
+        show={showDialog && selectedNode}
+        step={0}
+        images={[talkFrame === 0 ? bonziIdle : bonziTalk]} 
+        phrases={[ 
+          <div key="mascot-text">
+            <h3 style={{ margin: '0 0 10px 0', color: 'var(--primary)', fontFamily: 'var(--font-mono)' }}>
+              {selectedNode?.title}
+            </h3>
+            <Typewriter 
+              text={selectedNode?.desc || ''} 
+              speed={25} 
+              onComplete={handleTypewriterComplete} 
+            />
+          </div> 
+        ]}
+        onNext={() => navigate(selectedNode?.path || '/')}
+        buttonLabels={["INICIAR_"]}
+      />
     </div>
   );
 };
