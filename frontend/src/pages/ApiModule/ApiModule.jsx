@@ -115,9 +115,16 @@ const ApiModule = () => {
     };
   });
 
-  const handleSend = async (isMalicious = false) => {
+  const handleBoxClick = (id) => {
+    if (status !== 'IDLE') return;
+    setUserId(id.toString());
+    handleSend(false, id.toString());
+  };
+
+  const handleSend = async (isMalicious = false, directId = null) => {
     if (status !== 'IDLE') return;
     
+    const idToSearch = directId || userId;
     setResponse(null);
     setIsMaliciousAction(isMalicious);
     setStatus('WALKING_TO_FIREWALL');
@@ -137,35 +144,28 @@ const ApiModule = () => {
         setTimeout(async () => {
           setStatus('SEARCHING');
           try {
-            const res = await fetch(`/api/users/${userId}`);
+            const res = await fetch(`/api/users/${idToSearch}`);
             const data = await res.json();
             
             setTimeout(() => {
-              const isNotFound = !res.ok || parseInt(userId) > 5;
+              const isNotFound = !res.ok || parseInt(idToSearch) > 5;
               if (isNotFound) {
                 setResponse({ error: "A requisição não existe." });
-                if (apiStep === 1) { 
-                  setCastorStep(2);
-                  setApiStep(2);
-                  setShowCastor(true);
-                }
+                setCastorStep(2);
+                setApiStep(prev => Math.max(prev, 2));
               } else {
                 setResponse(data.data || data);
-                if (apiStep === 0) { 
-                  setCastorStep(1);
-                  setApiStep(1);
-                  setShowCastor(true);
-                }
+                setCastorStep(1);
+                setApiStep(prev => Math.max(prev, 1));
               }
+              setShowCastor(true);
               setStatus('WALKING_BACK');
               setTimeout(() => setStatus('IDLE'), 2000);
             }, 1500);
           } catch (err) {
-            setTimeout(() => {
-              setResponse({ error: "Falha na conexão" });
-              setStatus('WALKING_BACK');
-              setTimeout(() => setStatus('IDLE'), 2000);
-            }, 1500);
+            setResponse({ error: "Falha na conexão" });
+            setStatus('WALKING_BACK');
+            setTimeout(() => setStatus('IDLE'), 2000);
           }
         }, 1500);
       }
@@ -227,7 +227,7 @@ const ApiModule = () => {
     );
   }
 
-  const boxes = [1, 2, 3, 4, 5];
+  const boxes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   return (
     <div className="container module-container">
@@ -283,18 +283,41 @@ const ApiModule = () => {
 
               <div className={`animation-arena ${styles.arenaContainer}`}>
                 <div className={styles.stockroom}>
-                  <GlassPanel className={styles.shelfPanel}>
-                    {boxes.map(id => (
-                      <motion.div key={id} 
-                        className={`${styles.boxItem} ${status === 'SEARCHING' && parseInt(userId) === id ? styles.boxActive : styles.boxDefault}`}
-                        style={{ opacity: response && response.id === id && status === 'WALKING_BACK' ? 0.3 : 1 }}>
+                <GlassPanel className={styles.shelfPanel}>
+                  <div className={styles.boxGroup}>
+                    {boxes.filter(id => id <= 5).map(id => (
+                      <motion.button 
+                        key={id} 
+                        onClick={() => handleBoxClick(id)}
+                        disabled={status !== 'IDLE'}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                        className={`${styles.boxItem} ${status === 'SEARCHING' && parseInt(userId) === id ? styles.boxActive : styles.boxGreen}`}
+                      >
                         <Package size={20} />
                         <span className={`mono ${styles.boxLabel}`}>#{id}</span>
-                      </motion.div>
+                      </motion.button>
                     ))}
-                  </GlassPanel>
-                  <div className="node-label secondary-text">PRATELEIRAS</div>
-                </div>
+                  </div>
+
+                  <div className={styles.boxGroup}>
+                    {boxes.filter(id => id > 5).map(id => (
+                      <motion.button 
+                        key={id} 
+                        onClick={() => handleBoxClick(id)}
+                        disabled={status !== 'IDLE'}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.95 }}
+                        className={`${styles.boxItem} ${status === 'SEARCHING' && parseInt(userId) === id ? styles.boxActive : styles.boxRed}`}
+                      >
+                        <Package size={20} />
+                        <span className={`mono ${styles.boxLabel}`}>#{id}</span>
+                      </motion.button>
+                    ))}
+                  </div>
+                </GlassPanel>
+                  <div className="node-label secondary-text">PRODUTOS (CLIQUE)</div>
+              </div>
 
                 <div className={styles.pathContainer}>
                   <div className={styles.pathLine} />
