@@ -110,12 +110,12 @@ h1, h2, h3 {
   background: var(--primary);
   color: black;
   border: none;
+  border-radius: 50px;
   padding: 1rem 2.5rem;
   font-family: var(--font-title);
   font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
-  clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
   transition: all 0.5s ease;
   text-transform: uppercase;
   display: inline-flex;
@@ -126,7 +126,6 @@ h1, h2, h3 {
 
 .btn-404:hover {
   background: var(--secondary);
-  clip-path: polygon(0 0, 92% 0, 100% 100%, 8% 100%);
   box-shadow: 0 0 20px var(--glow-secondary);
   transform: translateY(-2px);
 }

@@ -251,6 +251,86 @@
             "progress": {},
             "id": "10",
             "created_at": "2026-05-12T22:02:28.450077"
+        },
+        {
+            "name": "dsds",
+            "character_id": "4",
+            "progress": {},
+            "id": "11",
+            "created_at": "2026-05-12T23:52:33.261690"
+        },
+        {
+            "name": "sds",
+            "character_id": "5",
+            "progress": {},
+            "id": "12",
+            "created_at": "2026-05-12T23:56:27.209520"
+        },
+        {
+            "name": "dsds",
+            "character_id": "2",
+            "progress": {
+                "score": 0,
+                "modules": {
+                    "hash": {
+                        "startTime": 1778641569577,
+                        "attempts": {},
+                        "isCorrectMap": {},
+                        "lastSelected": {}
+                    }
+                },
+                "achievements": [
+                    "ESCOLHER_NOME_AVATAR",
+                    "INTERACAO_BONZI",
+                    "QUIZ_RAPIDO_40",
+                    "QUIZ_PERFEITO",
+                    "QUIZ_3_SEGUIDOS",
+                    "PONTUACAO_300",
+                    "TOP_10",
+                    "TOP_3",
+                    "DIGITAR_START",
+                    "QUIZ_TODOS_PERFEITOS",
+                    "COMPLETAR_PERCURSO"
+                ]
+            },
+            "id": "13",
+            "created_at": "2026-05-13T00:05:51.375931"
+        },
+        {
+            "name": "dfsf",
+            "character_id": "4",
+            "progress": {
+                "score": 0,
+                "modules": {},
+                "achievements": [
+                    "ESCOLHER_NOME_AVATAR",
+                    "INTERACAO_BONZI",
+                    "QUIZ_RAPIDO_40",
+                    "QUIZ_PERFEITO",
+                    "QUIZ_3_SEGUIDOS",
+                    "PONTUACAO_300",
+                    "TOP_10",
+                    "TOP_3",
+                    "DIGITAR_START",
+                    "QUIZ_TODOS_PERFEITOS",
+                    "COMPLETAR_PERCURSO"
+                ]
+            },
+            "id": "14",
+            "created_at": "2026-05-13T00:31:27.740557"
+        },
+        {
+            "name": "fd",
+            "character_id": "4",
+            "progress": {
+                "score": 0,
+                "modules": {},
+                "achievements": [
+                    "ESCOLHER_NOME_AVATAR"
+                ]
+            },
+            "id": "15",
+            "created_at": "2026-05-13T01:22:36.643387"
         }
     ]
 }

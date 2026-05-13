@@ -14,12 +14,12 @@ import pipocaImg from '../../avatars/tigrinho_upscaled_0.png';
 import castorImg from '../../avatars/castor_upscaled_0.png';
 
 const CHARACTERS = [
-  { id: '1', name: 'Ghost Spec', role: 'The Hacker', image: neoImg, color: '#00ff88', desc: 'Rápido e furtivo. Especialista em quebrar firewalls.' },
-  { id: '2', name: 'Pucca', role: 'SysAdmin', image: trinityImg, color: '#00f3ff', desc: 'Controla a infraestrutura. Nada passa despercebido.' },
-  { id: '3', name: 'Stormtrooper', role: 'Cyber Punk', image: morpheusImg, color: '#ffcc00', desc: 'Poder bruto de processamento. Especialista em força bruta.' },
-  { id: '4', name: 'Piaba', role: 'Guardian', image: piabaImg, color: '#ff3b3b', desc: 'Defesa impenetrável. Focado em criptografia.' },
-  { id: '5', name: 'Tigrinho', role: 'Glitcher', image: pipocaImg, color: '#ff00ff', desc: 'Mestre da engenharia reversa e do caos controlado.' },
-  { id: '6', name: 'Castor', role: 'Chief Officer', image: castorImg, color: '#ffcc00', desc: 'O grande arquiteto da Rota 404. Conhece cada bit do sistema.' },
+  { id: '1', name: 'Gustavo Pereira', role: 'Gustavo Pereira', image: neoImg, color: '#00ff88', desc: 'Gustavo Pereira' },
+  { id: '2', name: 'Pucca', role: 'Guardiã Valente', image: trinityImg, color: '#00f3ff', desc: 'Deixou a vida pacífica da vila para se tornar uma protetora solitária. Utiliza sua persistência e seus icônicos laços vermelhos para abrir caminhos perigosos que ninguém mais ousa trilhar.' },
+  { id: '3', name: 'Stormtrooper', role: 'Sentinela Renegado', image: morpheusImg, color: '#ffcc00', desc: 'Especialista em táticas de defesa, apesar da má pontaria. Ele abandonou um exército rígido para aplicar suas habilidades militares na proteção de viajantes perdidos, garantindo que ninguém seja deixado para trás por ordens injustas.' },
+  { id: '4', name: 'Piaba', role: 'Sombra Ancestral', image: piabaImg, color: '#ff3b3b', desc: 'Uma entidade Illuminati que camufla sua mente vingativa e seu poder ancestral sob a aparência inofensiva de uma cadela carismática, aguardando o momento exato para retomar sua glória.' },
+  { id: '5', name: 'Tigrinho', role: 'Estrategista de Risco', image: pipocaImg, color: '#ff00ff', desc: 'Transformou críticas e derrotas, em um domínio absoluto sobre o mercado de apostas. É movido pela visão de negócios e pela realidade constante de metas batidas e conquistas inquestionáveis.' },
+  { id: '6', name: 'Castor', role: 'Mestre Construtor', image: castorImg, color: '#ffcc00', desc: 'Unindo a paciência de um mentor à força de um operário, ele utiliza sua vasta experiência para construir fisicamente as rotas que antes apenas ensinava, garantindo a segurança de novos viajantes.' },
 ];
 
 const CharacterSelect = () => {
