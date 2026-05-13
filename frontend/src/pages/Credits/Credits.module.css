@@ -1,0 +1,163 @@
+/* Credits.module.css */
+.container {
+  width: 100vw;
+  height: 100vh;
+  background-color: #050505;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  font-family: var(--font-mono, 'Courier New', Courier, monospace);
+  color: #fff;
+}
+
+/* --- Efeitos de Monitor Antigo / Hacker --- */
+.scanlines {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0) 50%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(0, 0, 0, 0.2)
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.vignette {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: radial-gradient(circle, transparent 50%, rgba(0, 0, 0, 0.8) 100%);
+  pointer-events: none;
+  z-index: 11;
+}
+
+/* --- Efeito Crawl (Star Wars) --- */
+.crawlContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  /* A perspectiva cria a profundidade 3D */
+  perspective: 800px; 
+  /* O mask-image faz o texto sumir suavemente no topo da tela */
+  mask-image: linear-gradient(to bottom, transparent 5%, black 40%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 5%, black 40%);
+}
+
+.crawlText {
+  width: 85%;
+  max-width: 700px;
+  position: absolute;
+  text-align: center;
+  /* O texto se inclina para trás */
+  transform-origin: 50% 100%;
+  color: var(--primary, #00ff88);
+}
+
+.header {
+  margin-bottom: 6rem;
+}
+
+.title {
+  font-size: 4.5rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 20px var(--primary, #00ff88), 0 0 40px var(--primary, #00ff88);
+  letter-spacing: 12px;
+  font-weight: 900;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  letter-spacing: 4px;
+  color: #fff;
+  opacity: 0.7;
+}
+
+.section {
+  margin-bottom: 5rem;
+}
+
+.section h2 {
+  font-size: 1.2rem;
+  color: var(--primary, #00ff88);
+  margin-bottom: 1rem;
+  letter-spacing: 3px;
+  opacity: 0.9;
+  text-transform: uppercase;
+}
+
+.section p {
+  font-size: 1.4rem;
+  color: #e0e0e0;
+  line-height: 1.5;
+  margin: 0.3rem 0;
+  font-weight: bold;
+}
+
+.hackTheWorld {
+  margin-top: 2rem !important;
+  color: var(--primary, #00ff88) !important;
+  text-shadow: 0 0 10px var(--primary, #00ff88);
+  font-style: italic;
+}
+
+.endSimulation {
+  margin-top: 10rem;
+  margin-bottom: 15rem; /* Espaço extra no final para não cortar a animação de saída */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.endSimulation p {
+  color: var(--primary, #00ff88);
+  font-weight: bold;
+  font-size: 1.8rem;
+  letter-spacing: 5px;
+}
+
+.cursor {
+  font-size: 2rem;
+  color: var(--primary, #00ff88);
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* --- Botão de Pular --- */
+.skipBtn {
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  border: 1px solid var(--primary, #00ff88);
+  padding: 1rem 2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  z-index: 100;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+  transition: background 0.3s ease;
+}
+
+.skipBtn:hover {
+  background: var(--primary, #00ff88);
+  color: #000;
+  box-shadow: 0 0 20px var(--primary, #00ff88);
+}

@@ -13,36 +13,125 @@
   top: 0;
   left: 0;
   right: 0;
-  padding: 1.5rem 2rem;
+  padding: 4rem 2rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   z-index: 50;
   pointer-events: none;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
 }
 
 .logoWrapper {
   pointer-events: auto;
+  position: absolute;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.arcadeProfile {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid var(--primary);
+  padding: 0.5rem 1.5rem 0.5rem 0.5rem;
+  border-radius: 50px;
+  backdrop-filter: blur(5px);
+}
+
+.avatarCircle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid var(--primary);
+  overflow: hidden;
+  background: #000;
+  flex-shrink: 0;
+}
+
+.avatarCircle img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.playerName {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #fff;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.playerScore {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--secondary);
+  margin: 0;
+}
+
+.bottomNav {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  z-index: 50;
+  pointer-events: none;
 }
 
 .finalizarBtn {
   pointer-events: auto;
-  background: transparent;
-  border: 2px solid #555;
-  color: #fff;
+  background: rgba(255, 59, 59, 0.1);
+  border: 2px solid #ff3b3b;
+  color: #ff3b3b;
   padding: 0.8rem 2rem;
   font-size: 1rem;
   font-family: var(--font-mono);
+  font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.1);
   text-transform: uppercase;
   letter-spacing: 2px;
+  border-radius: 4px;
 }
 
 .finalizarBtn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: #fff;
+  background: #ff3b3b;
+  color: #fff;
+  box-shadow: 0 0 20px rgba(255, 59, 59, 0.5);
+  transform: scale(1.05);
+}
+
+.trophyBtn {
+  pointer-events: auto;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.trophyBtn:hover {
+  background: var(--primary);
+  color: #000;
+  transform: scale(1.1);
+  box-shadow: 0 0 15px var(--primary);
 }
 
 .scrollArea {
@@ -70,104 +159,14 @@
   padding-bottom: 10rem;
 }
 
-.dialogOverlay {
-  position: absolute;
-  bottom: 30px;
-  left: 0;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  z-index: 100;
-  pointer-events: none; /* Let clicks pass through overlay */
-}
-
-.dialogBox {
-  pointer-events: auto; /* Catch clicks on the box */
-  width: 90%;
-  max-width: 800px;
-  background: rgba(10, 10, 10, 0.95);
-  border: 4px solid #fff;
-  padding: 2rem;
-  display: flex;
-  gap: 2rem;
-  align-items: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-  position: relative;
-}
-
-.bonziAvatar {
-  width: 120px;
-  height: 120px;
-  flex-shrink: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.dialogContent {
-  flex-grow: 1;
-}
-
-.dialogTitle {
-  font-family: var(--font-mono);
-  font-size: 1.5rem;
-  color: var(--primary);
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-}
-
-.dialogText {
-  color: #ccc;
-  font-size: 1.1rem;
-  line-height: 1.5;
-}
-
-.dialogAction {
-  flex-shrink: 0;
-}
-
-.iniciarBtn {
-  background: #fff;
-  color: #000;
-  border: none;
-  padding: 1rem 3rem;
-  font-size: 1.2rem;
-  font-family: var(--font-mono);
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-}
-
-.iniciarBtn:hover {
-  background: var(--primary);
-  transform: scale(1.05);
-}
-
 @media (max-width: 768px) {
   .topNav {
     padding: 1rem;
-  }
-  
-  .dialogBox {
     flex-direction: column;
-    padding: 1.5rem;
     gap: 1rem;
-    text-align: center;
-  }
-  
-  .dialogAction {
-    width: 100%;
-  }
-  
-  .iniciarBtn {
-    width: 100%;
-    padding: 1rem;
   }
   
   .mapSvg {
-    padding-top: 8rem;
+    padding-top: 10rem;
   }
 }

@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback  } from 'react';
+import React from 'react';
 import { AnimatePresence } from 'framer-motion';
 import AchievementToast from '../components/AchievementToast';
 
@@ -7,12 +8,12 @@ const AchievementContext = createContext();
 export const AchievementProvider = ({ children }) => {
   const [achievements, setAchievements] = useState([]);
 
-  const unlockAchievement = useCallback((id, title, description) => {
+  const unlockAchievement = useCallback((id, title, description, tier = 'COMUM') => {
     // Verifica se já foi desbloqueado nesta sessão ou no localStorage
     const unlocked = JSON.parse(localStorage.getItem('rota404_achievements') || '[]');
     if (unlocked.includes(id)) return;
 
-    const newAchievement = { id, title, description };
+    const newAchievement = { id, title, description, tier };
     setAchievements(prev => [...prev, newAchievement]);
     
     // Salva no localStorage
@@ -26,14 +27,14 @@ export const AchievementProvider = ({ children }) => {
   return (
     <AchievementContext.Provider value={{ unlockAchievement }}>
       {children}
-      <AnimatePresence>
-        {achievements.map(achievement => (
+      <AnimatePresence mode="wait">
+        {achievements.length > 0 && (
           <AchievementToast 
-            key={achievement.id} 
-            achievement={achievement} 
-            onExpire={() => removeAchievement(achievement.id)} 
+            key={achievements[0].id} 
+            achievement={achievements[0]} 
+            onExpire={() => removeAchievement(achievements[0].id)} 
           />
-        ))}
+        )}
       </AnimatePresence>
     </AchievementContext.Provider>
   );

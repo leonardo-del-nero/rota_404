@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect  } from 'react';
+import React from 'react';
 
 const Typewriter = ({ text, speed = 30, delay = 0, onComplete }) => {
   const [displayedText, setDisplayedText] = useState('');

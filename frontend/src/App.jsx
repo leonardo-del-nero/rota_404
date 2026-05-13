@@ -12,6 +12,8 @@ import HttpsModule from './pages/HttpsModule/HttpsModule';
 import Error404Module from './pages/Error404Module/Error404Module';
 import DeployModule from './pages/DeployModule/DeployModule';
 import Leaderboard from './pages/Leaderboard/Leaderboard';
+import ResultScreen from './pages/ResultScreen/ResultScreen';
+import Credits from './pages/Credits/Credits';
 import { AchievementProvider } from './context/AchievementContext';
 import Achievements from './pages/Achievements/Achievements';
 
@@ -116,6 +118,16 @@ const AnimatedRoutes = () => {
             <DeployModule />
           </motion.div>
         } />
+        <Route path="/result" element={
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9, filter: 'blur(10px)' }} 
+            animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }} 
+            exit={{ opacity: 0, scale: 1.1, filter: 'blur(5px)' }} 
+            transition={{ duration: 0.4 }}
+          >
+            <ResultScreen />
+          </motion.div>
+        } />
         <Route path="/leaderboard" element={
           <motion.div 
             initial={{ opacity: 0, filter: 'blur(10px)' }} 
@@ -124,6 +136,16 @@ const AnimatedRoutes = () => {
             transition={{ duration: 0.2 }}
           >
             <Leaderboard />
+          </motion.div>
+        } />
+        <Route path="/credits" element={
+          <motion.div 
+            initial={{ opacity: 0, scale: 1.1 }} 
+            animate={{ opacity: 1, scale: 1 }} 
+            exit={{ opacity: 0, scale: 0.9 }} 
+            transition={{ duration: 0.5 }}
+          >
+            <Credits />
           </motion.div>
         } />
 
