@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect  } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, Unlock, Mail, Server, User, Terminal, Send, FileText, AlertTriangle, Globe } from 'lucide-react';
 import ModuleIntro from '../../components/ModuleIntro';

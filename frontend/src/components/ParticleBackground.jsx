@@ -1,4 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef  } from 'react';
+import React from 'react';
 
 const ParticleBackground = () => {
   const canvasRef = useRef(null);
