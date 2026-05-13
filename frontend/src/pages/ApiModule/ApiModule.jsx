@@ -59,12 +59,35 @@ const ApiModule = () => {
   const [castorStep, setCastorStep] = useState(0);
   const [isMaliciousAction, setIsMaliciousAction] = useState(false);
   const [apiStep, setApiStep] = useState(0);
+  const [quizFocus, setQuizFocus] = useState(false);
+
+  const slowScrollTo = (targetY, duration) => {
+    const startingY = window.pageYOffset;
+    const diff = targetY - startingY;
+    let start;
+
+    window.requestAnimationFrame(function step(timestamp) {
+      if (!start) start = timestamp;
+      const time = timestamp - start;
+      const percent = Math.min(time / duration, 1);
+      
+      window.scrollTo(0, startingY + diff * percent);
+
+      if (time < duration) {
+        window.requestAnimationFrame(step);
+      }
+    });
+  };
 
   useEffect(() => {
-    if (showLab && apiStep === 0) {
-      setCastorStep(0);
-      setShowCastor(true);
+    if (showLab) {
+      const endScreen = setTimeout(() => {
+        slowScrollTo(300, 1000)
+      }, 800);
     }
+
+    setCastorStep(0);
+    setShowCastor(true);
   }, [showLab]);
 
   const handleSend = async (isMalicious = false) => {
@@ -124,6 +147,19 @@ const ApiModule = () => {
     }, 1500);
   };
 
+  const handleNextCastor = () => {
+    if (castorStep === 3) {
+      setCastorStep(4); 
+      setQuizFocus(true);
+      slowScrollTo(0, 1000);
+    } else if (castorStep === 4) {
+      setShowCastor(false);
+      setQuizFocus(false);
+    } else {
+      setShowCastor(false);
+    }
+  };
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -170,7 +206,30 @@ const ApiModule = () => {
 
   return (
     <div className="container module-container">
-      <LabHeader showQuiz={showQuiz} setShowQuiz={setShowQuiz} onResetLab={resetLab} />
+      <LabHeader 
+        showQuiz={showQuiz} 
+        setShowQuiz={setShowQuiz} 
+        onResetLab={resetLab} 
+        quizFocus={quizFocus} 
+      />
+
+      <AnimatePresence>
+        {quizFocus && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: 'fixed',
+              top: 0, left: 0, right: 0, bottom: 0,
+              background: 'rgba(0, 0, 0, 0.85)',
+              zIndex: 999,
+              backdropFilter: 'blur(4px)',
+              pointerEvents: 'none'
+            }}
+          />
+        )}
+      </AnimatePresence>
 
       <div className="content-max-width">
         <Mascot 
@@ -181,16 +240,11 @@ const ApiModule = () => {
             /* Passo 0 */ <Typewriter text="Olá! Bem-vindo ao módulo de API. Escolha um ID entre 1 e 5 e clique em 'Fazer Requisição' para ver o garçom em ação!" />,
             /* Passo 1 */ <Typewriter text="Viu só? O Servidor foi até o estoque e trouxe exatamente o pacote JSON que você pediu. Agora, tente pedir um ID que não existe (como o 6)!" />,
             /* Passo 2 */ <Typewriter text="A API retornou um erro porque você pediu algo que não está no estoque. APIs são rígidas! Agora, tente clicar em 'Tentar Acesso Direto' para ver o que acontece." />,
-            /* Passo 3 */ <Typewriter text="SEGURANÇA! Tentar acessar arquivos sensíveis sem permissão ativa o Firewall da API. Ela protege o servidor! Seria como tentar acessar a cozinha de um restaurante, não sendo um garçom. Não tem motivos para você estar lá!" />
+            /* Passo 3 */ <Typewriter text="SEGURANÇA! Tentar acessar arquivos sensíveis sem permissão ativa o Firewall da API. Ela protege o servidor! Seria como tentar acessar a cozinha de um restaurante, não sendo um garçom. Não tem motivos para você estar lá!" />,
+            /* Passo 4 */ <Typewriter text="Excelente! Você entendeu como a API gerencia as requisições. Que tal testar seu conhecimento no Quiz?" />
           ]}
-          onNext={() => {
-            if (castorStep === 1) {
-              setShowCastor(false); 
-            } else {
-              setShowCastor(false);
-            }
-          }}
-          buttonLabels={["VAMOS LÁ_", "ENTENDI_", "OK!_", "ENTENDI_"]}
+          onNext={handleNextCastor}
+          buttonLabels={["VAMOS LÁ_", "ENTENDI_", "OK!_", "ENTENDI_", "BORA!_"]}
         />
 
         <AnimatePresence mode="wait">

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Star, Zap } from 'lucide-react';
+import commonBadge from '../badges/c_model.png';
+import rareBadge from '../badges/r_model.png';
+import legendaryBadge from '../badges/l_model.png';
 
 const AchievementToast = ({ achievement, onExpire }) => {
   useEffect(() => {
@@ -9,6 +9,24 @@ const AchievementToast = ({ achievement, onExpire }) => {
     }, 5000);
     return () => clearTimeout(timer);
   }, [onExpire]);
+
+  const getBadgeIcon = () => {
+    switch (achievement.tier) {
+      case 'RARO': return rareBadge;
+      case 'LENDÁRIO': return legendaryBadge;
+      case 'SECRETAS': return rareBadge; // Secret uses rare as base
+      default: return commonBadge;
+    }
+  };
+
+  const getGlowColor = () => {
+    switch (achievement.tier) {
+      case 'RARO': return 'var(--secondary)';
+      case 'LENDÁRIO': return 'var(--primary)';
+      case 'SECRETAS': return '#ff00ff';
+      default: return '#aaa';
+    }
+  };
 
   return (
     <motion.div
@@ -20,34 +38,54 @@ const AchievementToast = ({ achievement, onExpire }) => {
         bottom: '30px',
         left: '50%',
         zIndex: 10000,
-        background: 'rgba(10, 10, 15, 0.95)',
-        border: '1px solid var(--primary)',
-        boxShadow: '0 0 30px var(--glow-primary)',
-        padding: '1rem 2rem',
-        borderRadius: '12px',
+        background: 'rgba(10, 10, 15, 0.98)',
+        border: `1px solid ${getGlowColor()}`,
+        boxShadow: `0 0 30px ${getGlowColor()}44`,
+        padding: '0.8rem 1.5rem',
+        borderRadius: '16px',
         display: 'flex',
         alignItems: 'center',
-        gap: '1rem',
-        minWidth: '320px'
+        gap: '1.2rem',
+        minWidth: '340px',
+        backdropFilter: 'blur(10px)'
       }}
     >
       <div style={{ 
-        background: 'var(--primary)', 
-        color: 'black', 
-        padding: '10px', 
-        borderRadius: '50%',
+        position: 'relative',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
       }}>
-        <Trophy size={24} />
+        <img 
+          src={getBadgeIcon()} 
+          alt="Badge" 
+          style={{ 
+            width: '45px', 
+            height: '45px', 
+            imageRendering: 'pixelated',
+            filter: achievement.tier === 'SECRETAS' ? 'hue-rotate(290deg) brightness(1.2)' : 'none'
+          }} 
+        />
+        <motion.div 
+          animate={{ opacity: [0, 1, 0], scale: [1, 1.5, 1] }}
+          transition={{ repeat: Infinity, duration: 2 }}
+          style={{ 
+            position: 'absolute', 
+            inset: -5, 
+            border: `1px solid ${getGlowColor()}`, 
+            borderRadius: '50%', 
+            opacity: 0.3 
+          }} 
+        />
       </div>
       <div>
-        <h4 className="mono" style={{ color: 'var(--primary)', margin: 0, fontSize: '0.8rem' }}>CONQUISTA DESBLOQUEADA!</h4>
-        <p style={{ color: 'white', margin: '4px 0 0 0', fontWeight: 'bold' }}>{achievement.title}</p>
-        <p className="mono" style={{ color: '#888', margin: 0, fontSize: '0.7rem' }}>{achievement.description}</p>
+        <h4 className="mono" style={{ color: getGlowColor(), margin: 0, fontSize: '0.7rem', letterSpacing: '1px' }}>
+          CONQUISTA DESBLOQUEADA!
+        </h4>
+        <p style={{ color: 'white', margin: '2px 0', fontWeight: 'bold', fontSize: '1rem' }}>{achievement.title}</p>
+        <p className="mono" style={{ color: '#aaa', margin: 0, fontSize: '0.7rem' }}>{achievement.description}</p>
       </div>
-      <div style={{ marginLeft: 'auto', color: 'var(--primary)' }}>
+      <div style={{ marginLeft: 'auto', color: getGlowColor() }}>
         <Zap size={20} />
       </div>
     </motion.div>

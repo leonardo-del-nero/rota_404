@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Hash, Cpu, Globe, Lock, AlertCircle, CloudUpload } from 'lucide-react';
@@ -7,6 +8,8 @@ import styles from './Hub.module.css';
 import PrimaryLogo from '../../components/PrimaryLogo';
 import ParticleBackground from '../../components/ParticleBackground';
 import ModuleCard from '../../components/ModuleCard';
+import AchievementGallery from '../../components/AchievementGallery';
+import { LayoutGrid } from 'lucide-react';
 
 const Hub = () => {
   const navigate = useNavigate();
@@ -72,13 +75,23 @@ const Hub = () => {
   const { unlockAchievement } = useAchievement();
 
   React.useEffect(() => {
-    unlockAchievement('HUB_VISITED', 'EXPLORADOR DE REDES', 'Você acessou a central de módulos da Rota 404.');
-    
-    // Check for Grand Master
+    // Inicializa o tempo da jornada se não existir
+    if (!localStorage.getItem('rota404_journey_start')) {
+      localStorage.setItem('rota404_journey_start', Date.now().toString());
+    }
+
+    // Check for Grand Master (RARO: completar todo o percurso)
     const progress = JSON.parse(localStorage.getItem('rota404_quiz_progress') || '{}');
     const completedModules = Object.keys(progress).filter(key => progress[key].score);
     if (completedModules.length >= 6) {
-      unlockAchievement('GRAND_MASTER', 'GRÃO-MESTRE CYBER', 'Você completou todos os desafios da Rota 404. O sistema é seu!');
+      unlockAchievement('COMPLETAR_PERCURSO', 'CONQUISTADOR DO SISTEMA', 'Você completou todo o percurso da Rota 404!', 'RARO');
+      
+      // LENDÁRIO: completar todo o percurso dentro de 6 minutos
+      const journeyStart = parseInt(localStorage.getItem('rota404_journey_start') || '0');
+      const journeyDuration = (Date.now() - journeyStart) / 1000;
+      if (journeyDuration <= 360) { // 6 minutos = 360 segundos
+        unlockAchievement('JORNADA_VELOZ', 'SPEEDRUNNER CYBER', 'Você completou todo o percurso em menos de 6 minutos!', 'LENDÁRIO');
+      }
     }
   }, [unlockAchievement]);
 
@@ -108,27 +121,48 @@ const Hub = () => {
       }
     });
 
+    // NOVAS CONQUISTAS DE PONTUAÇÃO
+    if (totalScore >= 300) {
+      unlockAchievement('PONTUACAO_300', 'HACKER APRENDIZ', 'Você atingiu 300 pontos ou mais!', 'COMUM');
+    }
+    if (totalScore >= 700) {
+      unlockAchievement('PONTUACAO_700', 'HACKER AVANÇADO', 'Você atingiu 700 pontos ou mais!', 'RARO');
+    }
+    if (totalScore >= 900) {
+      unlockAchievement('PONTUACAO_900', 'DEUS DO CÓDIGO', 'Você atingiu 900 pontos ou mais!', 'LENDÁRIO');
+    }
+
+    const isFirstTime = !player.progress?.score || player.progress.score === 0;
+
     if (player.id) {
       const achievements = JSON.parse(localStorage.getItem('rota404_achievements') || '[]');
       try {
+        // Se for a primeira vez, envia tudo. Se não, envia apenas as achievements (o backend deve ignorar o score se já existir, mas aqui garantimos enviando o original ou uma flag)
         await fetch(`${import.meta.env.VITE_API_URL}/api/players/${player.id}/score`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
-            score: totalScore, 
+            score: isFirstTime ? totalScore : player.progress.score, 
             modules: saved,
-            achievements: achievements
+            achievements: achievements,
+            isUpdate: !isFirstTime // Flag opcional para o backend saber que é apenas atualização de badges
           })
         });
         
-        player.progress = { ...player.progress, score: totalScore, modules: saved, achievements: achievements };
+        // No local, só atualizamos o score se for a primeira vez
+        player.progress = { 
+          ...player.progress, 
+          score: isFirstTime ? totalScore : player.progress.score, 
+          modules: saved, 
+          achievements: achievements 
+        };
         localStorage.setItem('rota404_player', JSON.stringify(player));
       } catch (e) {
-        console.error("Erro ao salvar score:", e);
+        console.error("Erro ao salvar dados:", e);
       }
     }
     
-    navigate('/leaderboard');
+    navigate('/leaderboard', { state: { sessionScore: totalScore } });
   };
 
   const progressData = JSON.parse(localStorage.getItem('rota404_quiz_progress') || '{}');
@@ -136,6 +170,29 @@ const Hub = () => {
   return (
     <div className={`container ${styles.hubContainer}`}>
       <ParticleBackground />
+      
+      <div className={styles.topActions}>
+        <motion.button 
+          className={styles.achievementBtn}
+          onClick={() => navigate('/achievements')}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <LayoutGrid size={20} />
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+            <span>CONQUISTAS</span>
+            <span style={{ fontSize: '0.6rem', opacity: 0.7, fontFamily: 'var(--font-mono)' }}>
+              {JSON.parse(localStorage.getItem('rota404_achievements') || '[]').filter(a => [
+                'ESCOLHER_NOME_AVATAR', 'QUIZ_PERFEITO', 'INTERACAO_BONZI', 'PONTUACAO_300',
+                'QUIZ_RAPIDO_40', 'COMPLETAR_PERCURSO', 'QUIZ_3_SEGUIDOS', 'PONTUACAO_700', 'TOP_10',
+                'QUIZ_RAPIDO_10', 'JORNADA_VELOZ', 'QUIZ_TODOS_PERFEITOS', 'PONTUACAO_900',
+                'TOP_3', 'DIGITAR_START'
+              ].includes(a)).length}/15 COLETADAS
+            </span>
+          </div>
+        </motion.button>
+      </div>
+
       <header className={styles.hubHeader}>
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}

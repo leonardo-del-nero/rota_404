@@ -1,0 +1,256 @@
+{
+    "players": [
+        {
+            "name": "vgr",
+            "character_id": "5",
+            "progress": {},
+            "id": "1",
+            "created_at": "2026-05-03T09:11:52.978632"
+        },
+        {
+            "name": "gfd",
+            "character_id": "3",
+            "progress": {},
+            "id": "2",
+            "created_at": "2026-05-03T09:54:28.094905"
+        },
+        {
+            "name": "dfs",
+            "character_id": "4",
+            "progress": {},
+            "id": "3",
+            "created_at": "2026-05-11T01:06:42.755447"
+        },
+        {
+            "name": "ds",
+            "character_id": "4",
+            "progress": {},
+            "id": "4",
+            "created_at": "2026-05-11T04:14:38.959851"
+        },
+        {
+            "name": "dasdsa",
+            "character_id": "4",
+            "progress": {
+                "score": 0,
+                "modules": {
+                    "hash": {
+                        "startTime": 1778590147509,
+                        "attempts": {},
+                        "isCorrectMap": {},
+                        "lastSelected": {}
+                    }
+                }
+            },
+            "id": "5",
+            "created_at": "2026-05-11T06:55:03.267793"
+        },
+        {
+            "name": "fdsf",
+            "character_id": "4",
+            "progress": {},
+            "id": "6",
+            "created_at": "2026-05-12T09:53:00.968657"
+        },
+        {
+            "name": "CP1",
+            "character_id": "6",
+            "progress": {},
+            "id": "7",
+            "created_at": "2026-05-12T19:22:10.082796"
+        },
+        {
+            "name": "CP1",
+            "character_id": "6",
+            "progress": {},
+            "id": "8",
+            "created_at": "2026-05-12T19:27:36.114768"
+        },
+        {
+            "name": "fdg",
+            "character_id": "3",
+            "progress": {
+                "score": 641.9047619047622,
+                "modules": {
+                    "hash": {
+                        "startTime": 1778626912180,
+                        "attempts": {
+                            "0": 1,
+                            "1": 1,
+                            "2": 2
+                        },
+                        "isCorrectMap": {
+                            "0": true,
+                            "1": true,
+                            "2": true
+                        },
+                        "lastSelected": {
+                            "0": 0,
+                            "1": 1,
+                            "2": 2
+                        },
+                        "score": {
+                            "total": 133.33333333333337,
+                            "bonus": 8.333333333333336,
+                            "timeElapsed": 35,
+                            "questions": {
+                                "0": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "1": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "2": {
+                                    "attempts": 2,
+                                    "score": 25.000000000000007
+                                }
+                            }
+                        }
+                    },
+                    "api": {
+                        "startTime": 1778627244293,
+                        "attempts": {
+                            "0": 1,
+                            "1": 1,
+                            "2": 1
+                        },
+                        "isCorrectMap": {
+                            "0": true,
+                            "1": true,
+                            "2": true
+                        },
+                        "lastSelected": {
+                            "0": 1,
+                            "1": 0,
+                            "2": 0
+                        },
+                        "score": {
+                            "total": 160.47619047619054,
+                            "bonus": 10.47619047619048,
+                            "timeElapsed": 26,
+                            "questions": {
+                                "0": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "1": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "2": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                }
+                            }
+                        }
+                    },
+                    "dns": {
+                        "startTime": 1778627404241,
+                        "attempts": {
+                            "0": 1,
+                            "1": 1,
+                            "2": 1
+                        },
+                        "isCorrectMap": {
+                            "0": true,
+                            "1": true,
+                            "2": true
+                        },
+                        "lastSelected": {
+                            "0": 1,
+                            "1": 2,
+                            "2": 0
+                        },
+                        "score": {
+                            "total": 160.95238095238102,
+                            "bonus": 10.952380952380956,
+                            "timeElapsed": 24,
+                            "questions": {
+                                "0": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "1": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "2": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                }
+                            }
+                        }
+                    },
+                    "error404": {
+                        "startTime": 1778627523011,
+                        "attempts": {
+                            "0": 1,
+                            "1": 1,
+                            "2": 1
+                        },
+                        "isCorrectMap": {
+                            "0": true,
+                            "1": true,
+                            "2": true
+                        },
+                        "lastSelected": {
+                            "0": 2,
+                            "1": 0,
+                            "2": 0
+                        },
+                        "score": {
+                            "total": 162.1428571428572,
+                            "bonus": 12.142857142857146,
+                            "timeElapsed": 19,
+                            "questions": {
+                                "0": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "1": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "2": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                }
+                            }
+                        }
+                    },
+                    "https": {
+                        "startTime": 1778627559127,
+                        "attempts": {
+                            "0": 2
+                        },
+                        "isCorrectMap": {
+                            "0": true
+                        },
+                        "lastSelected": {
+                            "0": 1
+                        }
+                    }
+                },
+                "achievements": [
+                    "ESCOLHER_NOME_AVATAR",
+                    "INTERACAO_BONZI",
+                    "QUIZ_RAPIDO_40",
+                    "QUIZ_PERFEITO",
+                    "QUIZ_3_SEGUIDOS",
+                    "PONTUACAO_300"
+                ]
+            },
+            "id": "9",
+            "created_at": "2026-05-12T19:37:19.272112"
+        },
+        {
+            "name": "fds",
+            "character_id": "4",
+            "progress": {},
+            "id": "10",
+            "created_at": "2026-05-12T22:02:28.450077"
+        }
+    ]
+}

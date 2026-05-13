@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trophy, Medal, Star, ArrowLeft, LogOut, Zap } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { Trophy, Medal, Star, ArrowLeft, LogOut, Zap, RefreshCcw, LayoutGrid } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useAchievement } from '../../context/AchievementContext';
 import styles from './Leaderboard.module.css';
 
 const Leaderboard = () => {
@@ -9,7 +11,10 @@ const Leaderboard = () => {
   const [loading, setLoading] = useState(true);
   const [displayScore, setDisplayScore] = useState(0);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { unlockAchievement } = useAchievement();
   
+  const sessionScore = location.state?.sessionScore;
   const player = JSON.parse(localStorage.getItem('rota404_player') || '{}');
   const targetScore = player.progress?.score || 0;
 
@@ -31,6 +36,18 @@ const Leaderboard = () => {
     
     fetchLeaderboard();
   }, []);
+
+  useEffect(() => {
+    if (!loading && leaderboard.length > 0 && player.id) {
+      const rank = leaderboard.findIndex(p => p.id === player.id) + 1;
+      if (rank > 0 && rank <= 10) {
+        unlockAchievement('TOP_10', 'ELITE CYBER', 'Você atingiu o top 10 na leaderboard!', 'RARO');
+      }
+      if (rank > 0 && rank <= 3) {
+        unlockAchievement('TOP_3', 'LENDA DA REDE', 'Você atingiu o top 3 na leaderboard!', 'SECRETAS');
+      }
+    }
+  }, [loading, leaderboard, player.id, unlockAchievement]);
 
   // Animação do score do jogador
   useEffect(() => {
@@ -65,23 +82,36 @@ const Leaderboard = () => {
   return (
     <div className={styles.container}>
       <div className={styles.topButtons}>
-        <motion.button 
-          className={`btn-404 btn-outline`}
-          onClick={() => navigate('/hub')}
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-        >
-          <ArrowLeft size={16} /> VOLTAR AO HUB
-        </motion.button>
+        <div className={styles.leftGroup}>
+          <motion.button 
+            className={`btn-404 btn-outline`}
+            onClick={() => navigate('/hub')}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+          >
+            <ArrowLeft size={16} /> VOLTAR AO HUB
+          </motion.button>
+        </div>
 
-        <motion.button 
-          className={`btn-404`}
-          onClick={handleLogout}
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-          style={{ background: 'var(--danger)', color: '#fff', border: 'none' }}
-        >
-          <LogOut size={16} style={{ marginRight: '8px', verticalAlign: 'middle' }}/> 
-          ENCERRAR SESSÃO (NOVO JOGADOR)
-        </motion.button>
+        <div className={styles.rightGroup}>
+          <motion.button 
+            className={`btn-404`}
+            onClick={() => navigate('/achievements')}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            style={{ background: 'var(--primary)', color: '#000' }}
+          >
+            <LayoutGrid size={16} style={{ marginRight: '8px', verticalAlign: 'middle' }}/> 
+            MINHAS CONQUISTAS
+          </motion.button>
+
+          <motion.button 
+            className={`btn-404`}
+            onClick={handleLogout}
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+            style={{ background: 'rgba(255,59,59,0.1)', color: 'var(--danger)', border: '1px solid var(--danger)' }}
+          >
+            <LogOut size={16} /> 
+          </motion.button>
+        </div>
       </div>
 
       <div className={styles.scoreSection}>
@@ -96,6 +126,37 @@ const Leaderboard = () => {
             {displayScore.toFixed(2)}
           </div>
           <p className={styles.scoreText}>PONTOS DE HACKER</p>
+          
+          {sessionScore !== undefined && Math.abs(sessionScore - targetScore) > 0.01 && (
+            <div className={styles.sessionScoreInfo}>
+              <span className="mono">ESTA TENTATIVA: {sessionScore.toFixed(2)} pts</span>
+              <p className="mono" style={{ fontSize: '0.6rem', opacity: 0.5, marginTop: '4px' }}>
+                (Seu score oficial na Leaderboard permanece {targetScore.toFixed(2)})
+              </p>
+            </div>
+          )}
+          
+          <div className={styles.cardActions}>
+            <button 
+              className={styles.refazerBtn}
+              onClick={() => {
+                const progress = JSON.parse(localStorage.getItem('rota404_quiz_progress') || '{}');
+                Object.keys(progress).forEach(key => {
+                  progress[key].attempts = {};
+                  progress[key].isCorrectMap = {};
+                  progress[key].lastSelected = {};
+                  delete progress[key].startTime;
+                });
+                localStorage.setItem('rota404_quiz_progress', JSON.stringify(progress));
+                localStorage.removeItem('rota404_consecutive_perfect');
+                localStorage.removeItem('rota404_perfect_modules');
+                localStorage.removeItem('rota404_journey_start');
+                navigate('/hub');
+              }}
+            >
+              <RefreshCcw size={14} /> REFAZER LABORATÓRIOS
+            </button>
+          </div>
         </motion.div>
       </div>
 
@@ -125,9 +186,14 @@ const Leaderboard = () => {
                     </div>
                     <div className={`mono ${styles.name}`}>{p.name}</div>
                     <div className={`mono ${styles.achievements}`} style={{ fontSize: '0.75rem', color: 'var(--secondary)', opacity: 0.8 }}>
-                      {(p.progress?.achievements?.length || 0)}/22 <Zap size={10} style={{ marginLeft: '2px' }} />
+                      {(p.progress?.achievements?.filter(a => [
+                        'ESCOLHER_NOME_AVATAR', 'QUIZ_PERFEITO', 'INTERACAO_BONZI', 'PONTUACAO_300',
+                        'QUIZ_RAPIDO_40', 'COMPLETAR_PERCURSO', 'QUIZ_3_SEGUIDOS', 'PONTUACAO_700', 'TOP_10',
+                        'QUIZ_RAPIDO_10', 'JORNADA_VELOZ', 'QUIZ_TODOS_PERFEITOS', 'PONTUACAO_900',
+                        'TOP_3', 'DIGITAR_START'
+                      ].includes(a)).length || 0)}/15 <Zap size={10} style={{ marginLeft: '2px' }} />
                     </div>
-                    <div className={`mono ${styles.points}`}>{p.progress.score.toFixed(2)} pts</div>
+                    <div className={`mono ${styles.points}`}>{(p.progress?.score ?? 0).toFixed(2)} pts</div>
                     {isCurrentPlayer && <Star size={16} color="var(--primary)" style={{ marginLeft: '1rem' }} />}
                   </motion.div>
                 );

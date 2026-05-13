@@ -4,6 +4,7 @@ import { Fingerprint, FileText, Zap, Moon, User, Server } from 'lucide-react';
 import ModuleIntro from '../../components/ModuleIntro';
 import LabHeader from '../../components/LabHeader';
 import Quiz from '../../components/Quiz';
+import { useAchievement } from '../../context/AchievementContext';
 import GlassPanel from '../../components/GlassPanel';
 import Mascot from '../../components/Mascot';
 import styles from './HashModule.module.css';
@@ -64,12 +65,36 @@ const HashModule = () => {
   const [generations, setGenerations] = useState(0);
   const [hashGenerations, setHashGenerations] = useState(0);
   const [isButtonFlashing, setIsButtonFlashing] = useState(false);
+  const { unlockAchievement } = useAchievement();
+  const [quizFocus, setQuizFocus] = useState(false);
+
+  const slowScrollTo = (targetY, duration) => {
+    const startingY = window.pageYOffset;
+    const diff = targetY - startingY;
+    let start;
+
+    window.requestAnimationFrame(function step(timestamp) {
+      if (!start) start = timestamp;
+      const time = timestamp - start;
+      const percent = Math.min(time / duration, 1);
+      
+      window.scrollTo(0, startingY + diff * percent);
+
+      if (time < duration) {
+        window.requestAnimationFrame(step);
+      }
+    });
+  };
 
   useEffect(() => {
-    if (showLab && generations === 0) {
-      setCastorStep(0);
-      setShowCastor(true);
+    if (showLab) {
+      const endScreen = setTimeout(() => {
+        slowScrollTo(300, 1000)
+      }, 800);
     }
+
+    setCastorStep(0);
+    setShowCastor(true);
   }, [showLab]);
 
   const handleSend = async () => {
@@ -143,13 +168,18 @@ const HashModule = () => {
 
   const handleNextCastor = () => {
     if (castorStep === 1) {
-      // Apenas fecha e espera o clique no botão que está piscando
       setShowCastor(false);
     } else if (castorStep === 4) {
-      // Se clicou em continuar no SHA-256, avança para a Fruta!
       setCastorStep(5);
+    } else if (castorStep === 5) {
+      setCastorStep(6); 
+      setQuizFocus(true); 
+      
+      slowScrollTo(0, 1000); 
+    } else if (castorStep === 6) {
+      setShowCastor(false);
+      setQuizFocus(false);
     } else {
-      // Para os outros passos, fecha o Mascot
       setShowCastor(false);
     }
   };
@@ -196,23 +226,51 @@ const HashModule = () => {
 
   return (
     <div className="container module-container">
-      <LabHeader showQuiz={showQuiz} setShowQuiz={setShowQuiz} onResetLab={resetLab} />
+      <LabHeader 
+        showQuiz={showQuiz} 
+        setShowQuiz={setShowQuiz} 
+        onResetLab={resetLab} 
+        quizFocus={quizFocus} 
+      />
+
+      <AnimatePresence>
+        {quizFocus && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => { 
+              setQuizFocus(false);
+              setShowCastor(false);
+            }}
+            style={{
+              position: 'fixed',
+              top: 0, left: 0, right: 0, bottom: 0,
+              background: 'rgba(0, 0, 0, 0.85)',
+              zIndex: 999,
+              backdropFilter: 'blur(1px)',
+              cursor: 'pointer'
+            }}
+          />
+        )}
+      </AnimatePresence>
 
       <div className="content-max-width">
         <Mascot 
           show={showCastor}
           step={castorStep}
-          images={[bonzi1, bonzi2, bonzi3, bonzi1, bonzi2, bonzi3]}
+          images={[bonzi1, bonzi2, bonzi3, bonzi1, bonzi2, bonzi3, bonzi2]}
           phrases={[
             /* Passo 0 */ <Typewriter text="Olá! Bem-vindo ao módulo de Hash. Digite qualquer mensagem ali embaixo e clique em enviar para começarmos!" />,
             /* Passo 1 */ <Typewriter text="Notou? Como o Hashing está DESLIGADO, a informação chegou ao destino exatamente como você a escreveu. Tente ligar o Hashing agora!" />,
             /* Passo 2 */ <Typewriter text="Ótimo! Agora com o Hashing LIGADO, digite uma nova mensagem e veja o que vai acontecer." />,
             /* Passo 3 */ <Typewriter text="Ei! Notou algo? Mude apenas uma letra ou um ponto e envie de novo. O Hash será completamente diferente!" />,
             /* Passo 4 */ <Typewriter text="O SHA-256 é tão complexo que a chance de dois arquivos diferentes terem o mesmo Hash é praticamente ZERO!" />,
-            /* Passo 5 */ <Typewriter text="Gerar um Hash é como triturar uma fruta. Você joga a fruta (dado), faz o suco (hash), mas é impossível transformar o suco de volta em fruta." />
+            /* Passo 5 */ <Typewriter text="Gerar um Hash é como triturar uma fruta. Você joga a fruta (dado), faz o suco (hash), mas é impossível transformar o suco de volta em fruta." />,
+            /* Passo 6 */ <Typewriter text="Você dominou o Hash! Que tal testar seus conhecimentos com um quiz rápido? Está logo ali em cima!" />
           ]}
           onNext={handleNextCastor}
-          buttonLabels={["VAMOS LÁ_", "ENTENDI_", "OK!_", "INCRÍVEL_", "CONTINUAR_", "ENTENDI_"]}
+          buttonLabels={["VAMOS LÁ_", "ENTENDI_", "OK!_", "INCRÍVEL_", "CONTINUAR_", "ENTENDI_", "BORA!_"]}
         />
 
         <AnimatePresence mode="wait">
@@ -307,7 +365,11 @@ const HashModule = () => {
                   <textarea 
                     className={`input-404 ${styles.inputArea}`}
                     value={input}
-                    onChange={(e) => { setInput(e.target.value); setStatus('IDLE'); setHash('...'); }}
+                    onChange={(e) => { 
+                      setInput(e.target.value); 
+                      setStatus('IDLE'); 
+                      setHash('...'); 
+                    }}
                     onKeyDown={handleKeyDown}
                     disabled={status !== 'IDLE' && status !== 'DONE'}
                     placeholder="Digite algo para enviar... (Pressione Enter para enviar)"

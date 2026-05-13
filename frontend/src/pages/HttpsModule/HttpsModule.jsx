@@ -63,13 +63,34 @@ const HttpsModule = () => {
   const [castorStep, setCastorStep] = useState(0);
   const [hasExplainedHttps, setHasExplainedHttps] = useState(false);
 
+  const slowScrollTo = (targetY, duration) => {
+    const startingY = window.pageYOffset;
+    const diff = targetY - startingY;
+    let start;
+
+    window.requestAnimationFrame(function step(timestamp) {
+      if (!start) start = timestamp;
+      const time = timestamp - start;
+      const percent = Math.min(time / duration, 1);
+      
+      window.scrollTo(0, startingY + diff * percent);
+
+      if (time < duration) {
+        window.requestAnimationFrame(step);
+      }
+    });
+  };
+
   useEffect(() => {
     if (showLab) {
-      setCastorStep(0);
-      setShowCastor(true);
+      const endScreen = setTimeout(() => {
+        slowScrollTo(300, 1000)
+      }, 800);
     }
-  }, [showLab]);
 
+    setCastorStep(0);
+    setShowCastor(true);
+  }, [showLab]);
   const handleSend = async () => {
     if (!input) return;
     setStatus('SENDING');

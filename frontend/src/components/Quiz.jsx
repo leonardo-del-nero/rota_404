@@ -11,9 +11,10 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
   const [pendingSelection, setPendingSelection] = useState(null);
   const [attempts, setAttempts] = useState({});
   const [isCorrectMap, setIsCorrectMap] = useState({});
-  const [showCongrats, setShowCongrats] = useState(false);
   const [isReviewing, setIsReviewing] = useState(false);
+  const [liveSeconds, setLiveSeconds] = useState(0);
   const { unlockAchievement } = useAchievement();
+  const [showCongrats, setShowCongrats] = useState(false);
 
   const [direction, setDirection] = useState(0);
 
@@ -35,6 +36,21 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
       setLastSelected(saved[moduleId].lastSelected || {});
     }
   }, [moduleId]);
+
+  // Timer em tempo real
+  useEffect(() => {
+    if (typeof showCongrats !== 'undefined' && (showCongrats || isReviewing)) return;
+    
+    const interval = setInterval(() => {
+      const saved = JSON.parse(localStorage.getItem('rota404_quiz_progress') || '{}');
+      const startTime = saved[moduleId]?.startTime;
+      if (startTime) {
+        setLiveSeconds(Math.floor((Date.now() - startTime) / 1000));
+      }
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, [moduleId, showCongrats, isReviewing]);
 
   const saveProgress = (newAttempts, newIsCorrectMap, newLastSelected) => {
     if (!moduleId) return;
@@ -79,59 +95,85 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
       const saved = JSON.parse(localStorage.getItem('rota404_quiz_progress') || '{}');
       const moduleData = saved[moduleId] || {};
       
-      // Só calcula se ainda não tiver a pontuação fechada
-      if (!moduleData.score) {
-        const startTime = moduleData.startTime || Date.now();
-        const seg = Math.floor((Date.now() - startTime) / 1000);
-        
-        const un = 16.66666666666667;
-        const max_time = 80;
-        
-        let valor_bonus = 0;
-        if (seg <= 10) {
-          valor_bonus = un;
-        } else if (seg <= max_time) {
-          valor_bonus = (un / (max_time - 10)) * (max_time - seg - 10);
-        } else {
-          valor_bonus = 0;
-        }
-        
-        let perguntasScore = 0;
-        let perfectFirstTry = true;
-        const questionsScoreDetails = {};
-        
-        questions.forEach((q, idx) => {
-          const tent = moduleData.attempts[idx] || 1; 
-          if (tent > 1) perfectFirstTry = false;
-          const v = (un * 3) / tent;
-          perguntasScore += v;
-          questionsScoreDetails[idx] = { attempts: tent, score: v };
-        });
-        
-        const valor_quiz = perguntasScore + valor_bonus;
-        
-        // Armazenando a nota por módulo e por tentativa
+      // Só calcula se ainda não tiver a pontuação fechada (primeira vez)
+      const isFirstTime = !moduleData.score;
+      
+      const startTime = moduleData.startTime || Date.now();
+      const seg = Math.floor((Date.now() - startTime) / 1000);
+      
+      const un = 16.66666666666667;
+      const max_time = 80;
+      
+      let valor_bonus = 0;
+      if (seg <= 10) {
+        valor_bonus = un;
+      } else if (seg <= max_time) {
+        valor_bonus = (un / (max_time - 10)) * (max_time - seg - 10);
+      } else {
+        valor_bonus = 0;
+      }
+      
+      let perguntasScore = 0;
+      let perfectFirstTry = true;
+      const questionsScoreDetails = {};
+      
+      questions.forEach((q, idx) => {
+        const tent = moduleData.attempts[idx] || 1; 
+        if (tent > 1) perfectFirstTry = false;
+        const v = (un * 3) / tent;
+        perguntasScore += v;
+        questionsScoreDetails[idx] = { attempts: tent, score: v };
+      });
+      
+      const valor_quiz = perguntasScore + valor_bonus;
+      
+      if (isFirstTime) {
         moduleData.score = {
           total: valor_quiz,
           bonus: valor_bonus,
           timeElapsed: seg,
           questions: questionsScoreDetails
         };
-        
         saved[moduleId] = moduleData;
         localStorage.setItem('rota404_quiz_progress', JSON.stringify(saved));
-
-        // Conquistas de Dificuldade
-        if (perfectFirstTry) {
-          unlockAchievement(`PERFECTIONIST_${moduleId.toUpperCase()}`, 'PERFECCIONISTA DIGITAL', `Você acertou todas as questões de ${moduleId.toUpperCase()} de primeira!`);
-        }
-        if (seg < 30) {
-          unlockAchievement(`SPEED_HACKER_${moduleId.toUpperCase()}`, 'SPEED HACKER', `Você detonou o laboratório de ${moduleId.toUpperCase()} em menos de 30 segundos!`);
-        }
       }
 
+      // NOVAS CONQUISTAS
+      // COMUM: completar um quiz sem errar nenhuma resposta
+      if (perfectFirstTry) {
+        unlockAchievement('QUIZ_PERFEITO', 'GABARITOU!', 'Você completou um quiz sem errar nenhuma resposta!', 'COMUM');
+        
+        // RARO: completar 3 quizes seguidos sem errar nenhuma resposta
+        const consecutivePerfect = parseInt(localStorage.getItem('rota404_consecutive_perfect') || '0') + 1;
+        localStorage.setItem('rota404_consecutive_perfect', consecutivePerfect.toString());
+        if (consecutivePerfect >= 3) {
+          unlockAchievement('QUIZ_3_SEGUIDOS', 'TRIPLE KILL', 'Você completou 3 quizes seguidos sem errar nenhuma resposta!', 'RARO');
+        }
 
-      unlockAchievement(`QUIZ_COMPLETE_${moduleId.toUpperCase()}`, 'PERCURSO FINALIZADO', `Você completou o laboratório de ${moduleId.toUpperCase()}!`);
+        // LENDÁRIO: completar todos os quizes sem errar nenhuma resposta
+        const totalPerfect = JSON.parse(localStorage.getItem('rota404_perfect_modules') || '[]');
+        if (!totalPerfect.includes(moduleId)) {
+          const newTotalPerfect = [...totalPerfect, moduleId];
+          localStorage.setItem('rota404_perfect_modules', JSON.stringify(newTotalPerfect));
+          if (newTotalPerfect.length >= 6) { // Assumindo 6 módulos no total
+            unlockAchievement('QUIZ_TODOS_PERFEITOS', 'MESTRE DOS BITS', 'Você completou todos os quizes sem errar nenhuma resposta!', 'LENDÁRIO');
+          }
+        }
+      } else {
+        // Reseta o contador de seguidos se errou
+        localStorage.setItem('rota404_consecutive_perfect', '0');
+      }
+
+      // RARO: completar um quiz dentro de 40 segundos
+      if (seg <= 40) {
+        unlockAchievement('QUIZ_RAPIDO_40', 'FLASH DA REDE', 'Você completou um quiz dentro de 40 segundos!', 'RARO');
+      }
+
+      // LENDÁRIO: completar um quiz dentro de 10 segundos
+      if (seg <= 10) {
+        unlockAchievement('QUIZ_RAPIDO_10', 'VELOCIDADE DA LUZ', 'Você completou um quiz dentro de 10 segundos!', 'LENDÁRIO');
+      }
+
       setShowCongrats(true);
     }
   };
@@ -186,9 +228,17 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
 
   return (
     <div style={{ minHeight: '450px', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-      <div className="mono" style={{ color: 'var(--primary)', marginBottom: '1rem', letterSpacing: '2px', display: 'flex', justifyContent: 'space-between' }}>
+      <div className="mono" style={{ color: 'var(--primary)', marginBottom: '1rem', letterSpacing: '2px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <span>{isReviewing ? "REVISÃO" : "QUESTÃO"} {currentQuestion + 1} / {questions.length}</span>
-        {isCorrectMap[currentQuestion] && !isReviewing && <span style={{color: 'var(--success)'}}>RESOLVIDO ({currentAttempts} tentativas)</span>}
+        {!showCongrats && !isReviewing && (
+          <div style={{ color: liveSeconds > 40 ? '#666' : liveSeconds > 10 ? 'var(--secondary)' : 'var(--primary)', transition: 'color 0.3s' }}>
+            {liveSeconds}s 
+            <span style={{ fontSize: '0.6rem', marginLeft: '6px', opacity: 0.5 }}>
+              {liveSeconds <= 10 ? 'META: LENDÁRIO' : liveSeconds <= 40 ? 'META: RARO' : ''}
+            </span>
+          </div>
+        )}
+        {isCorrectMap[currentQuestion] && !isReviewing && <span style={{color: 'var(--success)'}}>RESOLVIDO</span>}
       </div>
 
       <AnimatePresence mode="wait" custom={direction}>
@@ -285,9 +335,13 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
       </AnimatePresence>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '3rem' }}>
-        <button className="btn-404 btn-outline" disabled={currentQuestion === 0} onClick={handlePrev}>
-          <ChevronLeft size={16} style={{marginRight: '5px'}}/> ANTERIOR
-        </button>
+        {currentQuestion > 0 ? (
+          <button className="btn-404 btn-outline" onClick={handlePrev}>
+            <ChevronLeft size={16} style={{ marginRight: '5px' }} /> ANTERIOR
+          </button>
+        ) : (
+          <div />
+        )}
         {isReviewing && currentQuestion === questions.length - 1 ? (
           <button className="btn-404" onClick={() => navigate('/hub')}>VOLTAR AO HUB</button>
         ) : (

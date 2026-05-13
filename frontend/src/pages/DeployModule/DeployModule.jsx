@@ -61,13 +61,34 @@ const DeployModule = () => {
   const [logs, setLogs] = useState([]);
   const terminalEndRef = useRef(null);
 
+  const slowScrollTo = (targetY, duration) => {
+    const startingY = window.pageYOffset;
+    const diff = targetY - startingY;
+    let start;
+
+    window.requestAnimationFrame(function step(timestamp) {
+      if (!start) start = timestamp;
+      const time = timestamp - start;
+      const percent = Math.min(time / duration, 1);
+      
+      window.scrollTo(0, startingY + diff * percent);
+
+      if (time < duration) {
+        window.requestAnimationFrame(step);
+      }
+    });
+  };
+
   useEffect(() => {
-    if (showLab && !hasStarted) {
-      setCastorStep(0);
-      setShowCastor(true);
-      setHasStarted(true);
+    if (showLab) {
+      const endScreen = setTimeout(() => {
+        slowScrollTo(300, 1000)
+      }, 800);
     }
-  }, [showLab, hasStarted]);
+
+    setCastorStep(0);
+    setShowCastor(true);
+  }, [showLab]);
 
   const addLog = (msg, isAction = false) => {
     setLogs(prev => [...prev, { time: new Date().toLocaleTimeString(), msg, isAction }]);

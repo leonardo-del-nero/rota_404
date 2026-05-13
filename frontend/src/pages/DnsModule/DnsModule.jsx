@@ -69,11 +69,33 @@ const DnsModule = () => {
   const [isHackerMascot, setIsHackerMascot] = useState(false);
   const [dnsStep, setDnsStep] = useState(0);
 
+  const slowScrollTo = (targetY, duration) => {
+    const startingY = window.pageYOffset;
+    const diff = targetY - startingY;
+    let start;
+
+    window.requestAnimationFrame(function step(timestamp) {
+      if (!start) start = timestamp;
+      const time = timestamp - start;
+      const percent = Math.min(time / duration, 1);
+      
+      window.scrollTo(0, startingY + diff * percent);
+
+      if (time < duration) {
+        window.requestAnimationFrame(step);
+      }
+    });
+  };
+
   useEffect(() => {
-    if (showLab && dnsStep === 0) {
-      setCastorStep(0); // Start with welcome
-      setShowCastor(true);
+    if (showLab) {
+      const endScreen = setTimeout(() => {
+        slowScrollTo(300, 1000)
+      }, 800);
     }
+
+    setCastorStep(0);
+    setShowCastor(true);
   }, [showLab]);
 
   const simulateDnsSearch = () => {

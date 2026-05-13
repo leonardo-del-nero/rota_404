@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAchievement } from '../context/AchievementContext';
 import '../index.css'; 
 
 const Mascot = ({ 
@@ -13,6 +14,7 @@ const Mascot = ({
   isHacker = false
 }) => {
   const [mounted, setMounted] = useState(false);
+  const { unlockAchievement } = useAchievement();
 
   useEffect(() => {
     setMounted(true);
@@ -75,7 +77,10 @@ const Mascot = ({
               </div>
 
               <div className="popupFooter">
-                <button onClick={onNext} className={`popupBtn ${isHacker ? 'popupBtnHacker' : ''}`}>
+                <button onClick={() => {
+                  unlockAchievement('INTERACAO_BONZI', 'AMIGO DO SISTEMA', 'Você interagiu com o Bonzi pela primeira vez!', 'COMUM');
+                  onNext();
+                }} className={`popupBtn ${isHacker ? 'popupBtnHacker' : ''}`}>
                   {buttonLabels[step] || "ENTENDI_"}
                 </button>
               </div>

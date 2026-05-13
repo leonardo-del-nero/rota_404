@@ -13,6 +13,7 @@ import Error404Module from './pages/Error404Module/Error404Module';
 import DeployModule from './pages/DeployModule/DeployModule';
 import Leaderboard from './pages/Leaderboard/Leaderboard';
 import { AchievementProvider } from './context/AchievementContext';
+import Achievements from './pages/Achievements/Achievements';
 
 // Wrapper para o Intro poder usar o useNavigate
 const IntroWrapper = () => {
@@ -46,6 +47,7 @@ const AnimatedRoutes = () => {
             <CharacterSelect />
           </motion.div>
         } />
+        
         <Route path="/intro" element={
           <IntroWrapper />
         } />
@@ -124,6 +126,19 @@ const AnimatedRoutes = () => {
             <Leaderboard />
           </motion.div>
         } />
+
+
+        <Route path="/achievements" element={
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            exit={{ opacity: 0, y: -20 }} 
+            transition={{ duration: 0.3 }}
+          >
+            <Achievements />
+          </motion.div>
+        } />
+
       </Routes>
     </AnimatePresence>
   );

@@ -54,16 +54,38 @@ const Error404Module = () => {
   const [status, setStatus] = useState('IDLE'); 
   const [backendMsg, setBackendMsg] = useState('');
   const [showQuiz, setShowQuiz] = useState(false);
+  const [showCastor, setShowCastor] = useState(false);
+  const [castorStep, setCastorStep] = useState(0);
 
   const validDoors = ['/api/users/1', '/api/hash', '/api/dns-lookup'];
-  const [showMascot, setShowMascot] = useState(false);
-  const [mascotStep, setMascotStep] = useState(0);
+
+  const slowScrollTo = (targetY, duration) => {
+    const startingY = window.pageYOffset;
+    const diff = targetY - startingY;
+    let start;
+
+    window.requestAnimationFrame(function step(timestamp) {
+      if (!start) start = timestamp;
+      const time = timestamp - start;
+      const percent = Math.min(time / duration, 1);
+      
+      window.scrollTo(0, startingY + diff * percent);
+
+      if (time < duration) {
+        window.requestAnimationFrame(step);
+      }
+    });
+  };
 
   useEffect(() => {
     if (showLab) {
-      setMascotStep(0);
-      setShowMascot(true);
+      const endScreen = setTimeout(() => {
+        slowScrollTo(300, 1000)
+      }, 800);
     }
+
+    setCastorStep(0);
+    setShowCastor(true);
   }, [showLab]);
 
   const handleSearch = () => {
@@ -77,13 +99,13 @@ const Error404Module = () => {
       if (match) {
         setBackendMsg("Recurso encontrado! Servidor enviando dados...");
         setStatus('FOUND'); 
-        setMascotStep(1); 
-        setShowMascot(true);
+        setCastorStep(1); 
+        setShowCastor(true);
       } else {
         setBackendMsg("Erro: O servidor não encontrou nada nesse endereço.");
         setStatus('NOT_FOUND'); 
-        setMascotStep(2);
-        setShowMascot(true);
+        setCastorStep(2);
+        setShowCastor(true);
       }
     }, 2000); 
   };
@@ -128,15 +150,15 @@ const Error404Module = () => {
 
       <div className="content-max-width">
         <Mascot 
-          show={showMascot}
-          step={mascotStep}
+          show={showCastor}
+          step={castorStep}
           images={[bonzi1, bonzi2, bonzi3]}
           phrases={[
             /* 0 */ <Typewriter text="Olá, bem-vindo ao módulo de Erro 404! Tente pesquisar uma das URLs mapeadas na nossa tabela para ver o servidor funcionando." />,
             /* 1 */ <Typewriter text="Perfeito! Como essa rota existe no servidor, ele retornou o status 200 (OK). Agora, tente digitar algo que não esteja na lista para ver o que acontece!" />,
             /* 2 */ <Typewriter text="Viu só? O servidor está ativo, mas ele não encontrou esse caminho. O 404 é exclusivo para rotas inexistentes, mas existem outros códigos como 403 ou 500!" />
           ]}
-          onNext={() => setShowMascot(false)}
+          onNext={() => setShowCastor(false)}
           buttonLabels={["VAMOS LÁ_", "ENTENDI!_", "ENTENDI_"]}
         />
 

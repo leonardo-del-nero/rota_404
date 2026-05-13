@@ -84,7 +84,45 @@
   font-size: 0.8rem;
   font-weight: bold;
 }
+.topActions {
+  position: absolute;
+  top: 1.5rem;
+  right: 2rem;
+  z-index: 100;
+}
+
+.achievementBtn {
+  background: rgba(0, 243, 255, 0.05);
+  border: 1px solid rgba(0, 243, 255, 0.2);
+  color: var(--primary);
+  padding: 0.8rem 1.2rem;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.achievementBtn:hover {
+  background: rgba(0, 243, 255, 0.15);
+  border-color: var(--primary);
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+}
+
 @media (max-width: 768px) {
+  .topActions {
+    position: relative;
+    top: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+  
   .hubContainer {
     padding: 2rem 1rem;
   }

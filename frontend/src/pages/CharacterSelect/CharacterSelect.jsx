@@ -13,11 +13,11 @@ import pipocaImg from '../../avatars/tigrinho_upscaled_0.png';
 import castorImg from '../../avatars/castor_upscaled_0.png';
 
 const CHARACTERS = [
-  { id: '1', name: 'Neo', role: 'The Hacker', image: neoImg, color: '#00ff88', desc: 'Rápido e furtivo. Especialista em quebrar firewalls.' },
-  { id: '2', name: 'Trinity', role: 'SysAdmin', image: trinityImg, color: '#00f3ff', desc: 'Controla a infraestrutura. Nada passa despercebido.' },
-  { id: '3', name: 'Morpheus', role: 'Cyber Punk', image: morpheusImg, color: '#ffcc00', desc: 'Poder bruto de processamento. Especialista em força bruta.' },
+  { id: '1', name: 'Ghost Spec', role: 'The Hacker', image: neoImg, color: '#00ff88', desc: 'Rápido e furtivo. Especialista em quebrar firewalls.' },
+  { id: '2', name: 'Pucca', role: 'SysAdmin', image: trinityImg, color: '#00f3ff', desc: 'Controla a infraestrutura. Nada passa despercebido.' },
+  { id: '3', name: 'Stormtrooper', role: 'Cyber Punk', image: morpheusImg, color: '#ffcc00', desc: 'Poder bruto de processamento. Especialista em força bruta.' },
   { id: '4', name: 'Piaba', role: 'Guardian', image: piabaImg, color: '#ff3b3b', desc: 'Defesa impenetrável. Focado em criptografia.' },
-  { id: '5', name: 'Pipoca', role: 'Glitcher', image: pipocaImg, color: '#ff00ff', desc: 'Mestre da engenharia reversa e do caos controlado.' },
+  { id: '5', name: 'Tigrinho', role: 'Glitcher', image: pipocaImg, color: '#ff00ff', desc: 'Mestre da engenharia reversa e do caos controlado.' },
   { id: '6', name: 'Castor', role: 'Chief Officer', image: castorImg, color: '#ffcc00', desc: 'O grande arquiteto da Rota 404. Conhece cada bit do sistema.' },
 ];
 
@@ -52,11 +52,11 @@ const CharacterSelect = () => {
       localStorage.setItem('rota404_player', JSON.stringify(result.data));
       localStorage.removeItem('rota404_quiz_progress'); // Zera o progresso do quiz para o novo usuário
       
-      unlockAchievement('FIRST_PROFILE', 'IDENTIDADE CONFIRMADA', 'Você criou seu primeiro perfil na Rota 404!');
+      unlockAchievement('ESCOLHER_NOME_AVATAR', 'IDENTIDADE CONFIRMADA', 'Você escolheu seu nome e avatar na Rota 404!', 'COMUM');
       
       // Checa se veio do atalho secreto
       if (localStorage.getItem('rota404_secret_start_pending') === 'true') {
-        unlockAchievement('SECRET_START', 'ACESSO PRIVILEGIADO', 'Você utilizou o código de acesso secreto na inicialização.');
+        unlockAchievement('DIGITAR_START', 'ACESSO PRIVILEGIADO', 'Você digitou START na tela inicial!', 'SECRETAS');
         localStorage.removeItem('rota404_secret_start_pending');
       }
 
