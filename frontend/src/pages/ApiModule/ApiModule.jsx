@@ -7,10 +7,24 @@ import Quiz from '../../components/Quiz';
 import GlassPanel from '../../components/GlassPanel';
 import Mascot from '../../components/Mascot';
 import styles from './ApiModule.module.css';
-
 import bonzi4 from '../../bonzi/bonzi_upscaled_4.png';
-
 import Typewriter from '../../components/Typewriter';
+
+import neoImg from '../../avatars/ghost_spec_upscaled_0.png';
+import trinityImg from '../../avatars/pucca_upscaled_0.png';
+import morpheusImg from '../../avatars/stormtrooper_upscaled_0.png';
+import piabaImg from '../../avatars/piaba_upscaled_0.png';
+import pipocaImg from '../../avatars/tigrinho_upscaled_0.png';
+import castorImg from '../../avatars/castor_upscaled_0.png';
+
+const AVATAR_MAP = {
+  '1': neoImg,
+  '2': trinityImg,
+  '3': morpheusImg,
+  '4': piabaImg,
+  '5': pipocaImg,
+  '6': castorImg
+};
 
 const apiQuestions = [
   {
@@ -89,6 +103,16 @@ const ApiModule = () => {
     setCastorStep(0);
     setShowCastor(true);
   }, [showLab]);
+
+  const [playerData] = useState(() => {
+    const savedPlayer = JSON.parse(localStorage.getItem('rota404_player') || '{}');
+    const charId = savedPlayer.characterId || savedPlayer.character_id;
+
+    return {
+      name: savedPlayer.name || 'USUÁRIO',
+      avatar: AVATAR_MAP[charId] || null
+    };
+  });
 
   const handleSend = async (isMalicious = false) => {
     if (status !== 'IDLE') return;
@@ -316,8 +340,34 @@ const ApiModule = () => {
                   }}
                   transition={{ duration: 1.5 }}
                 >
-                  <div className={`node-icon node-secondary ${styles.userIcon}`}><User size={40} color="var(--secondary)" /></div>
-                  <div className="node-label secondary-text">USUÁRIO</div>
+                  <div className={styles.nodeItem}>
+                    <div 
+                    className={`node-icon ${styles.nodeIcon} ${styles.nodePrimary}`} 
+                    style={{ 
+                      overflow: 'hidden', 
+                      padding: 0, 
+                      background: 'rgba(0,0,0,0.5)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                    >
+                    {playerData.avatar ? (
+                      <img 
+                      src={playerData.avatar} 
+                      alt="Avatar" 
+                      style={{ 
+                        width: '100%', 
+                        height: '100%', 
+                        objectFit: 'cover'
+                      }} 
+                      />
+                    ) : (
+                      <User size={40} className={styles.nodePrimaryIcon} />
+                    )}
+                    </div>
+                    <div className={styles.nodeLabel}>USUÁRIO</div>
+                  </div>
                 </motion.div>
               </div>
 

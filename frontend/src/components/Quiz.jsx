@@ -22,7 +22,6 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
     if (moduleId) {
       const saved = JSON.parse(localStorage.getItem('rota404_quiz_progress') || '{}');
       
-      // Inicializa o módulo e o tempo de início se for a primeira vez
       if (!saved[moduleId]) {
         saved[moduleId] = { startTime: Date.now(), attempts: {}, isCorrectMap: {}, lastSelected: {} };
         localStorage.setItem('rota404_quiz_progress', JSON.stringify(saved));
@@ -37,7 +36,6 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
     }
   }, [moduleId]);
 
-  // Timer em tempo real
   useEffect(() => {
     if (typeof showCongrats !== 'undefined' && (showCongrats || isReviewing)) return;
     
@@ -91,11 +89,9 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
       setCurrentQuestion(currentQuestion + 1);
       setPendingSelection(null);
     } else {
-      // Final do quiz, calcula a pontuação
       const saved = JSON.parse(localStorage.getItem('rota404_quiz_progress') || '{}');
       const moduleData = saved[moduleId] || {};
       
-      // Só calcula se ainda não tiver a pontuação fechada (primeira vez)
       const isFirstTime = !moduleData.score;
       
       const startTime = moduleData.startTime || Date.now();
@@ -138,19 +134,15 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
         localStorage.setItem('rota404_quiz_progress', JSON.stringify(saved));
       }
 
-      // NOVAS CONQUISTAS
-      // COMUM: completar um quiz sem errar nenhuma resposta
       if (perfectFirstTry) {
         unlockAchievement('QUIZ_PERFEITO', 'GABARITOU!', 'Você completou um quiz sem errar nenhuma resposta!', 'COMUM');
         
-        // RARO: completar 3 quizes seguidos sem errar nenhuma resposta
         const consecutivePerfect = parseInt(localStorage.getItem('rota404_consecutive_perfect') || '0') + 1;
         localStorage.setItem('rota404_consecutive_perfect', consecutivePerfect.toString());
         if (consecutivePerfect >= 3) {
           unlockAchievement('QUIZ_3_SEGUIDOS', 'TRIPLE KILL', 'Você completou 3 quizes seguidos sem errar nenhuma resposta!', 'RARO');
         }
 
-        // LENDÁRIO: completar todos os quizes sem errar nenhuma resposta
         const totalPerfect = JSON.parse(localStorage.getItem('rota404_perfect_modules') || '[]');
         if (!totalPerfect.includes(moduleId)) {
           const newTotalPerfect = [...totalPerfect, moduleId];
@@ -159,17 +151,14 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
             unlockAchievement('QUIZ_TODOS_PERFEITOS', 'MESTRE DOS BITS', 'Você completou todos os quizes sem errar nenhuma resposta!', 'LENDÁRIO');
           }
         }
-      } else {
-        // Reseta o contador de seguidos se errou
+      } else {u
         localStorage.setItem('rota404_consecutive_perfect', '0');
       }
 
-      // RARO: completar um quiz dentro de 40 segundos
       if (seg <= 40) {
         unlockAchievement('QUIZ_RAPIDO_40', 'FLASH DA REDE', 'Você completou um quiz dentro de 40 segundos!', 'RARO');
       }
 
-      // LENDÁRIO: completar um quiz dentro de 10 segundos
       if (seg <= 10) {
         unlockAchievement('QUIZ_RAPIDO_10', 'VELOCIDADE DA LUZ', 'Você completou um quiz dentro de 10 segundos!', 'LENDÁRIO');
       }

@@ -195,13 +195,13 @@
   height: 60px;
   font-size: 1.2rem;
   justify-content: center;
+  border-radius: 20px;
 }
 
 .submitBtn:disabled {
   background: var(--bg-card);
   color: var(--text-dim);
   cursor: not-allowed;
-  clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
   box-shadow: none;
 }
 

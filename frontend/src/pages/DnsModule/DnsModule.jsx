@@ -15,7 +15,21 @@ import bonzi2 from '../../bonzi/bonzi_upscaled_1.png';
 import bonzi3 from '../../bonzi/bonzi_upscaled_3.png';
 import bonzi4 from '../../bonzi/bonzi_upscaled_2.png';
 
+import neoImg from '../../avatars/ghost_spec_upscaled_0.png';
+import trinityImg from '../../avatars/pucca_upscaled_0.png';
+import morpheusImg from '../../avatars/stormtrooper_upscaled_0.png';
+import piabaImg from '../../avatars/piaba_upscaled_0.png';
+import pipocaImg from '../../avatars/tigrinho_upscaled_0.png';
+import castorImg from '../../avatars/castor_upscaled_0.png';
 
+const AVATAR_MAP = {
+  '1': neoImg,
+  '2': trinityImg,
+  '3': morpheusImg,
+  '4': piabaImg,
+  '5': pipocaImg,
+  '6': castorImg
+};
 
 const dnsQuestions = [
   {
@@ -97,6 +111,16 @@ const DnsModule = () => {
     setCastorStep(0);
     setShowCastor(true);
   }, [showLab]);
+
+  const [playerData] = useState(() => {
+    const savedPlayer = JSON.parse(localStorage.getItem('rota404_player') || '{}');
+    const charId = savedPlayer.characterId || savedPlayer.character_id;
+
+    return {
+      name: savedPlayer.name || 'USUÁRIO',
+      avatar: AVATAR_MAP[charId] || null
+    };
+  });
 
   const simulateDnsSearch = () => {
     const logs = (hackerScene === 'GLITCH' || hackerScene === 'POISONED' 
@@ -274,8 +298,34 @@ const handleLookup = async () => {
 
               <div className={styles.arenaContainer}>
                 <div className={styles.nodeContainer}>
-                  <div className={`node-icon ${styles.userNodeIcon}`}><User size={40} color="#ff6b00" /></div>
-                  <div className={styles.nodeLabel}>USUÁRIO</div>
+                  <div className={styles.nodeItem}>
+                    <div 
+                    className={`node-icon ${styles.nodeIcon} ${styles.nodePrimary}`} 
+                    style={{ 
+                      overflow: 'hidden', 
+                      padding: 0, 
+                      background: 'rgba(0,0,0,0.5)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                    >
+                    {playerData.avatar ? (
+                      <img 
+                      src={playerData.avatar} 
+                      alt="Avatar" 
+                      style={{ 
+                        width: '100%', 
+                        height: '100%', 
+                        objectFit: 'cover'
+                      }} 
+                      />
+                    ) : (
+                      <User size={40} className={styles.nodePrimaryIcon} />
+                    )}
+                    </div>
+                    <div className={styles.nodeLabel}>USUÁRIO</div>
+                  </div>
                 </div>
 
                 <div className={styles.connectionLine}>
