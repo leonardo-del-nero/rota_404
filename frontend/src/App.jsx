@@ -12,6 +12,7 @@ import HttpsModule from './pages/HttpsModule/HttpsModule';
 import Error404Module from './pages/Error404Module/Error404Module';
 import DeployModule from './pages/DeployModule/DeployModule';
 import Leaderboard from './pages/Leaderboard/Leaderboard';
+import ResultScreen from './pages/ResultScreen/ResultScreen';
 import { AchievementProvider } from './context/AchievementContext';
 import Achievements from './pages/Achievements/Achievements';
 
@@ -114,6 +115,16 @@ const AnimatedRoutes = () => {
             transition={{ duration: 0.5 }}
           >
             <DeployModule />
+          </motion.div>
+        } />
+        <Route path="/result" element={
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9, filter: 'blur(10px)' }} 
+            animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }} 
+            exit={{ opacity: 0, scale: 1.1, filter: 'blur(5px)' }} 
+            transition={{ duration: 0.4 }}
+          >
+            <ResultScreen />
           </motion.div>
         } />
         <Route path="/leaderboard" element={

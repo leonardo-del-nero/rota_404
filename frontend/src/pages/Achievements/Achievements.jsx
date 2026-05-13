@@ -33,6 +33,7 @@ const ALL_ACHIEVEMENTS = {
   SECRETAS: [
     { id: 'TOP_3', title: 'LENDA DA REDE', desc: 'Atingiu o Top 3.', icon: rareBadge },
     { id: 'DIGITAR_START', title: 'ACESSO PRIVILEGIADO', desc: 'Digitou START na tela inicial.', icon: rareBadge },
+    { id: 'EASTER_EGG_PIABA', title: 'A VERDADEIRA PIABA', desc: 'Você revelou a verdadeira identidade da Piaba!', icon: rareBadge },
   ]
 };
 
@@ -70,8 +71,14 @@ const Achievements = () => {
 
       <div className={styles.content}>
         {Object.entries(ALL_ACHIEVEMENTS).map(([category, list], catIdx) => {
-          const catUnlocked = list.filter(a => unlocked.includes(a.id)).length;
-          const catTotal = list.length;
+          let displayList = list;
+          if (category === 'SECRETAS') {
+            displayList = list.filter(a => unlocked.includes(a.id));
+            if (displayList.length === 0) return null;
+          }
+
+          const catUnlocked = displayList.filter(a => unlocked.includes(a.id)).length;
+          const catTotal = displayList.length;
           const progressPercent = (catUnlocked / catTotal) * 100;
 
           return (
@@ -98,9 +105,11 @@ const Achievements = () => {
               </div>
               
               <div className={styles.grid}>
-                {list.map((ach) => {
+                {displayList.map((ach) => {
                   const isUnlocked = unlocked.includes(ach.id);
                   const isSecret = category === 'SECRETAS' && !isUnlocked;
+
+                  if (isSecret) return null;
 
                   return (
                     <motion.div 

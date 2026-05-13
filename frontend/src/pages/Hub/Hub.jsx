@@ -42,6 +42,7 @@ const Hub = () => {
   const [isTalking, setIsTalking] = useState(false);
   const [talkFrame, setTalkFrame] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showConfirmFinish, setShowConfirmFinish] = useState(false);
 
   const handleTypewriterComplete = React.useCallback(() => {
     setIsTalking(false);
@@ -295,6 +296,15 @@ const Hub = () => {
     setShowDialog(true);
   };
 
+  const handleFinishClick = () => {
+    const isFirstTime = !player.progress?.score || player.progress.score === 0;
+    if (isFirstTime) {
+      setShowConfirmFinish(true);
+    } else {
+      handleFinishSimulation();
+    }
+  };
+
   const handleFinishSimulation = async () => {
     const saved = JSON.parse(localStorage.getItem('rota404_quiz_progress') || '{}');
     let totalScore = 0;
@@ -346,7 +356,7 @@ const Hub = () => {
       }
     }
     
-    navigate('/leaderboard', { state: { sessionScore: totalScore } });
+    navigate('/result', { state: { sessionScore: totalScore } });
   };
 
   const stars = useMemo(() => {
@@ -413,7 +423,7 @@ const Hub = () => {
       </div>
 
       <div className={styles.bottomNav}>
-        <button className={styles.finalizarBtn} onClick={handleFinishSimulation}>
+        <button className={styles.finalizarBtn} onClick={handleFinishClick}>
           Finalizar Sessão
         </button>
       </div>
@@ -541,6 +551,50 @@ const Hub = () => {
         onNext={() => navigate(selectedNode?.path || '/')}
         buttonLabels={["INICIAR_"]}
       />
+
+      <AnimatePresence>
+        {showConfirmFinish && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.8)', zIndex: 1000, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+          >
+            <motion.div 
+              initial={{ scale: 0.8, y: 50 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.8, y: 50 }}
+              style={{ background: '#111', border: '2px solid var(--primary)', padding: '2.5rem', borderRadius: '16px', maxWidth: '500px', textAlign: 'center', boxShadow: '0 0 30px rgba(0,255,136,0.2)' }}
+            >
+              <h2 style={{ fontFamily: 'var(--font-mono)', color: 'var(--primary)', margin: '0 0 1.5rem 0' }}>ATENÇÃO, VIAJANTE</h2>
+              <p style={{ color: '#ccc', fontSize: '1.1rem', lineHeight: '1.5', marginBottom: '2rem' }}>
+                Tem certeza que deseja finalizar a sessão agora? 
+                <br/><br/>
+                <b>Seus pontos serão definidos permanentemente na Leaderboard!</b> 
+                <br/><br/>
+                Mesmo após enviar, você poderá continuar explorando os módulos para tentar desbloquear novas conquistas.
+              </p>
+              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+                <button 
+                  onClick={() => setShowConfirmFinish(false)}
+                  style={{ background: 'transparent', color: '#fff', border: '2px solid #555', padding: '0.8rem 1.5rem', borderRadius: '8px', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '1.1rem' }}
+                >
+                  VOLTAR
+                </button>
+                <button 
+                  onClick={() => {
+                    setShowConfirmFinish(false);
+                    handleFinishSimulation();
+                  }}
+                  style={{ background: 'var(--primary)', color: '#000', border: '2px solid var(--primary)', padding: '0.8rem 1.5rem', borderRadius: '8px', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontWeight: 'bold', fontSize: '1.1rem' }}
+                >
+                  FINALIZAR
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

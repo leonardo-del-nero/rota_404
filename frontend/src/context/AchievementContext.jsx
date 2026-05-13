@@ -27,14 +27,14 @@ export const AchievementProvider = ({ children }) => {
   return (
     <AchievementContext.Provider value={{ unlockAchievement }}>
       {children}
-      <AnimatePresence>
-        {achievements.map(achievement => (
+      <AnimatePresence mode="wait">
+        {achievements.length > 0 && (
           <AchievementToast 
-            key={achievement.id} 
-            achievement={achievement} 
-            onExpire={() => removeAchievement(achievement.id)} 
+            key={achievements[0].id} 
+            achievement={achievements[0]} 
+            onExpire={() => removeAchievement(achievements[0].id)} 
           />
-        ))}
+        )}
       </AnimatePresence>
     </AchievementContext.Provider>
   );
