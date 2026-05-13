@@ -219,19 +219,23 @@ const ApiModule = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            onClick={() => { 
+              setQuizFocus(false);
+              setShowCastor(false);
+            }}
             style={{
               position: 'fixed',
               top: 0, left: 0, right: 0, bottom: 0,
               background: 'rgba(0, 0, 0, 0.85)',
               zIndex: 999,
-              backdropFilter: 'blur(4px)',
-              pointerEvents: 'none'
+              backdropFilter: 'blur(1px)',
+              cursor: 'pointer'
             }}
           />
         )}
       </AnimatePresence>
 
-      <div className="content-max-width">
+      <div className="content-max-width" style={{ position: 'relative', zIndex: quizFocus ? 1002 : 1 }}>
         <Mascot 
           show={showCastor}
           step={castorStep}

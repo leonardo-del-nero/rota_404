@@ -33,7 +33,9 @@ const LabHeader = ({ showQuiz, setShowQuiz, onResetLab, quizFocus }) => {
           transition: 'all 0.5s ease',
           transform: quizFocus ? 'scale(1.15)' : 'scale(1)',
           boxShadow: quizFocus ? '0 0 30px var(--primary), 0 0 60px var(--primary)' : 'none',
-          animation: quizFocus ? 'pulse-glow 1.5s infinite' : 'none'
+          animation: quizFocus ? 'pulse-glow 1.5s infinite' : 'none',
+          borderRadius: '10px',
+          clipPath: 'none'
         }}
       >
         {showQuiz ? "VOLTAR AO LABORATÓRIO" : "REALIZAR QUIZ"}

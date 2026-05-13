@@ -193,7 +193,12 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
   };
 
   if (showCongrats) {
-    const score = questions.filter((q, i) => lastSelected[i] === q.correct).length;
+    const savedProgress = JSON.parse(localStorage.getItem('rota404_quiz_progress') || '{}');
+    const moduleScore = savedProgress[moduleId]?.score?.total || 0;
+    const moduleTime = savedProgress[moduleId]?.score?.timeElapsed || 0;
+
+    const correctCount = questions.filter((q, i) => lastSelected[i] === q.correct).length;
+
     return (
       <motion.div 
         initial={{ opacity: 0, y: 20 }} 
@@ -202,12 +207,39 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
         transition={{ duration: 0.5, ease: "easeOut" }}
         style={{ textAlign: 'center', padding: '2rem 0' }}
       >
-        <h2 style={{ color: 'var(--primary)', fontSize: '2.5rem', marginBottom: '1rem' }}>QUIZ CONCLUÍDO</h2>
-        <p className="mono" style={{ color: 'var(--text-dim)', marginBottom: '3rem' }}>
-          VOCÊ FINALIZOU O PERCURSO COM {score} ACERTOS DE {questions.length}.
-        </p>
-        <button className="btn-404" onClick={startReview}>
-          <Eye size={18} style={{ marginRight: '8px' }} /> REVISAR RESPOSTAS
+        <h2 style={{ color: 'var(--primary)', fontSize: '2.5rem', marginBottom: '1rem' }}>
+          QUIZ CONCLUÍDO
+        </h2>
+        
+        <div style={{ marginBottom: '2rem' }}>
+          <div className="mono" style={{ fontSize: '1rem', color: 'var(--text-dim)', opacity: 0.8 }}>
+            SCORE DO MÓDULO
+          </div>
+          <div style={{ 
+            fontSize: '4rem', 
+            fontWeight: 'bold', 
+            color: 'var(--primary)', 
+            textShadow: '0 0 20px rgba(0, 243, 255, 0.5)',
+            margin: '0.5rem 0'
+          }}>
+            {moduleScore.toFixed(2)}
+          </div>
+        </div>
+
+        <button 
+          className="btn-404" 
+          onClick={startReview}
+          style={{ 
+            borderRadius: '30px',
+            clipPath: 'none',
+            padding: '0.8rem 2.5rem',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '10px',
+            fontSize: '1rem'
+          }}
+        >
+          <Eye size={18} /> REVISAR RESPOSTAS
         </button>
       </motion.div>
     );
@@ -300,7 +332,7 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
                 exit={{ opacity: 0, height: 0 }}
                 style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center', overflow: 'hidden' }}
               >
-                <button className="btn-404" onClick={handleConfirm} style={{ background: 'var(--secondary)', color: '#000' }}>
+                <button className="btn-404" onClick={handleConfirm} style={{ background: 'var(--secondary)', color: '#000', borderRadius: '30px', clipPath: 'none', }}>
                   CONFIRMAR RESPOSTA
                 </button>
               </motion.div>
@@ -337,13 +369,19 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '3rem' }}>
         {currentQuestion > 0 ? (
           <button className="btn-404 btn-outline" onClick={handlePrev}>
-            <ChevronLeft size={16} style={{ marginRight: '5px' }} /> ANTERIOR
+            <ChevronLeft size={16} style={{ marginRight: '5px', borderRadius: '30px', clipPath: 'none',}} /> ANTERIOR
           </button>
         ) : (
           <div />
         )}
         {isReviewing && currentQuestion === questions.length - 1 ? (
-          <button className="btn-404" onClick={() => navigate('/hub')}>VOLTAR AO HUB</button>
+          <button 
+            className="btn-404" 
+            onClick={() => navigate('/hub')} 
+            style={{ borderRadius: '30px', clipPath: 'none', WebkitClipPath: 'none' }}
+          >
+            VOLTAR AO HUB
+          </button>
         ) : (
           <button 
             className="btn-404" 
@@ -351,7 +389,9 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
             style={{ 
               opacity: (isReviewing || isCorrectMap[currentQuestion]) ? 1 : 0.5, 
               background: (currentQuestion === questions.length - 1 && !isReviewing) ? 'var(--primary)' : '',
-              transition: 'all 0.3s ease'
+              transition: 'all 0.3s ease',
+              borderRadius: '30px',
+              clipPath: 'none'
             }} 
             onClick={handleNext}
           >

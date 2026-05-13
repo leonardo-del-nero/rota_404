@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Server, Monitor, CloudUpload, Globe, Play, Box, CheckCircle } from 'lucide-react';
 import ModuleIntro from '../../components/ModuleIntro';
