@@ -59,6 +59,7 @@ const DeployModule = () => {
   const [castorStep, setCastorStep] = useState(0);
   const [hasStarted, setHasStarted] = useState(false);
   const [quizFinished, setQuizFinished] = useState(false);
+  const [quizFocus, setQuizFocus] = useState(false); 
   
   const [logs, setLogs] = useState([]);
   const terminalEndRef = useRef(null);
@@ -151,6 +152,11 @@ const DeployModule = () => {
   const handleNextCastor = () => {
     if (castorStep === 2) {
       setCastorStep(3);
+      setQuizFocus(true);
+      slowScrollTo(0, 1000);
+    } else if (castorStep === 3) {
+      setShowCastor(false);
+      setQuizFocus(false);
     } else {
       setShowCastor(false);
     }
@@ -186,9 +192,40 @@ const DeployModule = () => {
 
   return (
     <div className="container module-container">
-      <LabHeader showQuiz={showQuiz} setShowQuiz={setShowQuiz} onResetLab={resetLab} quizFinished={quizFinished} setQuizFinished={setQuizFinished} setShowCastor={setShowCastor}/>
+      <LabHeader 
+        showQuiz={showQuiz} 
+        setShowQuiz={setShowQuiz} 
+        onResetLab={resetLab} 
+        quizFocus={quizFocus}
+        quizFinished={quizFinished} 
+        setQuizFinished={setQuizFinished} 
+        setShowCastor={setShowCastor}
+        setQuizFocus={setQuizFocus}
+      />
 
-      <div className="content-max-width">
+      <AnimatePresence>
+        {quizFocus && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => { 
+              setQuizFocus(false);
+              setShowCastor(false);
+            }}
+            style={{
+              position: 'fixed',
+              top: 0, left: 0, right: 0, bottom: 0,
+              background: 'rgba(0, 0, 0, 0.85)',
+              zIndex: 999,
+              backdropFilter: 'blur(1px)',
+              cursor: 'pointer'
+            }}
+          />
+        )}
+      </AnimatePresence> 
+
+      <div className="content-max-width" style={{ position: 'relative', zIndex: quizFocus ? 1002 : 1 }}> 
         <Mascot 
           show={showCastor}
           step={castorStep}
@@ -197,11 +234,11 @@ const DeployModule = () => {
             <Typewriter text="O seu código está apenas no seu computador (Local). Para o mundo ver, você precisa fazer o 'Build' e depois enviá-lo (Deploy). Tente clicar em Executar Build!" />,
             <Typewriter text="Boa! O Build empacotou seu código. Ele removeu espaços, otimizou imagens e deixou tudo levinho. Agora está pronto para viajar pela rede!" />,
             <Typewriter text="Incrível! Seu site agora está morando em um Servidor: um supercomputador em um Data Center que nunca dorme e tem uma internet ultrarrápida!" />,
-            <Typewriter text="Excelente! Você dominou a prática deste laboratório. Agora, clique em 'QUIZ' ali no topo e mostre o que aprendeu!" />
+            <Typewriter text="Excelente! Você entendeu como funciona o Deploy e a Nuvem. Que tal testar seu conhecimento no Quiz?" />
           ]}
           onNext={handleNextCastor}
           buttonLabels={["BORA_", "ENTENDI_", "PRÓXIMO_", "BORA!_"]}
-        />
+        /> 
 
         <AnimatePresence mode="wait">
           {!showQuiz ? (

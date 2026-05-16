@@ -562,22 +562,7 @@ const Hub = () => {
                   />
                 )}
 
-                {/* Orbiting Sprite */}
-                {mod.sprite && (
-                  <motion.g
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                    style={{ transformOrigin: `${mod.x}px ${mod.y}px` }}
-                  >
-                    <image 
-                      href={mod.sprite} 
-                      x={mod.x + 75} 
-                      y={mod.y - 20} 
-                      width="50" 
-                      height="50" 
-                    />
-                  </motion.g>
-                )}
+
 
                 {/* Planet Image - Colorful by default, dim if not completed */}
                 <image 
@@ -634,6 +619,22 @@ const Hub = () => {
                 >
                   {mod.title} {isCompleted ? '[OK]' : ''}
                 </text>
+
+                {/* Floating Sprite (Top Left) - MOVIDO PARA CIMA DE TUDO */}
+                {mod.sprite && (
+                  <motion.g
+                    animate={{ y: [-5, 5, -5] }}
+                    transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    <image 
+                      href={mod.sprite} 
+                      x={mod.x - 95} 
+                      y={mod.y - 95} 
+                      width="65" 
+                      height="65" 
+                    />
+                  </motion.g>
+                )}
               </motion.g>
             );
           })}

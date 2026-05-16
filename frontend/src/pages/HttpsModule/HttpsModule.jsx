@@ -80,6 +80,7 @@ const HttpsModule = () => {
   const [castorStep, setCastorStep] = useState(0);
   const [hasExplainedHttps, setHasExplainedHttps] = useState(false);
   const [quizFinished, setQuizFinished] = useState(false);
+  const [quizFocus, setQuizFocus] = useState(false); 
 
   const slowScrollTo = (targetY, duration) => {
     const startingY = window.pageYOffset;
@@ -126,8 +127,8 @@ const HttpsModule = () => {
     setReceivedText('');
     setIntercepting(false);
 
-    const midWayTime = 4000; 
-    const totalTime = 8000; 
+    const midWayTime = 1500; 
+    const totalTime = 3000; 
 
     if (isHttpsOn) {
       try {
@@ -141,21 +142,19 @@ const HttpsModule = () => {
         setTimeout(() => {
           setIntercepting(true);
           
-          if (!hasExplainedHttps) {
-            setCastorStep(1); 
-            setShowCastor(true);
-            setHasExplainedHttps(true);
-          }
-
           setTimeout(() => {
             setInterceptedText(data.encrypted);
             setIntercepting(false);
-          }, 1500); // Increased from 1000
+          }, 500);
         }, midWayTime);
 
         setTimeout(() => {
           setReceivedText(input);
           setStatus('DONE');
+          
+          setCastorStep(1); 
+          setShowCastor(true);
+          setHasExplainedHttps(true);
         }, totalTime);
       } catch (err) {
         setStatus('DONE');
@@ -171,7 +170,7 @@ const HttpsModule = () => {
           setCastorStep(2); 
           setShowCastor(true);
           setIsButtonFlashing(true); 
-        }, 1500); // Increased from 1000
+        }, 500);
       }, midWayTime);
 
       setTimeout(() => {
@@ -181,7 +180,20 @@ const HttpsModule = () => {
     }
   };
 
-  const handleKeyDown = (e) => {
+  const handleNextCastor = () => {
+    if (castorStep === 1) {
+      setCastorStep(4);
+      setQuizFocus(true);
+      slowScrollTo(0, 1000);
+    } else if (castorStep === 4) {
+      setShowCastor(false);
+      setQuizFocus(false);
+    } else {
+      setShowCastor(false);
+    }
+  };
+
+  const handleKeyDown = (e) => { 
     if (e.key === 'Enter') {
       e.preventDefault();
       handleSend();
@@ -220,9 +232,40 @@ const HttpsModule = () => {
 
   return (
     <div className="container module-container">
-      <LabHeader showQuiz={showQuiz} setShowQuiz={setShowQuiz} onResetLab={resetLab}   quizFinished={quizFinished} setQuizFinished={setQuizFinished} setShowCastor={setShowCastor}/>
+      <LabHeader 
+        showQuiz={showQuiz} 
+        setShowQuiz={setShowQuiz} 
+        onResetLab={resetLab} 
+        quizFocus={quizFocus}
+        quizFinished={quizFinished} 
+        setQuizFinished={setQuizFinished} 
+        setShowCastor={setShowCastor}
+        setQuizFocus={setQuizFocus}
+      />
 
-      <div className="content-max-width">
+      <AnimatePresence>
+        {quizFocus && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => { 
+              setQuizFocus(false);
+              setShowCastor(false);
+            }}
+            style={{
+              position: 'fixed',
+              top: 0, left: 0, right: 0, bottom: 0,
+              background: 'rgba(0, 0, 0, 0.85)',
+              zIndex: 999,
+              backdropFilter: 'blur(1px)',
+              cursor: 'pointer'
+            }}
+          />
+        )}
+      </AnimatePresence> 
+
+      <div className="content-max-width" style={{ position: 'relative', zIndex: quizFocus ? 1002 : 1 }}> 
         <Mascot 
           show={showCastor}
           step={castorStep}
@@ -231,11 +274,12 @@ const HttpsModule = () => {
             /* 0 */ <Typewriter text="Olá! Bem-vindo ao simulador de HTTPS. Digite uma mensagem e clique em enviar para ver como os dados viajam pela rede!" speed={70} />,
             /* 1 */ <Typewriter text="Ótimo! Com HTTPS, a Criptografia embaralhou seus dados. Tornando difícil que um invasor roube-os!" speed={70} />,
             /* 2 */ <Typewriter text="CUIDADO! Como você usou HTTP, seus dados viajaram como 'texto puro'. Isso significa que o Hacker conseguiu ler tudo! Tente ativar o botão HTTPS para proteger sua mensagem." speed={70} />,
-            /* 3 */ <Typewriter text="Excelente! Agora que estamos utilizando o protocolo seguro (HTTPS), seus dados serão protegidos por criptografia. Digite sua mensagem novamente." speed={70} />
+            /* 3 */ <Typewriter text="Excelente! Agora que estamos utilizando o protocolo seguro (HTTPS), seus dados serão protegidos por criptografia. Digite sua mensagem novamente." speed={70} />,
+            /* 4 */ <Typewriter text="Excelente! Você entendeu como a Criptografia do HTTPS protege seus dados. Que tal testar seu conhecimento no Quiz?" speed={70} />
           ]}
-          onNext={() => setShowCastor(false)}
-          buttonLabels={["VAMOS LÁ_", "ENTENDI!_", "VOU ATIVAR!_"]}
-        />
+          onNext={handleNextCastor}
+          buttonLabels={["VAMOS LÁ_", "ENTENDI!_", "VOU ATIVAR!_", "ENTENDI!_", "BORA!_"]}
+        /> 
 
         <AnimatePresence mode="wait">
           {!showQuiz ? (
@@ -278,7 +322,7 @@ const HttpsModule = () => {
 
                   <AnimatePresence>
                     {status === 'SENDING' && (
-                      <motion.div initial={{ left: '100px' }} animate={{ left: 'calc(100% - 130px)' }} transition={{ duration: 7.5, ease: "linear" }} style={{ position: 'absolute', top: '15px', zIndex: 5 }}>
+                      <motion.div initial={{ left: '100px' }} animate={{ left: 'calc(100% - 130px)' }} transition={{ duration: 2.5, ease: "linear" }} style={{ position: 'absolute', top: '15px', zIndex: 5 }}>
                         <DataPackage
                           icon={isHttpsOn ? Lock : Mail} 
                           type={isHttpsOn ? "success" : "danger"} 
@@ -291,7 +335,7 @@ const HttpsModule = () => {
 
                   <AnimatePresence>
                     {intercepting && (
-                      <motion.div initial={{ top: '15px', left: '50%', transform: 'translateX(-50%)' }} animate={{ top: '150px' }} transition={{ duration: 2.5, ease: "linear" }} style={{ position: 'absolute', zIndex: 4 }}>
+                      <motion.div initial={{ top: '15px', left: '50%', transform: 'translateX(-50%)' }} animate={{ top: '150px' }} transition={{ duration: 0.8, ease: "linear" }} style={{ position: 'absolute', zIndex: 4 }}>
                         <DataPackage 
                           icon={isHttpsOn ? Lock : Mail} 
                           type={isHttpsOn ? "success" : "danger"} 

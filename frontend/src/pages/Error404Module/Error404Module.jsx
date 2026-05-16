@@ -58,6 +58,7 @@ const Error404Module = () => {
   const [showCastor, setShowCastor] = useState(false);
   const [castorStep, setCastorStep] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
+  const [quizFocus, setQuizFocus] = useState(false); 
 
   const validDoors = ['/api/users/1', '/api/hash', '/api/dns-lookup'];
 
@@ -89,6 +90,19 @@ const Error404Module = () => {
     setCastorStep(0);
     setShowCastor(true);
   }, [showLab]);
+
+  const handleNextCastor = () => {
+    if (castorStep === 2) {
+      setCastorStep(3);
+      setQuizFocus(true);
+      slowScrollTo(0, 1000);
+    } else if (castorStep === 3) {
+      setShowCastor(false);
+      setQuizFocus(false);
+    } else {
+      setShowCastor(false);
+    }
+  };
 
   const handleSearch = () => {
     if (!path || status === 'SCANNING') return; 
@@ -152,12 +166,36 @@ const Error404Module = () => {
         showQuiz={showQuiz} 
         setShowQuiz={setShowQuiz} 
         onResetLab={resetLab} 
+        quizFocus={quizFocus}
         quizFinished={quizFinished} 
-        setQuizFinished={setQuizFinished}
+        setQuizFinished={setQuizFinished} 
         setShowCastor={setShowCastor}
+        setQuizFocus={setQuizFocus}
       />
 
-      <div className="content-max-width">
+      <AnimatePresence>
+        {quizFocus && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => { 
+              setQuizFocus(false);
+              setShowCastor(false);
+            }}
+            style={{
+              position: 'fixed',
+              top: 0, left: 0, right: 0, bottom: 0,
+              background: 'rgba(0, 0, 0, 0.85)',
+              zIndex: 999,
+              backdropFilter: 'blur(1px)',
+              cursor: 'pointer'
+            }}
+          />
+        )}
+      </AnimatePresence> 
+
+      <div className="content-max-width" style={{ position: 'relative', zIndex: quizFocus ? 1002 : 1 }}> 
         <Mascot 
           show={showCastor}
           step={castorStep}
@@ -165,11 +203,12 @@ const Error404Module = () => {
           phrases={[
             /* 0 */ <Typewriter text="Olá, bem-vindo ao módulo de Erro 404! Tente pesquisar uma das URLs mapeadas na nossa tabela para ver o servidor funcionando." />,
             /* 1 */ <Typewriter text="Perfeito! Como essa rota existe no servidor, ele retornou o status 200 (OK). Agora, tente digitar algo que não esteja na lista para ver o que acontece!" />,
-            /* 2 */ <Typewriter text="Viu só? O servidor está ativo, mas ele não encontrou esse caminho. O 404 é exclusivo para rotas inexistentes, mas existem outros códigos como 403 ou 500!" />
+            /* 2 */ <Typewriter text="Viu só? O servidor está ativo, mas ele não encontrou esse caminho. O 404 é exclusivo para rotas inexistentes, mas existem outros códigos como 403 ou 500!" />,
+            /* 3 */ <Typewriter text="Excelente! Você entendeu como funcionam as rotas e o Erro 404. Que tal testar seu conhecimento no Quiz?" />
           ]}
-          onNext={() => setShowCastor(false)}
-          buttonLabels={["VAMOS LÁ_", "ENTENDI!_", "ENTENDI_"]}
-        />
+          onNext={handleNextCastor}
+          buttonLabels={["VAMOS LÁ_", "ENTENDI!_", "ENTENDI_", "BORA!_"]}
+        /> 
 
         <AnimatePresence mode="wait">
           {!showQuiz ? (

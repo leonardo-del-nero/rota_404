@@ -9,6 +9,10 @@ html, body {
   width: 100%;
 }
 
+img, image {
+  image-rendering: pixelated;
+}
+
 :root {
   --bg-main: #0a0a0a;
   --bg-card: rgba(20, 20, 20, 0.6);

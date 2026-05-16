@@ -84,6 +84,7 @@ const DnsModule = () => {
   const [isHackerMascot, setIsHackerMascot] = useState(false);
   const [dnsStep, setDnsStep] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
+  const [quizFocus, setQuizFocus] = useState(false);
 
   const slowScrollTo = (targetY, duration) => {
     const startingY = window.pageYOffset;
@@ -229,6 +230,16 @@ const DnsModule = () => {
 
     if (castorStep === 5) {
        setHackerScene('NONE');
+       setCastorStep(6);
+       setQuizFocus(true);
+       slowScrollTo(0, 1000);
+       return;
+    }
+
+    if (castorStep === 6) {
+       setShowCastor(false);
+       setQuizFocus(false);
+       return;
     }
 
     setShowCastor(false);
@@ -280,15 +291,46 @@ const DnsModule = () => {
 
   return (
     <div className="container module-container">
-      <LabHeader showQuiz={showQuiz} setShowQuiz={setShowQuiz} onResetLab={resetLab} quizFinished={quizFinished} setQuizFinished={setQuizFinished} setShowCastor={setShowCastor}/>
+      <LabHeader 
+        showQuiz={showQuiz} 
+        setShowQuiz={setShowQuiz} 
+        onResetLab={resetLab} 
+        quizFocus={quizFocus}
+        quizFinished={quizFinished} 
+        setQuizFinished={setQuizFinished} 
+        setShowCastor={setShowCastor}
+        setQuizFocus={setQuizFocus}
+      />
 
-      <div className="content-max-width" style={{ position: 'relative' }}>
+      <AnimatePresence>
+        {quizFocus && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => { 
+              setQuizFocus(false);
+              setShowCastor(false);
+            }}
+            style={{
+              position: 'fixed',
+              top: 0, left: 0, right: 0, bottom: 0,
+              background: 'rgba(0, 0, 0, 0.85)',
+              zIndex: 999,
+              backdropFilter: 'blur(1px)',
+              cursor: 'pointer'
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      <div className="content-max-width" style={{ position: 'relative', zIndex: quizFocus ? 1002 : 1 }}>
         
         <div style={{ position: 'relative', zIndex: 10 }}>
           <Mascot 
             show={showCastor}
             step={castorStep}
-            images={[bonzi1, bonzi3, bonzi1, bonzi1, bonzi4, bonzi1]} 
+            images={[bonzi1, bonzi3, bonzi1, bonzi1, bonzi4, bonzi1, bonzi2]} 
             phrases={[
               /* 0 */ <Typewriter text="Olá! Bem-vindo ao laboratório de DNS. Tente digitar qualquer palavra aleatória (sem ser um site real) para ver como o tradutor reage quando não encontra um endereço!" speed={70} />, 
               /* 1 */ <Typewriter text="Viu só? Como essa URL não existe, o DNS não encontrou nenhum IP. Agora, tente pesquisar um site real como 'google.com'!" speed={70} />,
@@ -296,9 +338,10 @@ const DnsModule = () => {
               /* 3 */ <Typewriter text="Que estranho... sinto que algo mudou no sistema. Olhe aquelas novas rotas ali embaixo..." speed={70} />,
               /* 4 */ <Typewriter text="HA-HA! Esqueça o castor bobinho. Digite 'banco.com' na busca. Eu preparei um caminho especial para você!" speed={70} />,
               /* 5 */ <Typewriter text="CUIDADO! O DNS foi envenenado! O hacker trocou o endereço do banco por um IP falso (Poisoning). Agora tudo foi limpo, pode continuar!" speed={70} />,
+              /* 6 */ <Typewriter text="Excelente! Você entendeu como o DNS traduz nomes para IPs. Que tal testar seu conhecimento no Quiz?" speed={70} />
             ]}
             onNext={handleNextCastor}
-            buttonLabels={["VAMOS LÁ_", "ENTENDI_", "OK!_", "COMO ASSIM?_", "TESTAR BANCO", "FINALIZAR"]}
+            buttonLabels={["VAMOS LÁ_", "ENTENDI_", "OK!_", "COMO ASSIM?_", "TESTAR BANCO", "FINALIZAR", "BORA!_"]}
             isHacker={isHackerMascot} 
           />
         </div>

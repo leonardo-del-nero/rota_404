@@ -85,7 +85,7 @@ const Credits = () => {
           </div>
           
           <div className={styles.endSimulation}>
-            <p>FIM DA TRANSMISSÃO</p>
+            <p>FIM DA COMUNICAÇÃO</p>
             <span className={styles.cursor}>_</span>
           </div>
         </motion.div>

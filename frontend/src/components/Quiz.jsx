@@ -186,6 +186,36 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
     setCurrentQuestion(0); 
   };
 
+  const [displayScore, setDisplayScore] = useState(0);
+
+  // Animação do score (Movido para fora do condicional para seguir as regras dos hooks)
+  useEffect(() => {
+    if (!showCongrats) {
+      setDisplayScore(0);
+      return;
+    }
+
+    const savedProgress = JSON.parse(localStorage.getItem('rota404_quiz_progress') || '{}');
+    const moduleScore = savedProgress[moduleId]?.score?.total || 0;
+
+    let current = 0;
+    const duration = 2000; // 2 segundos
+    const fps = 60;
+    const increment = moduleScore / (duration / (1000 / fps));
+    
+    const interval = setInterval(() => {
+      current += increment;
+      if (current >= moduleScore) {
+        setDisplayScore(moduleScore);
+        clearInterval(interval);
+      } else {
+        setDisplayScore(current);
+      }
+    }, 1000 / fps);
+    
+    return () => clearInterval(interval);
+  }, [showCongrats, moduleId]);
+
   if (showCongrats) {
     const savedProgress = JSON.parse(localStorage.getItem('rota404_quiz_progress') || '{}');
     const moduleScore = savedProgress[moduleId]?.score?.total || 0;
@@ -216,7 +246,7 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
             textShadow: '0 0 20px rgba(0, 243, 255, 0.5)',
             margin: '0.5rem 0'
           }}>
-            {Math.floor(moduleScore)}
+            {Math.floor(displayScore)}
           </div>
         </div>
 
