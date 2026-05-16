@@ -1,4 +1,4 @@
-import { useState  } from 'react';
+import { useState } from 'react';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -18,7 +18,7 @@ const CHARACTERS = [
   { id: '2', name: 'Pucca', role: 'Guardiã Valente', image: trinityImg, color: '#00f3ff', desc: 'Deixou a vida pacífica da vila para se tornar uma protetora solitária. Utiliza sua persistência e seus icônicos laços vermelhos para abrir caminhos perigosos que ninguém mais ousa trilhar.' },
   { id: '3', name: 'Stormtrooper', role: 'Sentinela Renegado', image: morpheusImg, color: '#ffcc00', desc: 'Especialista em táticas de defesa, apesar da má pontaria. Ele abandonou um exército rígido para aplicar suas habilidades militares na proteção de viajantes perdidos, garantindo que ninguém seja deixado para trás por ordens injustas.' },
   { id: '4', name: 'Piaba', role: 'Sombra Ancestral', image: piabaImg, color: '#ff3b3b', desc: 'Uma entidade Illuminati que camufla sua mente vingativa e seu poder ancestral sob a aparência inofensiva de uma cadela carismática, aguardando o momento exato para retomar sua glória.' },
-  { id: '5', name: 'Tigrinho', role: 'Estrategista de Risco', image: pipocaImg, color: '#ff00ff', desc: 'Transformou críticas e derrotas, em um domínio absoluto sobre o mercado de apostas. É movido pela visão de negócios e pela realidade constante de metas batidas e conquistas inquestionáveis.' },
+  { id: '5', name: 'Tigrinho', role: 'Estrategista de Risco', image: pipocaImg, color: '#ff00ff', desc: 'Transformou críticas e derrotas, em um domínio absolut sobre o mercado de apostas. É movido pela visão de negócios e pela realidade constante de metas batidas e conquistas inquestionáveis.' },
   { id: '6', name: 'Castor', role: 'Mestre Construtor', image: castorImg, color: '#ffcc00', desc: 'Unindo a paciência de um mentor à força de um operário, ele utiliza sua vasta experiência para construir fisicamente as rotas que antes apenas ensinava, garantindo a segurança de novos viajantes.' },
 ];
 
@@ -32,8 +32,17 @@ const CharacterSelect = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name.trim() || !selectedChar) {
-      setError('Por favor, preencha seu nome e selecione um personagem.');
+    
+    if (!name.trim() && !selectedChar) {
+      setError('Por favor, digite seu nome e escolha um avatar para seu personagem.');
+      return;
+    }
+    if (!name.trim()) {
+      setError('Por favor, insira um nome de usuário válido para continuar.');
+      return;
+    }
+    if (!selectedChar) {
+      setError('Por favor, selecione um dos avatares disponíveis abaixo.');
       return;
     }
 
@@ -51,11 +60,10 @@ const CharacterSelect = () => {
       
       const result = await response.json();
       localStorage.setItem('rota404_player', JSON.stringify(result.data));
-      localStorage.removeItem('rota404_quiz_progress'); // Zera o progresso do quiz para o novo usuário
+      localStorage.removeItem('rota404_quiz_progress'); 
       
       unlockAchievement('ESCOLHER_NOME_AVATAR', 'IDENTIDADE CONFIRMADA', 'Você escolheu seu nome e avatar na Rota 404!', 'COMUM');
       
-      // Checa se veio do atalho secreto
       if (localStorage.getItem('rota404_secret_start_pending') === 'true') {
         unlockAchievement('DIGITAR_START', 'ACESSO PRIVILEGIADO', 'Você digitou START na tela inicial!', 'SECRETAS');
         localStorage.removeItem('rota404_secret_start_pending');
@@ -65,7 +73,6 @@ const CharacterSelect = () => {
         unlockAchievement('EASTER_EGG_PIABA', 'A VERDADEIRA PIABA', 'Você revelou a verdadeira identidade da Piaba!', 'SECRETAS');
       }
 
-      // Sucesso! Vamos para a Intro
       navigate('/intro');
     } catch (err) {
       console.error(err);
@@ -94,7 +101,10 @@ const CharacterSelect = () => {
                 className={`input-404 ${styles.nameInput}`}
                 placeholder="Ex: CrashOverride"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  if (error) setError('');
+                }}
                 maxLength={20}
               />
             </div>
@@ -104,7 +114,10 @@ const CharacterSelect = () => {
                 <div 
                   key={char.id}
                   className={`${styles.charCard} ${selectedChar?.id === char.id ? styles.selected : ''}`}
-                  onClick={() => setSelectedChar(char)}
+                  onClick={() => {
+                    setSelectedChar(char);
+                    if (error) setError('');
+                  }}
                   style={{ '--char-color': char.color }}
                 >
                   <div className={styles.iconWrapper}>
@@ -140,12 +153,12 @@ const CharacterSelect = () => {
               )}
             </div>
 
-            {error && <p className={`mono ${styles.errorMessage}`}>{error}</p>}
+            {error && <p className={`mono ${styles.errorMessage}`} style={{ color: '#ff3b3b', marginBottom: '1rem', fontSize: '0.9rem' }}>{error}</p>}
 
             <button 
               type="submit" 
               className={`btn-404 ${styles.submitBtn}`}
-              disabled={!name.trim() || !selectedChar || isSubmitting}
+              disabled={isSubmitting} 
             >
               {isSubmitting ? 'CRIANDO...' : 'CONFIRMAR IDENTIDADE'}
             </button>

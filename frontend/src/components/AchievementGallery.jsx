@@ -9,20 +9,20 @@ const ALL_ACHIEVEMENTS = {
     { id: 'QUIZ_PERFEITO', title: 'GABARITOU!', desc: 'Completou um quiz sem errar.' },
     { id: 'INTERACAO_BONZI', title: 'AMIGO DO SISTEMA', desc: 'Interagiu com o Bonzi.' },
     { id: 'INTERACAO_LAB', title: 'PESQUISADOR NATO', desc: 'Interagiu com todos os elementos de um laboratório.' },
-    { id: 'PONTUACAO_300', title: 'HACKER APRENDIZ', desc: 'Pontuou 300 ou mais.' },
+    { id: 'PONTUACAO_300', title: 'HACKER APRENDIZ', desc: 'Pontuou 30.000 ou mais.' },
   ],
   RARO: [
     { id: 'QUIZ_RAPIDO_40', title: 'FLASH DA REDE', desc: 'Completou um quiz em < 40s.' },
     { id: 'COMPLETAR_PERCURSO', title: 'CONQUISTADOR', desc: 'Completou todo o percurso.' },
     { id: 'QUIZ_3_SEGUIDOS', title: 'TRIPLE KILL', desc: '3 quizes perfeitos seguidos.' },
-    { id: 'PONTUACAO_700', title: 'HACKER AVANÇADO', desc: 'Pontuou 700 ou mais.' },
+    { id: 'PONTUACAO_700', title: 'HACKER AVANÇADO', desc: 'Pontuou 70.000 ou mais.' },
     { id: 'TOP_10', title: 'ELITE CYBER', desc: 'Atingiu o Top 10.' },
   ],
   LENDÁRIO: [
     { id: 'QUIZ_RAPIDO_10', title: 'VELOCIDADE DA LUZ', desc: 'Completou um quiz em < 10s.' },
     { id: 'JORNADA_VELOZ', title: 'SPEEDRUNNER', desc: 'Percurso em < 6 min.' },
     { id: 'QUIZ_TODOS_PERFEITOS', title: 'MESTRE DOS BITS', desc: 'Todos os quizes perfeitos.' },
-    { id: 'PONTUACAO_900', title: 'DEUS DO CÓDIGO', desc: 'Pontuou 900 ou mais.' },
+    { id: 'PONTUACAO_900', title: 'DEUS DO CÓDIGO', desc: 'Pontuou 90.000 ou mais.' },
   ],
   SECRETAS: [
     { id: 'TOP_3', title: 'LENDA DA REDE', desc: 'Atingiu o Top 3.' },

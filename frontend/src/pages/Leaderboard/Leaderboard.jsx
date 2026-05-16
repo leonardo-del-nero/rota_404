@@ -123,15 +123,15 @@ const Leaderboard = () => {
         >
           <h2 className="mono">SEU SCORE FINAL</h2>
           <div className={styles.scoreValue}>
-            {displayScore.toFixed(2)}
+            {Math.floor(displayScore)}
           </div>
           <p className={styles.scoreText}>PONTOS DE HACKER</p>
           
           {sessionScore !== undefined && Math.abs(sessionScore - targetScore) > 0.01 && (
             <div className={styles.sessionScoreInfo}>
-              <span className="mono">ESTA TENTATIVA: {sessionScore.toFixed(2)} pts</span>
+              <span className="mono">ESTA TENTATIVA: {Math.floor(sessionScore)} pts</span>
               <p className="mono" style={{ fontSize: '0.6rem', opacity: 0.5, marginTop: '4px' }}>
-                (Seu score oficial na Leaderboard permanece {targetScore.toFixed(2)})
+                (Seu score oficial na Leaderboard permanece {Math.floor(targetScore)})
               </p>
             </div>
           )}
@@ -146,6 +146,7 @@ const Leaderboard = () => {
                   progress[key].isCorrectMap = {};
                   progress[key].lastSelected = {};
                   delete progress[key].startTime;
+                  delete progress[key].score;
                 });
                 localStorage.setItem('rota404_quiz_progress', JSON.stringify(progress));
                 localStorage.removeItem('rota404_consecutive_perfect');
@@ -193,7 +194,7 @@ const Leaderboard = () => {
                         'TOP_3', 'DIGITAR_START'
                       ].includes(a)).length || 0)}/15 <Zap size={10} style={{ marginLeft: '2px' }} />
                     </div>
-                    <div className={`mono ${styles.points}`}>{(p.progress?.score ?? 0).toFixed(2)} pts</div>
+                    <div className={`mono ${styles.points}`}>{Math.floor(p.progress?.score ?? 0)} pts</div>
                     {isCurrentPlayer && <Star size={16} color="var(--primary)" style={{ marginLeft: '1rem' }} />}
                   </motion.div>
                 );

@@ -79,6 +79,7 @@ const HttpsModule = () => {
   const [showCastor, setShowCastor] = useState(false);
   const [castorStep, setCastorStep] = useState(0);
   const [hasExplainedHttps, setHasExplainedHttps] = useState(false);
+  const [quizFinished, setQuizFinished] = useState(false);
 
   const slowScrollTo = (targetY, duration) => {
     const startingY = window.pageYOffset;
@@ -219,7 +220,7 @@ const HttpsModule = () => {
 
   return (
     <div className="container module-container">
-      <LabHeader showQuiz={showQuiz} setShowQuiz={setShowQuiz} onResetLab={resetLab} />
+      <LabHeader showQuiz={showQuiz} setShowQuiz={setShowQuiz} onResetLab={resetLab}   quizFinished={quizFinished} setQuizFinished={setQuizFinished} setShowCastor={setShowCastor}/>
 
       <div className="content-max-width">
         <Mascot 
@@ -379,7 +380,13 @@ const HttpsModule = () => {
             </motion.div>
           ) : (
             <motion.div key="quiz" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="card-404">
-              <Quiz moduleId="https" questions={httpsQuestions} onFinishQuiz={() => setShowQuiz(false)} />
+             <Quiz 
+                moduleId="https" 
+                questions={httpsQuestions} 
+                onFinishQuiz={() => {
+                setQuizFinished(true); 
+                }} 
+              />
             </motion.div>
           )}
         </AnimatePresence>

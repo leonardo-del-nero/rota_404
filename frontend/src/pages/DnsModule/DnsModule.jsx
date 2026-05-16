@@ -37,7 +37,7 @@ const dnsQuestions = [
     q: "1. Se o sistema de DNS parasse de funcionar em todo o mundo agora, o que aconteceria com a sua navegação?",
     options: [
       "A. Os sites passariam a carregar muito mais rápido porque não haveria tradução.",
-      "B. Você não conseguiria acessar sites digitando nomes (como google.com), apenas digitando o endereço IP direto.",
+      "B. Você nãoconseguiria acessar sites digitando nomes (como google.com), apenas digitando o endereço IP direto.",
       "C. Todos os sites do mundo seriam excluídos permanentemente.",
       "D. A internet seria desligada fisicamente e nenhum dado circularia mais."
     ],
@@ -74,7 +74,7 @@ const DnsModule = () => {
   const [step, setStep] = useState(0); 
   const [result, setResult] = useState(null);
   const [searchLogs, setSearchLogs] = useState([]);
-  const [lookupHistory, setLookupHistory] = useState([]); // Added history
+  const [lookupHistory, setLookupHistory] = useState([]);
   const [showQuiz, setShowQuiz] = useState(false);
 
   const [showCastor, setShowCastor] = useState(false);
@@ -83,6 +83,7 @@ const DnsModule = () => {
   const [hackerScene, setHackerScene] = useState('NONE'); 
   const [isHackerMascot, setIsHackerMascot] = useState(false);
   const [dnsStep, setDnsStep] = useState(0);
+  const [quizFinished, setQuizFinished] = useState(false);
 
   const slowScrollTo = (targetY, duration) => {
     const startingY = window.pageYOffset;
@@ -113,6 +114,12 @@ const DnsModule = () => {
     setShowCastor(true);
   }, [showLab]);
 
+  useEffect(() => {
+    if (showQuiz) {
+      setShowCastor(false);
+    }
+  }, [showQuiz]);
+
   const [playerData] = useState(() => {
     const savedPlayer = JSON.parse(localStorage.getItem('rota404_player') || '{}');
     const charId = savedPlayer.characterId || savedPlayer.character_id;
@@ -134,87 +141,93 @@ const DnsModule = () => {
         setSearchLogs(prev => [...prev, logs[currentLog]]);
         currentLog++;
       } else { clearInterval(interval); }
-    }, 600); 
+    }, 400);
   };
 
-const handleLookup = async () => {
-  if (!url) return;
-  setStep(1);
-  setResult(null);
-  setSearchLogs([]);
-  
-  const isInputIp = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/.test(url);
-  const isValidUrlFormat = url.includes('.') && !isInputIp;
-
-  setTimeout(() => {
-    setStep(2);
-    simulateDnsSearch();
+  const handleLookup = async () => {
+    if (!url) return;
     
+    let finalUrl = url.trim();
+    if (!finalUrl.includes('.') && !/^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/.test(finalUrl)) {
+      finalUrl = `${finalUrl}.com`;
+    }
+
+    setStep(1);
+    setResult(null);
+    setSearchLogs([]);
+    
+    const isInputIp = /^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$/.test(finalUrl);
+    const isValidUrlFormat = finalUrl.includes('.') && !isInputIp;
+
     setTimeout(() => {
-      setStep(3);
+      setStep(2);
+      simulateDnsSearch();
+      
       setTimeout(() => {
-        setStep(4);
-        
-        if ((hackerScene === 'GLITCH' || hackerScene === 'POISONED') && url.toLowerCase().includes('banco.com')) {
-          setResult("66.66.66.66 (IP_MALICIOSO)"); 
-          setHackerScene('POISONED'); 
-          setIsHackerMascot(false); 
-          setCastorStep(5); // Poisoning alert
-          setShowCastor(true); 
-          return;
-        }
-
-        if (dnsStep === 0) {
-          if (!isValidUrlFormat || url.length < 3) { 
-            setResult("IP_NÃO_ENCONTRADO"); 
-            setCastorStep(1); // Not found
-            setDnsStep(1);
-            setShowCastor(true);
-          } else {
-            setResult("172.217.1.1"); 
-            setDnsStep(1);
+        setStep(3);
+        setTimeout(() => {
+          setStep(4);
+          
+          if ((hackerScene === 'GLITCH' || hackerScene === 'POISONED') && finalUrl.toLowerCase().includes('banco.com')) {
+            setResult("66.66.66.66 (IP_MALICIOSO)"); 
+            setHackerScene('POISONED'); 
+            setIsHackerMascot(false); 
+            setCastorStep(5);
+            setShowCastor(true); 
+            return;
           }
-          return;
-        }
 
-        if (dnsStep === 1) {
-          if (isValidUrlFormat) {
-            const mockIp = "142.250.190.46"; 
-            setResult(mockIp); 
-            
-            setCastorStep(2); // Perfect lookup
-            setShowCastor(true);
-            setDnsStep(2);
-
-            setTimeout(() => {
-               setHackerScene('SHOW_ROUTES');
-            }, 6000);
-          } else {
-            setResult("IP_NÃO_ENCONTRADO"); 
+          if (dnsStep === 0) {
+            if (!isValidUrlFormat || finalUrl.toLowerCase().includes('site-falso')) { 
+              setResult("IP_NÃO_ENCONTRADO"); 
+              setCastorStep(1);
+              setDnsStep(1);
+              setShowCastor(true);
+            } else {
+              setResult("172.217.1.1"); 
+              setDnsStep(1);
+            }
+            return;
           }
-          return;
-        }
 
-        const resVal = isInputIp ? url : (isValidUrlFormat ? "172.217.1.1" : "IP_NÃO_ENCONTRADO");
-        setResult(resVal); 
-        setLookupHistory(prev => {
-          const entry = { url, result: resVal, time: new Date().toLocaleTimeString() };
-          return [entry, ...prev].slice(0, 3);
-        });
-      }, 2500); 
-    }, 3000); 
-  }, 2500); 
-};
+          if (dnsStep === 1) {
+            if (isValidUrlFormat && !finalUrl.toLowerCase().includes('site-falso')) {
+              const mockIp = "142.250.190.46"; 
+              setResult(mockIp); 
+              
+              setCastorStep(2);
+              setShowCastor(true);
+              setDnsStep(2);
+
+              setTimeout(() => {
+                 setHackerScene('SHOW_ROUTES');
+              }, 4000);
+            } else {
+              setResult("IP_NÃO_ENCONTRADO"); 
+            }
+            return;
+          }
+
+          const resVal = isInputIp ? finalUrl : (isValidUrlFormat && !finalUrl.toLowerCase().includes('site-falso') ? "172.217.1.1" : "IP_NÃO_ENCONTRADO");
+          setResult(resVal); 
+          setLookupHistory(prev => {
+            const entry = { url: finalUrl, result: resVal, time: new Date().toLocaleTimeString() };
+            return [entry, ...prev].slice(0, 3);
+          });
+        }, 1200); 
+      }, 1300); 
+    }, 1200); 
+  };
 
   const handleNextCastor = () => {
-    if (castorStep === 3) { // After "Something changed"
+    if (castorStep === 3) {
        setHackerScene('GLITCH');
        setIsHackerMascot(true);
-       setCastorStep(4); // Hacker hi-jack
+       setCastorStep(4);
        return;
     }
 
-    if (castorStep === 5) { // After poisoning alert
+    if (castorStep === 5) {
        setHackerScene('NONE');
     }
 
@@ -223,7 +236,7 @@ const handleLookup = async () => {
 
   useEffect(() => {
     if (hackerScene === 'SHOW_ROUTES') {
-      setCastorStep(3); // Strange routes
+      setCastorStep(3);
       setShowCastor(true);
     }
   }, [hackerScene]);
@@ -234,7 +247,7 @@ const handleLookup = async () => {
 
   const resetLab = () => {
     setShowLab(false); setStep(0); setResult(null); setUrl(''); 
-    setSearchLogs([]); setShowCastor(false); setHackerScene('NONE'); setIsHackerMascot(false);
+    setSearchLogs([]); setShowCastor(false); setHackerScene('NONE'); setIsHackerMascot(false); setQuizFinished(false);
   };
 
   if (!showLab) {
@@ -267,7 +280,7 @@ const handleLookup = async () => {
 
   return (
     <div className="container module-container">
-      <LabHeader showQuiz={showQuiz} setShowQuiz={setShowQuiz} onResetLab={resetLab} />
+      <LabHeader showQuiz={showQuiz} setShowQuiz={setShowQuiz} onResetLab={resetLab} quizFinished={quizFinished} setQuizFinished={setQuizFinished} setShowCastor={setShowCastor}/>
 
       <div className="content-max-width" style={{ position: 'relative' }}>
         
@@ -331,8 +344,8 @@ const handleLookup = async () => {
 
                 <div className={styles.connectionLine}>
                   <AnimatePresence>
-                    {step === 1 && <motion.div initial={{ left: 0 }} animate={{ left: '100%' }} transition={{ duration: 4 }} className={styles.packageWrapper}><DataPackage text={url} icon={Search} type="primary" /></motion.div>}
-                    {step === 3 && <motion.div initial={{ left: '100%' }} animate={{ left: 0 }} transition={{ duration: 4 }} className={styles.packageWrapper}><DataPackage text={result} icon={Globe} type={result?.includes('MALICIOSO') ? "danger" : "success"} /></motion.div>}
+                    {step === 1 && <motion.div initial={{ left: 0 }} animate={{ left: '100%' }} transition={{ duration: 1.8, ease: "easeInOut" }} className={styles.packageWrapper}><DataPackage text={url} icon={Search} type="primary" /></motion.div>}
+                    {step === 3 && <motion.div initial={{ left: '100%' }} animate={{ left: 0 }} transition={{ duration: 1.8, ease: "easeInOut" }} className={styles.packageWrapper}><DataPackage text={result} icon={Globe} type={result?.includes('MALICIOSO') ? "danger" : "success"} /></motion.div>}
                   </AnimatePresence>
                 </div>
 
@@ -340,7 +353,7 @@ const handleLookup = async () => {
                   <motion.div 
                     className={`node-icon ${step >= 2 ? styles.serverNodeIconActive : styles.serverNodeIconInactive}`}
                     animate={{ scale: step === 2 ? [1, 1.05, 1] : 1 }}
-                    transition={{ repeat: step === 2 ? Infinity : 0, duration: 2 }}
+                    transition={{ repeat: step === 2 ? Infinity : 0, duration: 1.5 }}
                   >
                     <Server size={40} color={step >= 2 ? '#ff6b00' : '#888'} />
                   </motion.div>
@@ -366,7 +379,7 @@ const handleLookup = async () => {
                                   strokeDasharray="8,8" 
                                   initial={{ pathLength: 0 }}
                                   animate={{ pathLength: 1 }}
-                                  transition={{ duration: 3}}
+                                  transition={{ duration: 2 }}
                                 />
                                 <motion.path
                                   d="M 200 100 L 200 40 L 60 40" 
@@ -375,7 +388,7 @@ const handleLookup = async () => {
                                   strokeDasharray="8,8" 
                                   initial={{ pathLength: 0 }}
                                   animate={{ pathLength: 1 }}
-                                  transition={{ duration: 4, delay: 3 }}
+                                  transition={{ duration: 2, delay: 1.5 }}
                                 />
                                 <motion.path
                                   d="M 200 100 L 200 160 L 60 160"
@@ -384,7 +397,7 @@ const handleLookup = async () => {
                                   strokeDasharray="8,8" 
                                   initial={{ pathLength: 0 }}
                                   animate={{ pathLength: 1 }}
-                                  transition={{ duration: 4, delay: 3}}
+                                  transition={{ duration: 2, delay: 1.5 }}
                                 />
                               </svg>
 
@@ -392,7 +405,7 @@ const handleLookup = async () => {
                                 <motion.div 
                                   initial={{ opacity: 0, scale: 0 }} 
                                   animate={{ opacity: 1, scale: 1 }} 
-                                  transition={{ delay: 7 }}
+                                  transition={{ delay: 3 }}
                                   className={styles.miniIconNode}
                                   style={{ top: '15px', left: '0' }}
                                 >
@@ -402,7 +415,7 @@ const handleLookup = async () => {
                                 <motion.div 
                                   initial={{ opacity: 0, scale: 0 }} 
                                   animate={{ opacity: 1, scale: 1 }} 
-                                  transition={{ delay: 7 }}
+                                  transition={{ delay: 3 }}
                                   className={`${styles.miniIconNode} ${hackerScene === 'POISONED' ? styles.glitchAlert : ''}`}
                                   style={{ top: '135px', left: '0' }}
                                 >
@@ -427,7 +440,6 @@ const handleLookup = async () => {
                   <button className={`btn-404 ${styles.submitBtn}`} onClick={handleLookup} disabled={(step > 0 && step < 4) || !url}>TRADUZIR</button>
                 </div>
                 
-                {/* Usability Improvement: Suggested URLs */}
                 <div className={styles.suggestions}>
                   <span>Sugestões: </span>
                   {['google.com', 'banco.com', 'site-falso'].map(s => (
@@ -461,7 +473,13 @@ const handleLookup = async () => {
               </div>
             </motion.div>
           ) : (
-            <Quiz moduleId="dns" questions={dnsQuestions} onFinishQuiz={() => setShowQuiz(false)} />
+          <Quiz 
+            moduleId="dns" 
+            questions={dnsQuestions} 
+            onFinishQuiz={() => {
+              setQuizFinished(true); 
+            }} 
+          />
           )}
         </AnimatePresence>
 

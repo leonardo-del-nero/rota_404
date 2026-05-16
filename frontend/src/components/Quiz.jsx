@@ -98,7 +98,7 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
       const startTime = moduleData.startTime || Date.now();
       const seg = Math.floor((Date.now() - startTime) / 1000);
       
-      const un = 16.66666666666667;
+      const un = 1667; // Arredondado para cima para efeito arcade
       const max_time = 80;
       
       let valor_bonus = 0;
@@ -119,15 +119,15 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
         if (tent > 1) perfectFirstTry = false;
         const v = (un * 3) / tent;
         perguntasScore += v;
-        questionsScoreDetails[idx] = { attempts: tent, score: v };
+        questionsScoreDetails[idx] = { attempts: tent, score: Math.floor(v) };
       });
       
-      const valor_quiz = perguntasScore + valor_bonus;
+      const valor_quiz = Math.floor(perguntasScore + valor_bonus);
       
       if (isFirstTime) {
         moduleData.score = {
           total: valor_quiz,
-          bonus: valor_bonus,
+          bonus: Math.floor(valor_bonus),
           timeElapsed: seg,
           questions: questionsScoreDetails
         };
@@ -152,7 +152,7 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
             unlockAchievement('QUIZ_TODOS_PERFEITOS', 'MESTRE DOS BITS', 'Você completou todos os quizes sem errar nenhuma resposta!', 'LENDÁRIO');
           }
         }
-      } else {u
+      } else {
         localStorage.setItem('rota404_consecutive_perfect', '0');
       }
 
@@ -163,6 +163,10 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
       if (seg <= 10) {
         unlockAchievement('QUIZ_RAPIDO_10', 'VELOCIDADE DA LUZ', 'Você completou um quiz dentro de 10 segundos!', 'LENDÁRIO');
       }
+
+      unlockAchievement('INTERACAO_LAB', 'PESQUISADOR NATO', 'Você interagiu com todos os elementos e completou o laboratório!', 'COMUM');
+
+      if (typeof onFinishQuiz === 'function') onFinishQuiz();
 
       setShowCongrats(true);
     }
@@ -212,7 +216,7 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
             textShadow: '0 0 20px rgba(0, 243, 255, 0.5)',
             margin: '0.5rem 0'
           }}>
-            {moduleScore.toFixed(2)}
+            {Math.floor(moduleScore)}
           </div>
         </div>
 
@@ -255,9 +259,6 @@ const Quiz = ({ moduleId, questions, onFinishQuiz }) => {
         {!showCongrats && !isReviewing && (
           <div style={{ color: liveSeconds > 40 ? '#666' : liveSeconds > 10 ? 'var(--secondary)' : 'var(--primary)', transition: 'color 0.3s' }}>
             {liveSeconds}s 
-            <span style={{ fontSize: '0.6rem', marginLeft: '6px', opacity: 0.5 }}>
-              {liveSeconds <= 10 ? 'META: LENDÁRIO' : liveSeconds <= 40 ? 'META: RARO' : ''}
-            </span>
           </div>
         )}
         {isCorrectMap[currentQuestion] && !isReviewing && <span style={{color: 'var(--success)'}}>RESOLVIDO</span>}

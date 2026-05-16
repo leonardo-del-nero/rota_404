@@ -41,7 +41,7 @@ const Credits = () => {
             opacity: [0, 1, 1, 0], 
           }}
           transition={{ 
-            duration: 45, 
+            duration: 25, 
             ease: 'linear',
             times: [0, 0.05, 0.9, 1] 
           }}
@@ -54,7 +54,7 @@ const Credits = () => {
           
           <div className={styles.section}>
             <h2>COMANDANTE DA FROTA E DEV FULL-STACK</h2>
-            <p>Leonardo Del Nero</p>
+            <p>Nero</p>
           </div>
 
           <div className={styles.section}>

@@ -20,6 +20,27 @@ import piabaImg from '../../avatars/piaba_upscaled_0.png';
 import pipocaImg from '../../avatars/tigrinho_upscaled_0.png';
 import castorImg from '../../avatars/castor_upscaled_0.png';
 
+// Novos assets V2
+import shipFrame0 from '../../assets/v2/foguete/foguete_png_0.png';
+import shipFrame1 from '../../assets/v2/foguete/foguete_png_1.png';
+import shipFrame2 from '../../assets/v2/foguete/foguete_png_2.png';
+import shipFrame3 from '../../assets/v2/foguete/foguete_png_3.png';
+import shipFrame4 from '../../assets/v2/foguete/foguete_png_4.png';
+import shipFrame5 from '../../assets/v2/foguete/foguete_png_5.png';
+
+const SHIP_FRAMES = [shipFrame0, shipFrame1, shipFrame2, shipFrame3, shipFrame4, shipFrame5];
+
+import planetHash from '../../assets/v2/planetas/hashing_upscaled.png';
+import planetApi from '../../assets/v2/planetas/api_upscaled.png';
+import planetDns from '../../assets/v2/planetas/dns_upscaled.png';
+import planetHttps from '../../assets/v2/planetas/https_upscaled.png';
+import planetError404 from '../../assets/v2/planetas/erro404_upscaled.png';
+import planetDeploy from '../../assets/v2/planetas/deploy_upscaled.png';
+
+import spriteCofre from '../../assets/sprites/cofre_upscaled.png';
+import spritePedido from '../../assets/sprites/pedido_upscaled.png';
+import spriteCadeado from '../../assets/sprites/cadeado_upscaled.png';
+
 const AVATARS = {
   '1': neoImg,
   '2': trinityImg,
@@ -42,6 +63,7 @@ const Hub = () => {
   const [showDialog, setShowDialog] = useState(false);
   const [isTalking, setIsTalking] = useState(false);
   const [talkFrame, setTalkFrame] = useState(0);
+  const [shipFrame, setShipFrame] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showConfirmFinish, setShowConfirmFinish] = useState(false);
 
@@ -61,6 +83,14 @@ const Hub = () => {
     return () => clearInterval(interval);
   }, [isTalking]);
 
+  // Rocket animation frame cycling
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setShipFrame(prev => (prev + 1) % SHIP_FRAMES.length);
+    }, 100);
+    return () => clearInterval(interval);
+  }, []);
+
   const modules = useMemo(() => [
     {
       id: 'hash',
@@ -68,6 +98,8 @@ const Hub = () => {
       desc: 'Como saber se um arquivo foi mexido? O Hash cria uma assinatura única que dedura qualquer mudança!',
       path: '/hash',
       color: 'var(--primary)',
+      image: planetHash,
+      sprite: spriteCofre,
       x: 300, y: 250
     },
     {
@@ -76,6 +108,8 @@ const Hub = () => {
       desc: 'Descubra como o seu computador faz "pedidos" para os sites e recebe as informações de volta.',
       path: '/api-concept',
       color: 'var(--secondary)',
+      image: planetApi,
+      sprite: spritePedido,
       x: 700, y: 450
     },
     {
@@ -84,6 +118,7 @@ const Hub = () => {
       desc: 'A lista telefônica da internet que traduz nomes em IPs.',
       path: '/dns',
       color: '#ff6b00',
+      image: planetDns,
       x: 300, y: 650
     },
     {
@@ -92,15 +127,9 @@ const Hub = () => {
       desc: 'Como seus dados viajam protegidos por um cofre digital.',
       path: '/https',
       color: '#00ff88',
+      image: planetHttps,
+      sprite: spriteCadeado,
       x: 700, y: 850
-    },
-    {
-      id: 'error404',
-      title: 'ERRO 404',
-      desc: 'Onde foram parar meus arquivos? Entenda por que as páginas somem da internet.',
-      path: '/404-lab',
-      color: '#ff3b3b',
-      x: 300, y: 1050
     },
     {
       id: 'deploy',
@@ -108,6 +137,16 @@ const Hub = () => {
       desc: 'Leve seu código da sua máquina para o mundo real em um servidor 24/7.',
       path: '/deploy',
       color: '#00f3ff',
+      image: planetDeploy,
+      x: 300, y: 1050
+    },
+    {
+      id: 'error404',
+      title: 'ERRO 404',
+      desc: 'Onde foram parar meus arquivos? Entenda por que as páginas somem da internet.',
+      path: '/404-lab',
+      color: '#ff3b3b',
+      image: planetError404,
       x: 700, y: 1250
     }
   ], []);
@@ -126,7 +165,7 @@ const Hub = () => {
       if (moduleData.score && moduleData.score.total) {
         totalScore += moduleData.score.total;
       } else if (moduleData.isCorrectMap) {
-        const un = 16.66666666666667;
+        const un = 1667;
         Object.keys(moduleData.isCorrectMap).forEach(qIdx => {
           if (moduleData.isCorrectMap[qIdx]) {
             const tent = moduleData.attempts[qIdx] || 1;
@@ -135,7 +174,7 @@ const Hub = () => {
         });
       }
     });
-    return Math.floor(totalScore);
+    return Math.min(Math.floor(totalScore), 100000);
   }, [progressData]);
 
   useEffect(() => {
@@ -153,7 +192,12 @@ const Hub = () => {
         unlockAchievement('JORNADA_VELOZ', 'SPEEDRUNNER CYBER', 'Você completou todo o percurso em menos de 6 minutos!', 'LENDÁRIO');
       }
     }
-  }, [unlockAchievement]);
+
+    // Milestones de pontuação
+    if (currentScore >= 30000) unlockAchievement('PONTUACAO_300', 'HACKER APRENDIZ', 'Você atingiu 30.000 pontos ou mais!', 'COMUM');
+    if (currentScore >= 70000) unlockAchievement('PONTUACAO_700', 'HACKER AVANÇADO', 'Você atingiu 70.000 pontos ou mais!', 'RARO');
+    if (currentScore >= 90000) unlockAchievement('PONTUACAO_900', 'DEUS DO CÓDIGO', 'Você atingiu 90.000 pontos ou mais!', 'LENDÁRIO');
+  }, [unlockAchievement, currentScore]);
 
   // Idle ship animation
   useEffect(() => {
@@ -315,7 +359,7 @@ const Hub = () => {
       if (moduleData.score && moduleData.score.total) {
         totalScore += moduleData.score.total;
       } else if (moduleData.isCorrectMap) {
-        const un = 16.66666666666667;
+        const un = 1667;
         Object.keys(moduleData.isCorrectMap).forEach(qIdx => {
           if (moduleData.isCorrectMap[qIdx]) {
             const tent = moduleData.attempts[qIdx] || 1;
@@ -324,10 +368,12 @@ const Hub = () => {
         });
       }
     });
+    totalScore = Math.min(Math.floor(totalScore), 100000);
 
-    if (totalScore >= 300) unlockAchievement('PONTUACAO_300', 'HACKER APRENDIZ', 'Você atingiu 300 pontos ou mais!', 'COMUM');
-    if (totalScore >= 700) unlockAchievement('PONTUACAO_700', 'HACKER AVANÇADO', 'Você atingiu 700 pontos ou mais!', 'RARO');
-    if (totalScore >= 900) unlockAchievement('PONTUACAO_900', 'DEUS DO CÓDIGO', 'Você atingiu 900 pontos ou mais!', 'LENDÁRIO');
+    // Milestones de pontuação (também checados no useEffect, mas mantidos aqui para segurança no envio)
+    if (totalScore >= 30000) unlockAchievement('PONTUACAO_300', 'HACKER APRENDIZ', 'Você atingiu 30.000 pontos ou mais!', 'COMUM');
+    if (totalScore >= 70000) unlockAchievement('PONTUACAO_700', 'HACKER AVANÇADO', 'Você atingiu 70.000 pontos ou mais!', 'RARO');
+    if (totalScore >= 90000) unlockAchievement('PONTUACAO_900', 'DEUS DO CÓDIGO', 'Você atingiu 90.000 pontos ou mais!', 'LENDÁRIO');
 
     localStorage.removeItem('rota404_ship_pos');
     localStorage.removeItem('rota404_ship_rot');
@@ -460,7 +506,7 @@ const Hub = () => {
           ))}
 
           {/* Planets */}
-          {modules.map((mod) => {
+          {modules.map((mod, idx) => {
             const isCompleted = progressData[mod.id]?.score?.total > 0;
             const isSelected = selectedNode?.id === mod.id;
             
@@ -468,48 +514,125 @@ const Hub = () => {
               <motion.g 
                 key={mod.id} 
                 onClick={() => handlePlanetClick(mod)}
-                whileHover={{ scale: 1.1 }}
+                whileHover={{ scale: 1.15 }}
                 style={{ cursor: 'pointer' }}
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.5 }}
               >
-                {/* Planet Circle */}
-                <circle 
+                {/* Enhanced background glow - ALWAYS THERE */}
+                <motion.circle 
                   cx={mod.x} 
                   cy={mod.y} 
-                  r={50} 
-                  fill={isCompleted ? mod.color : "rgba(0,0,0,0.5)"} 
-                  stroke={isSelected ? "#fff" : mod.color} 
-                  strokeWidth={6} 
+                  r={75} 
+                  fill={mod.color}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: isCompleted ? [0.3, 0.6, 0.3] : [0.15, 0.25, 0.15] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  style={{ filter: 'blur(20px)' }}
+                />
+
+                {/* Rotating orbit ring - ONLY FOR CURRENT MODULE */}
+                {shipIndex === idx && (
+                  <motion.circle
+                    cx={mod.x}
+                    cy={mod.y}
+                    r={70}
+                    fill="none"
+                    stroke={mod.color}
+                    strokeWidth={3}
+                    strokeDasharray="10 10"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                    style={{ transformOrigin: `${mod.x}px ${mod.y}px` }}
+                  />
+                )}
+
+                {/* Inner pulse - only for completed or current */}
+                {(isCompleted || shipIndex === idx) && (
+                  <motion.circle
+                    cx={mod.x}
+                    cy={mod.y}
+                    r={62}
+                    fill="none"
+                    stroke="#fff"
+                    strokeWidth={2}
+                    animate={{ scale: [1, 1.1, 1], opacity: [0.8, 0.3, 0.8] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  />
+                )}
+
+                {/* Orbiting Sprite */}
+                {mod.sprite && (
+                  <motion.g
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                    style={{ transformOrigin: `${mod.x}px ${mod.y}px` }}
+                  >
+                    <image 
+                      href={mod.sprite} 
+                      x={mod.x + 75} 
+                      y={mod.y - 20} 
+                      width="50" 
+                      height="50" 
+                    />
+                  </motion.g>
+                )}
+
+                {/* Planet Image - Colorful by default, dim if not completed */}
+                <image 
+                  href={mod.image}
+                  x={mod.x - 60}
+                  y={mod.y - 60}
+                  width={120}
+                  height={120}
+                  style={{ 
+                    filter: isCompleted ? 'drop-shadow(0 0 10px rgba(255,255,255,0.5))' : 'brightness(0.7) contrast(1.1)',
+                    transition: 'all 0.5s ease'
+                  }}
                 />
                 
-                {/* Decorative Triangle on Planet */}
-                <motion.polygon 
-                  points={`${mod.x+30},${mod.y-30} ${mod.x+70},${mod.y-10} ${mod.x+40},${mod.y+20}`} 
-                  fill={isCompleted ? "#000" : mod.color} 
-                  animate={{ 
-                    rotate: [0, 10, 0, -10, 0] 
-                  }}
-                  transition={{ 
-                    duration: 5, 
-                    repeat: Infinity, 
-                    ease: "easeInOut" 
-                  }}
-                  style={{ transformOrigin: `${mod.x+40}px ${mod.y-10}px` }}
-                />
+                {/* Completion Badge (Small checkmark or star) */}
+                {isCompleted && (
+                  <motion.g
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: 'spring', damping: 10 }}
+                  >
+                    <circle cx={mod.x + 45} cy={mod.y - 45} r={15} fill="var(--primary)" stroke="#000" strokeWidth={2} />
+                    <text x={mod.x + 45} y={mod.y - 40} textAnchor="middle" fill="#000" fontSize="16" fontWeight="bold">✓</text>
+                  </motion.g>
+                )}
+
+                {/* Selection Ring */}
+                {isSelected && (
+                  <circle 
+                    cx={mod.x} 
+                    cy={mod.y} 
+                    r={80} 
+                    fill="none" 
+                    stroke="#fff" 
+                    strokeWidth={2}
+                    strokeDasharray="5 5"
+                  />
+                )}
                 
-                {/* Label (Optional, but good for context) */}
+                {/* Label */}
                 <text 
                   x={mod.x} 
-                  y={mod.y + 80} 
+                  y={mod.y + 100} 
                   textAnchor="middle" 
-                  fill="#fff"
-                  fontSize="24"
+                  fill={isCompleted ? "var(--primary)" : "#fff"}
+                  fontSize="18"
+                  fontWeight="bold"
                   fontFamily="var(--font-mono)"
-                  letterSpacing="2"
+                  letterSpacing="1"
+                  style={{ 
+                    textShadow: isCompleted ? '0 0 15px var(--primary)' : '0 0 10px rgba(0,0,0,1)',
+                    transition: 'all 0.3s ease'
+                  }}
                 >
-                  {mod.title}
+                  {mod.title} {isCompleted ? '[OK]' : ''}
                 </text>
               </motion.g>
             );
@@ -517,20 +640,13 @@ const Hub = () => {
 
           {/* The Ship */}
           <motion.g animate={controls}>
-            {/* Simple Triangle Rocket pointing UP */}
-            <polygon 
-              points="-30,30 0,-40 30,30" 
-              fill="#fff" 
-              stroke="#000"
-              strokeWidth="3"
-            />
-            {/* Little thruster flame */}
-            <motion.polygon 
-              points="-15,35 0,55 15,35" 
-              fill="var(--primary)"
-              animate={{ opacity: [0.5, 1, 0.5], scaleY: [0.8, 1.2, 0.8] }}
-              transition={{ duration: 0.3, repeat: Infinity }}
-              style={{ transformOrigin: '0 35px' }}
+            {/* Animated Ship Sprite */}
+            <image 
+              href={SHIP_FRAMES[shipFrame]}
+              x={-50}
+              y={-50}
+              width={100}
+              height={100}
             />
           </motion.g>
         </svg>

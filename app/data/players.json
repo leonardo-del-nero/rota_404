@@ -360,6 +360,637 @@
             "progress": {},
             "id": "18",
             "created_at": "2026-05-13T02:43:38.201766"
+        },
+        {
+            "name": "piaba",
+            "character_id": "4",
+            "progress": {
+                "score": 163.57142857142864,
+                "modules": {
+                    "hash": {
+                        "startTime": 1778671671010,
+                        "attempts": {
+                            "0": 1,
+                            "1": 1,
+                            "2": 1
+                        },
+                        "isCorrectMap": {
+                            "0": true,
+                            "1": true,
+                            "2": true
+                        },
+                        "lastSelected": {
+                            "0": 0,
+                            "1": 1,
+                            "2": 2
+                        },
+                        "score": {
+                            "total": 163.57142857142864,
+                            "bonus": 13.571428571428575,
+                            "timeElapsed": 13,
+                            "questions": {
+                                "0": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "1": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "2": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                }
+                            }
+                        }
+                    }
+                },
+                "achievements": [
+                    "HUB_VISITED",
+                    "INTERACAO_BONZI",
+                    "QUIZ_RAPIDO_40",
+                    "QUIZ_COMPLETE_API",
+                    "ESCOLHER_NOME_AVATAR",
+                    "DIGITAR_START",
+                    "TOP_10",
+                    "TOP_3",
+                    "QUIZ_PERFEITO",
+                    "QUIZ_RAPIDO_10",
+                    "QUIZ_COMPLETE_HASH",
+                    "QUIZ_3_SEGUIDOS",
+                    "PONTUACAO_300",
+                    "EASTER_EGG_PIABA"
+                ]
+            },
+            "id": "19",
+            "created_at": "2026-05-13T08:26:06.478385"
+        },
+        {
+            "name": "piaba",
+            "character_id": "4",
+            "progress": {
+                "score": 163.80952380952388,
+                "modules": {
+                    "hash": {
+                        "startTime": 1778671912114,
+                        "attempts": {
+                            "0": 1,
+                            "1": 1,
+                            "2": 1
+                        },
+                        "isCorrectMap": {
+                            "0": true,
+                            "1": true,
+                            "2": true
+                        },
+                        "lastSelected": {
+                            "0": 0,
+                            "1": 1,
+                            "2": 2
+                        },
+                        "score": {
+                            "total": 163.80952380952388,
+                            "bonus": 13.809523809523814,
+                            "timeElapsed": 12,
+                            "questions": {
+                                "0": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "1": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "2": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                }
+                            }
+                        }
+                    }
+                },
+                "achievements": [
+                    "ESCOLHER_NOME_AVATAR",
+                    "DIGITAR_START",
+                    "EASTER_EGG_PIABA",
+                    "INTERACAO_BONZI",
+                    "QUIZ_PERFEITO",
+                    "QUIZ_RAPIDO_40"
+                ]
+            },
+            "id": "20",
+            "created_at": "2026-05-13T08:29:38.338517"
+        },
+        {
+            "name": "Boster",
+            "character_id": "3",
+            "progress": {
+                "score": 0,
+                "modules": {},
+                "achievements": [
+                    "ESCOLHER_NOME_AVATAR",
+                    "INTERACAO_BONZI"
+                ]
+            },
+            "id": "21",
+            "created_at": "2026-05-13T08:35:09.409668"
+        },
+        {
+            "name": "piaba",
+            "character_id": "4",
+            "progress": {
+                "score": 166.66666666666674,
+                "modules": {
+                    "hash": {
+                        "startTime": 1778676667536,
+                        "attempts": {
+                            "0": 1,
+                            "1": 1,
+                            "2": 1
+                        },
+                        "isCorrectMap": {
+                            "0": true,
+                            "1": true,
+                            "2": true
+                        },
+                        "lastSelected": {
+                            "0": 0,
+                            "1": 1,
+                            "2": 2
+                        },
+                        "score": {
+                            "total": 166.66666666666674,
+                            "bonus": 16.66666666666667,
+                            "timeElapsed": 9,
+                            "questions": {
+                                "0": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "1": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "2": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                }
+                            }
+                        }
+                    }
+                },
+                "achievements": [
+                    "ESCOLHER_NOME_AVATAR",
+                    "EASTER_EGG_PIABA",
+                    "INTERACAO_BONZI",
+                    "QUIZ_PERFEITO",
+                    "QUIZ_RAPIDO_40",
+                    "QUIZ_RAPIDO_10"
+                ]
+            },
+            "id": "22",
+            "created_at": "2026-05-13T09:45:42.053732"
+        },
+        {
+            "name": "pimba",
+            "character_id": "4",
+            "progress": {
+                "score": 0,
+                "modules": {},
+                "achievements": [
+                    "ESCOLHER_NOME_AVATAR",
+                    "DIGITAR_START",
+                    "INTERACAO_BONZI"
+                ]
+            },
+            "id": "23",
+            "created_at": "2026-05-13T11:19:59.485247"
+        },
+        {
+            "name": "123456",
+            "character_id": "4",
+            "progress": {},
+            "id": "24",
+            "created_at": "2026-05-13T13:57:05.196615"
+        },
+        {
+            "name": "kl",
+            "character_id": "2",
+            "progress": {},
+            "id": "25",
+            "created_at": "2026-05-13T18:11:00.974752"
+        },
+        {
+            "name": "Piaba",
+            "character_id": "4",
+            "progress": {
+                "score": 296.42857142857156,
+                "modules": {
+                    "error404": {
+                        "startTime": 1778706950272,
+                        "attempts": {
+                            "0": 3,
+                            "1": 1,
+                            "2": 1
+                        },
+                        "isCorrectMap": {
+                            "0": true,
+                            "1": true,
+                            "2": true
+                        },
+                        "lastSelected": {
+                            "0": 2,
+                            "1": 0,
+                            "2": 0
+                        },
+                        "score": {
+                            "total": 129.7619047619048,
+                            "bonus": 13.095238095238098,
+                            "timeElapsed": 15,
+                            "questions": {
+                                "0": {
+                                    "attempts": 3,
+                                    "score": 16.66666666666667
+                                },
+                                "1": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "2": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                }
+                            }
+                        }
+                    },
+                    "hash": {
+                        "startTime": 1778706993438,
+                        "attempts": {
+                            "0": 1,
+                            "1": 1,
+                            "2": 1
+                        },
+                        "isCorrectMap": {
+                            "0": true,
+                            "1": true,
+                            "2": true
+                        },
+                        "lastSelected": {
+                            "0": 0,
+                            "1": 1,
+                            "2": 2
+                        },
+                        "score": {
+                            "total": 166.66666666666674,
+                            "bonus": 16.66666666666667,
+                            "timeElapsed": 7,
+                            "questions": {
+                                "0": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "1": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "2": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                }
+                            }
+                        }
+                    }
+                },
+                "achievements": [
+                    "ESCOLHER_NOME_AVATAR",
+                    "DIGITAR_START",
+                    "EASTER_EGG_PIABA",
+                    "INTERACAO_BONZI",
+                    "QUIZ_PERFEITO",
+                    "QUIZ_RAPIDO_40",
+                    "QUIZ_RAPIDO_10"
+                ]
+            },
+            "id": "26",
+            "created_at": "2026-05-13T18:15:16.962985"
+        },
+        {
+            "name": "piaba",
+            "character_id": "4",
+            "progress": {},
+            "id": "27",
+            "created_at": "2026-05-15T11:54:45.687697"
+        },
+        {
+            "name": "piiaba",
+            "character_id": "4",
+            "progress": {
+                "score": 747.1428571428575,
+                "modules": {
+                    "hash": {
+                        "startTime": 1778856972164,
+                        "attempts": {
+                            "0": 1,
+                            "1": 1,
+                            "2": 1
+                        },
+                        "isCorrectMap": {
+                            "0": true,
+                            "1": true,
+                            "2": true
+                        },
+                        "lastSelected": {
+                            "0": 0,
+                            "1": 1,
+                            "2": 2
+                        },
+                        "score": {
+                            "total": 166.66666666666674,
+                            "bonus": 16.66666666666667,
+                            "timeElapsed": 8,
+                            "questions": {
+                                "0": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "1": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "2": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                }
+                            }
+                        }
+                    },
+                    "api": {
+                        "startTime": 1778856990546,
+                        "attempts": {
+                            "0": 1,
+                            "1": 1,
+                            "2": 4
+                        },
+                        "isCorrectMap": {
+                            "0": true,
+                            "1": true,
+                            "2": true
+                        },
+                        "lastSelected": {
+                            "0": 1,
+                            "1": 0,
+                            "2": 0
+                        },
+                        "score": {
+                            "total": 125.59523809523813,
+                            "bonus": 13.095238095238098,
+                            "timeElapsed": 15,
+                            "questions": {
+                                "0": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "1": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "2": {
+                                    "attempts": 4,
+                                    "score": 12.500000000000004
+                                }
+                            }
+                        }
+                    },
+                    "dns": {
+                        "startTime": 1778857015057,
+                        "attempts": {
+                            "0": 3,
+                            "1": 2,
+                            "2": 1
+                        },
+                        "isCorrectMap": {
+                            "0": true,
+                            "1": true,
+                            "2": true
+                        },
+                        "lastSelected": {
+                            "0": 1,
+                            "1": 2,
+                            "2": 0
+                        },
+                        "score": {
+                            "total": 105.00000000000003,
+                            "bonus": 13.333333333333337,
+                            "timeElapsed": 14,
+                            "questions": {
+                                "0": {
+                                    "attempts": 3,
+                                    "score": 16.66666666666667
+                                },
+                                "1": {
+                                    "attempts": 2,
+                                    "score": 25.000000000000007
+                                },
+                                "2": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                }
+                            }
+                        }
+                    },
+                    "https": {
+                        "startTime": 1778857038441,
+                        "attempts": {
+                            "0": 4,
+                            "1": 3,
+                            "2": 2
+                        },
+                        "isCorrectMap": {
+                            "0": true,
+                            "1": true,
+                            "2": true
+                        },
+                        "lastSelected": {
+                            "0": 1,
+                            "1": 3,
+                            "2": 3
+                        },
+                        "score": {
+                            "total": 66.54761904761907,
+                            "bonus": 12.380952380952385,
+                            "timeElapsed": 18,
+                            "questions": {
+                                "0": {
+                                    "attempts": 4,
+                                    "score": 12.500000000000004
+                                },
+                                "1": {
+                                    "attempts": 3,
+                                    "score": 16.66666666666667
+                                },
+                                "2": {
+                                    "attempts": 2,
+                                    "score": 25.000000000000007
+                                }
+                            }
+                        }
+                    },
+                    "deploy": {
+                        "startTime": 1778857065423,
+                        "attempts": {
+                            "0": 2,
+                            "1": 1,
+                            "2": 1
+                        },
+                        "isCorrectMap": {
+                            "0": true,
+                            "1": true,
+                            "2": true
+                        },
+                        "lastSelected": {
+                            "0": 1,
+                            "1": 2,
+                            "2": 0
+                        },
+                        "score": {
+                            "total": 141.6666666666667,
+                            "bonus": 16.66666666666667,
+                            "timeElapsed": 9,
+                            "questions": {
+                                "0": {
+                                    "attempts": 2,
+                                    "score": 25.000000000000007
+                                },
+                                "1": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "2": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                }
+                            }
+                        }
+                    },
+                    "error404": {
+                        "startTime": 1778857083638,
+                        "attempts": {
+                            "0": 2,
+                            "1": 1,
+                            "2": 1
+                        },
+                        "isCorrectMap": {
+                            "0": true,
+                            "1": true,
+                            "2": true
+                        },
+                        "lastSelected": {
+                            "0": 2,
+                            "1": 0,
+                            "2": 0
+                        },
+                        "score": {
+                            "total": 141.6666666666667,
+                            "bonus": 16.66666666666667,
+                            "timeElapsed": 10,
+                            "questions": {
+                                "0": {
+                                    "attempts": 2,
+                                    "score": 25.000000000000007
+                                },
+                                "1": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                },
+                                "2": {
+                                    "attempts": 1,
+                                    "score": 50.000000000000014
+                                }
+                            }
+                        }
+                    }
+                },
+                "achievements": [
+                    "ESCOLHER_NOME_AVATAR",
+                    "DIGITAR_START",
+                    "INTERACAO_BONZI",
+                    "QUIZ_PERFEITO",
+                    "QUIZ_RAPIDO_40",
+                    "QUIZ_RAPIDO_10",
+                    "INTERACAO_LAB",
+                    "PONTUACAO_300",
+                    "COMPLETAR_PERCURSO",
+                    "JORNADA_VELOZ",
+                    "PONTUACAO_700"
+                ]
+            },
+            "id": "28",
+            "created_at": "2026-05-15T11:55:55.638615"
+        },
+        {
+            "name": "dasd",
+            "character_id": "4",
+            "progress": {
+                "score": 15003,
+                "modules": {
+                    "hash": {
+                        "attempts": {
+                            "0": 1,
+                            "1": 1,
+                            "2": 1
+                        },
+                        "isCorrectMap": {
+                            "0": true,
+                            "1": true,
+                            "2": true
+                        },
+                        "lastSelected": {
+                            "0": 0,
+                            "1": 1,
+                            "2": 2
+                        },
+                        "startTime": 1778887519597,
+                        "score": {
+                            "total": 16336,
+                            "bonus": 1333,
+                            "timeElapsed": 14,
+                            "questions": {
+                                "0": {
+                                    "attempts": 1,
+                                    "score": 5001
+                                },
+                                "1": {
+                                    "attempts": 1,
+                                    "score": 5001
+                                },
+                                "2": {
+                                    "attempts": 1,
+                                    "score": 5001
+                                }
+                            }
+                        }
+                    }
+                },
+                "achievements": [
+                    "ESCOLHER_NOME_AVATAR",
+                    "INTERACAO_BONZI",
+                    "QUIZ_PERFEITO",
+                    "QUIZ_RAPIDO_40",
+                    "QUIZ_3_SEGUIDOS",
+                    "INTERACAO_LAB",
+                    "TOP_10",
+                    "TOP_3"
+                ]
+            },
+            "id": "29",
+            "created_at": "2026-05-15T20:09:46.304754"
+        },
+        {
+            "name": "dsds",
+            "character_id": "4",
+            "progress": {},
+            "id": "30",
+            "created_at": "2026-05-15T21:50:47.442507"
         }
     ]
 }

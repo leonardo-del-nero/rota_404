@@ -46,7 +46,7 @@
 
 .content {
   position: relative;
-  z-index: 3;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -54,6 +54,22 @@
   height: 100vh;
   width: 100vw;
   padding: 2rem;
+}
+
+.rocketContainer {
+  margin-top: 2rem;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  filter: drop-shadow(0 0 20px var(--primary-glow));
+}
+
+.rocketImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .logoContainer {

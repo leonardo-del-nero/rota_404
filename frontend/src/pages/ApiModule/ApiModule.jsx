@@ -75,6 +75,7 @@ const ApiModule = () => {
   const [isMaliciousAction, setIsMaliciousAction] = useState(false);
   const [apiStep, setApiStep] = useState(0);
   const [quizFocus, setQuizFocus] = useState(false);
+  const [quizFinished, setQuizFinished] = useState(false);
 
   const slowScrollTo = (targetY, duration) => {
     const startingY = window.pageYOffset;
@@ -235,7 +236,11 @@ const ApiModule = () => {
         showQuiz={showQuiz} 
         setShowQuiz={setShowQuiz} 
         onResetLab={resetLab} 
-        quizFocus={quizFocus} 
+        quizFocus={quizFocus}
+        quizFinished={quizFinished}
+        setQuizFinished={setQuizFinished}
+        setShowCastor={setShowCastor}
+        setQuizFocus={setQuizFocus}
       />
 
       <AnimatePresence>
@@ -448,7 +453,13 @@ const ApiModule = () => {
               </div>
             </motion.div>
           ) : (
-            <Quiz moduleId="api" questions={apiQuestions} onFinishQuiz={() => setShowQuiz(false)} />
+            <Quiz 
+              moduleId="api" 
+              questions={apiQuestions} 
+              onFinishQuiz={() => {
+                setQuizFinished(true); 
+              }} 
+            />
           )}
         </AnimatePresence>
       </div>

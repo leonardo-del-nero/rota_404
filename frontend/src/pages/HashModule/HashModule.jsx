@@ -84,6 +84,7 @@ const HashModule = () => {
   const [isButtonFlashing, setIsButtonFlashing] = useState(false);
   const { unlockAchievement } = useAchievement();
   const [quizFocus, setQuizFocus] = useState(false);
+  const [quizFinished, setQuizFinished] = useState(false);
 
   const slowScrollTo = (targetY, duration) => {
     const startingY = window.pageYOffset;
@@ -226,6 +227,7 @@ const HashModule = () => {
     setHash('...');
     setShowQuiz(false);
     setGenerations(0);
+    setQuizFinished(false);
   };
 
   if (!showLab) {
@@ -258,6 +260,10 @@ const HashModule = () => {
         setShowQuiz={setShowQuiz} 
         onResetLab={resetLab} 
         quizFocus={quizFocus} 
+        quizFinished={quizFinished}
+        setQuizFinished={setQuizFinished}
+        setShowCastor={setShowCastor}
+        setQuizFocus={setQuizFocus}
       />
 
       <AnimatePresence>
@@ -444,7 +450,13 @@ const HashModule = () => {
               initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }}
               className="card-404"
             >
-              <Quiz moduleId="hash" questions={hashQuestions} onFinishQuiz={() => setShowQuiz(false)} />
+              <Quiz 
+                moduleId="hash" 
+                questions={hashQuestions} 
+                onFinishQuiz={() => {
+                  setQuizFinished(true); 
+                }} 
+              />
             </motion.div>
           )}
         </AnimatePresence>

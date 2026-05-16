@@ -57,6 +57,7 @@ const Error404Module = () => {
   const [showQuiz, setShowQuiz] = useState(false);
   const [showCastor, setShowCastor] = useState(false);
   const [castorStep, setCastorStep] = useState(0);
+  const [quizFinished, setQuizFinished] = useState(false);
 
   const validDoors = ['/api/users/1', '/api/hash', '/api/dns-lookup'];
 
@@ -147,7 +148,14 @@ const Error404Module = () => {
 
   return (
     <div className="container module-container">
-      <LabHeader showQuiz={showQuiz} setShowQuiz={setShowQuiz} onResetLab={resetLab} />
+      <LabHeader 
+        showQuiz={showQuiz} 
+        setShowQuiz={setShowQuiz} 
+        onResetLab={resetLab} 
+        quizFinished={quizFinished} 
+        setQuizFinished={setQuizFinished}
+        setShowCastor={setShowCastor}
+      />
 
       <div className="content-max-width">
         <Mascot 
@@ -236,7 +244,13 @@ const Error404Module = () => {
             </motion.div>
           ) : (
             <motion.div key="quiz" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="card-404">
-              <Quiz moduleId="error404" questions={errorQuestions} onFinishQuiz={() => setShowQuiz(false)} />
+              <Quiz 
+                moduleId="error404" 
+                questions={errorQuestions} 
+                onFinishQuiz={() => {
+                setQuizFinished(true); 
+                }} 
+              />
             </motion.div>
           )}
         </AnimatePresence>
