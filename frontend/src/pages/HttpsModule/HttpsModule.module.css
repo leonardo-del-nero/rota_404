@@ -1,4 +1,6 @@
-/* Intro Section */
+/* ==========================================================================
+   Intro Section
+   ========================================================================== */
 .introAnimation {
   position: relative;
   width: 200px;
@@ -18,10 +20,12 @@
   border-radius: 50%;
 }
 
-/* Arena Base */
+/* ==========================================================================
+   Arena Base & Linhas de Transmissão
+   ========================================================================== */
 .arenaLine {
   position: absolute;
-  top: 40px;
+  top: 45px; /* Alinhado perfeitamente ao centro vertical dos avatares de 90px */
   left: 100px;
   right: 100px;
   height: 2px;
@@ -38,15 +42,18 @@
 
 .arenaVerticalLine {
   position: absolute;
-  top: 40px;
+  top: 45px;
   left: 50%;
   width: 2px;
-  height: 160px;
-  background: rgba(255,59,59,0.3);
-  border-left: 2px dashed rgba(255,59,59,0.3);
+  height: 110px; /* Tamanho calibrado para alcançar o nó do Hacker abaixo */
+  background: rgba(255, 59, 59, 0.3);
+  border-left: 2px dashed rgba(255, 59, 59, 0.3);
+  z-index: 0;
 }
 
-/* Data Package */
+/* ==========================================================================
+   Data Package
+   ========================================================================== */
 .dataPackage {
   padding: 8px;
   border-radius: 8px;
@@ -65,33 +72,71 @@
   border: 2px solid var(--success);
 }
 
-/* Actors (User & Server) */
+/* ==========================================================================
+   Atores (Alinhamento Horizontal Obrigatório)
+   ========================================================================== */
+
+/* Contêiner principal da arena física */
 .actorContainer {
+  position: relative;
   z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: flex !important;
+  flex-direction: row !important; /* Força os nós a ficarem lado a lado */
+  justify-content: space-between !important; /* Usuário na extrema esquerda, Servidor na extrema direita */
+  align-items: flex-start;
+  width: 100%;
+  padding: 0 2rem;
+  box-sizing: border-box;
 }
 
-.serverContainer {
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+/* Nó do Usuário (Esquerda) */
+.nodeItem {
+  z-index: 2;
+  text-align: center;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start;
   width: 200px;
+  flex: none !important; /* Impede a deformação do nó esquerdo */
 }
 
-.actorIcon {
-  width: 80px;
-  height: 80px;
-  background: var(--bg-accent);
+/* Nó do Servidor / Destino (Direita) */
+.serverContainer {
+  z-index: 2;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start;
+  width: 200px;
+  text-align: center;
+  flex: none !important; /* Impede que o nó seja jogado para baixo ou deformado */
+}
+
+/* Nó do Hacker (Centro / Linha de Baixo) */
+.hackerContainer {
+  position: absolute;
+  top: 155px; /* Alinhado geograficamente abaixo da linha horizontal */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  width: 250px;
+}
+
+/* Dimensionamento dos Envelopes de Imagens */
+.nodeIcon, .actorIconServer {
+  width: 90px;
+  height: 90px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1rem;
+  margin: 0 auto 1rem auto;
 }
 
-.actorIconUser {
+.nodeIcon {
   border-radius: 50%;
 }
 
@@ -99,24 +144,22 @@
   border-radius: 12px;
 }
 
-/* Hacker */
-.hackerContainer {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 250px;
+.nodePrimary {
+  border: 1px solid rgba(255, 204, 0, 0.4);
+  background: rgba(255, 204, 0, 0.05);
+  box-shadow: inset 0 0 20px rgba(255, 204, 0, 0.1);
+  color: var(--primary);
+}
+
+.nodePrimaryIcon {
+  filter: drop-shadow(0 0 8px rgba(255, 204, 0, 0.6));
 }
 
 .hackerIcon {
   width: 60px;
   height: 60px;
   background: #220000;
-  border-radius: 12px;
+  border-radius: 50%;
   border: 2px solid var(--danger);
   display: flex;
   align-items: center;
@@ -124,7 +167,16 @@
   margin-bottom: 0.5rem;
 }
 
-/* Displays */
+.nodeLabel {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  color: var(--primary);
+}
+
+/* ==========================================================================
+   Displays de Logs de Mensagem
+   ========================================================================== */
 .displayBox {
   width: 100%;
   height: 60px;
@@ -135,6 +187,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .displayHacker {
@@ -156,12 +209,15 @@
   color: #fff;
 }
 
-/* Toggles & Forms */
+/* ==========================================================================
+   Controles Interativos e Formulários
+   ========================================================================== */
 .toggleBtn {
   padding: 0.5rem 1rem;
   font-size: 0.8rem;
-  clip-path: none;
   border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .toggleBtnHttps {
@@ -192,8 +248,14 @@
   height: 50px;
 }
 
+.formBtnHttp {
+  background: #fff;
+  color: #000;
+}
+
 .formBtnHttp:hover {
   background: var(--danger);
+  color: #fff;
   box-shadow: 0 0 15px var(--glow-danger);
 }
 
@@ -201,60 +263,13 @@
   animation: glitchTextAnim 0.2s infinite;
 }
 
-.nodeItem {
-  z-index: 1;
-  text-align: center;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.nodeIcon {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.5rem auto;
-}
-
-.nodePrimary {
-  border: 1px solid rgba(255,204,0,0.4);
-  background: rgba(255,204,0,0.05);
-  box-shadow: inset 0 0 20px rgba(255,204,0,0.1);
-  color: var(--primary);
-}
-.nodePrimaryIcon {
-  filter: drop-shadow(0 0 8px rgba(255,204,0,0.6));
-}
-
-.nodeLabel {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  letter-spacing: 2px;
-  color: var(--primary);
-}
-
-@keyframes glitchTextAnim {
-  0% { transform: translate(0); text-shadow: -2px 0 var(--secondary), 2px 0 var(--danger); }
-  25% { transform: translate(-1px, 1px); }
-  50% { transform: translate(1px, -1px); text-shadow: 2px 0 var(--secondary), -2px 0 var(--danger); }
-  75% { transform: translate(-1px, -1px); }
-  100% { transform: translate(0); }
-}
-
-.formBtnHttp {
-  background: #fff;
-  color: #000;
-}
-
+/* ==========================================================================
+   Barra do Navegador Mockada
+   ========================================================================== */
 .searchBar {
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   padding: 1rem;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -279,7 +294,7 @@
   flex: 1;
   display: flex;
   align-items: center;
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
   padding: 0.5rem 1rem;
   border-radius: 20px;
   border: 1px solid transparent;
@@ -311,14 +326,24 @@
   font-size: 0.7rem;
   padding: 4px 8px;
   border-radius: 4px;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   color: #888;
 }
 
 .flashAnimation {
   animation: pulseGlow 2s infinite ease-in-out;
   border-color: var(--success) !important;
-  box-shadow: 0 0 0px rgba(0, 255, 136, 0);
+}
+
+/* ==========================================================================
+   Keyframes Animações
+   ========================================================================== */
+@keyframes glitchTextAnim {
+  0% { transform: translate(0); text-shadow: -2px 0 var(--secondary), 2px 0 var(--danger); }
+  25% { transform: translate(-1px, 1px); }
+  50% { transform: translate(1px, -1px); text-shadow: 2px 0 var(--secondary), -2px 0 var(--danger); }
+  75% { transform: translate(-1px, -1px); }
+  100% { transform: translate(0); }
 }
 
 @keyframes pulseGlow {

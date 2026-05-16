@@ -2,6 +2,7 @@
   color: var(--primary);
   margin-bottom: 2rem;
   letter-spacing: 2px;
+  text-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
 }
 
 .arenaContainer {
@@ -24,14 +25,23 @@
 .localIcon {
   width: 80px;
   height: 80px;
-  background: rgba(0, 243, 255, 0.1);
-  border: 2px solid var(--primary);
+  background: rgba(255, 204, 0, 0.05);
+  border: 1px solid rgba(255, 204, 0, 0.4);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
-  box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+  box-shadow: inset 0 0 20px rgba(255, 204, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* Força os SVGs internos (como o Monitor) a obedecerem o Amber global */
+.localIcon :global(svg),
+.localIcon svg {
+  stroke: var(--primary) !important;
+  color: var(--primary) !important;
+  filter: drop-shadow(0 0 8px rgba(255, 204, 0, 0.6));
 }
 
 .pathContainer {
@@ -50,12 +60,12 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, rgba(0, 243, 255, 0.5) 0%, rgba(255, 0, 255, 0.5) 100%);
+  background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
   transform: translateY(-50%);
   z-index: 1;
   border-style: dashed;
   border-width: 2px 0 0 0;
-  border-color: rgba(255, 255, 255, 0.2);
+  opacity: 0.3;
 }
 
 .cloudIconWrapper {
@@ -64,9 +74,17 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background: var(--bg-card);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   padding: 10px;
   border-radius: 50%;
-  z-index: 1;
+  z-index: 2;
+}
+
+.cloudIconWrapper :global(svg),
+.cloudIconWrapper svg {
+  stroke: var(--text-dim) !important;
+  color: var(--text-dim) !important;
 }
 
 .packageWrapper {
@@ -79,12 +97,18 @@
 .packageBox {
   background: var(--bg-card);
   border: 1px solid var(--primary);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+  box-shadow: 0 0 15px rgba(255, 204, 0, 0.3);
+}
+
+.packageBox :global(svg),
+.packageBox svg {
+  stroke: var(--primary) !important;
+  color: var(--primary) !important;
 }
 
 .serverContainer {
@@ -96,40 +120,55 @@
 
 .serverPanel {
   padding: 2rem;
-  border: 2px solid var(--secondary);
-  border-radius: 12px;
-  background: rgba(255, 0, 255, 0.05);
+  border: 1px solid rgba(0, 243, 255, 0.4);
+  border-radius: 16px;
+  background: rgba(0, 243, 255, 0.05);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
   min-width: 150px;
-  box-shadow: 0 0 20px rgba(255, 0, 255, 0.1);
+  box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.1);
   transition: all 0.3s ease;
 }
 
+.serverPanel :global(svg),
+.serverPanel svg {
+  stroke: var(--secondary) !important;
+  color: var(--secondary) !important;
+  filter: drop-shadow(0 0 8px rgba(0, 243, 255, 0.6));
+}
+
 .serverActive {
-  background: rgba(0, 255, 136, 0.1);
-  border-color: var(--success);
-  box-shadow: 0 0 30px rgba(0, 255, 136, 0.2);
+  background: rgba(0, 255, 136, 0.05);
+  border-color: rgba(0, 255, 136, 0.4);
+  box-shadow: inset 0 0 20px rgba(0, 255, 136, 0.1), 0 0 25px rgba(0, 255, 136, 0.15);
+}
+
+.serverActive :global(svg),
+.serverActive svg {
+  stroke: var(--success) !important;
+  color: var(--success) !important;
+  filter: drop-shadow(0 0 8px rgba(0, 255, 136, 0.6));
 }
 
 .statusBadge {
   padding: 0.3rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.8rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
   font-weight: bold;
   letter-spacing: 1px;
+  font-family: var(--font-mono);
 }
 
 .statusOffline {
-  background: rgba(255, 59, 59, 0.2);
-  color: var(--danger);
-  border: 1px solid var(--danger);
+  background: rgba(0, 243, 255, 0.1);
+  color: var(--secondary);
+  border: 1px solid var(--secondary);
 }
 
 .statusOnline {
-  background: rgba(0, 255, 136, 0.2);
+  background: rgba(0, 255, 136, 0.1);
   color: var(--success);
   border: 1px solid var(--success);
 }
@@ -142,15 +181,15 @@
 }
 
 .controlSection {
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-card);
+  border: var(--glass-border);
   padding: 1.5rem;
-  border-radius: 12px;
+  border-radius: 16px;
 }
 
 .sectionTitle {
-  font-size: 0.9rem;
-  color: #888;
+  font-size: 0.8rem;
+  color: var(--text-dim);
   margin-bottom: 1rem;
   letter-spacing: 1px;
 }
@@ -161,51 +200,93 @@
   flex-wrap: wrap;
 }
 
+/* Botão de Build herda o padrão estrutural e de hover (.btn-outline) */
 .btnBuild {
-  background: transparent;
-  border: 1px solid var(--primary);
-  color: var(--primary);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-bright);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50px;
+  padding: 1rem 2.5rem;
+  font-family: var(--font-title);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
 }
 
 .btnBuild:hover:not(:disabled) {
-  background: rgba(0, 243, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--primary);
+  box-shadow: 0 0 15px var(--glow-primary);
 }
 
+/* Botão de Deploy herda o padrão estrutural e de hover da marca (.btn-404) */
 .btnDeploy {
-  background: var(--secondary);
-  color: white;
+  background: var(--primary);
+  color: black;
   border: none;
+  border-radius: 50px;
+  padding: 1rem 2.5rem;
+  font-family: var(--font-title);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+.btnDeploy :global(svg),
+.btnDeploy svg {
+  stroke: black !important;
+  color: black !important;
 }
 
 .btnDeploy:hover:not(:disabled) {
-  background: #cc00cc;
+  background: var(--secondary);
+  box-shadow: 0 0 20px var(--glow-secondary);
+  transform: translateY(-2px);
+}
+
+.btnBuild:disabled, .btnDeploy:disabled {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: #555;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btnBuild:disabled :global(svg), .btnBuild:disabled svg,
+.btnDeploy:disabled :global(svg), .btnDeploy:disabled svg {
+  stroke: #555 !important;
+  color: #555 !important;
+  filter: none;
 }
 
 .terminalOutput {
-  background: #0a0a0a;
-  border-radius: 8px;
-  padding: 1rem;
-  font-family: monospace;
-  color: #00ff88;
-  min-height: 100px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.2rem;
+  font-family: var(--font-mono);
+  color: var(--text-bright);
+  min-height: 120px;
   font-size: 0.9rem;
-  border: 1px solid #333;
   overflow-y: auto;
   max-height: 150px;
 }
 
 .terminalLine {
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.4rem;
   display: flex;
   gap: 0.5rem;
 }
 
 .terminalPrefix {
-  color: #555;
+  color: var(--text-dim);
 }
 
 .terminalAction {
-  color: #00f3ff;
+  color: var(--primary);
 }
 
 .introContainer {
@@ -214,6 +295,11 @@
   justify-content: center;
   gap: 2rem;
   margin: 2rem 0;
+}
+
+.introContainer :global(svg),
+.introContainer svg {
+  filter: drop-shadow(0 0 8px currentColor);
 }
 
 .introArrow {
@@ -227,6 +313,7 @@
   50% { opacity: 1; transform: scale(1.1); }
   100% { opacity: 0.5; transform: scale(0.9); }
 }
+
 @media (max-width: 768px) {
   .arenaContainer {
     flex-direction: column;
@@ -249,7 +336,7 @@
     bottom: 0;
     width: 2px;
     height: 100%;
-    background: linear-gradient(180deg, rgba(0, 243, 255, 0.5) 0%, rgba(255, 0, 255, 0.5) 100%);
+    background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
     transform: translateX(-50%);
   }
 

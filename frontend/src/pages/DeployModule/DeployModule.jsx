@@ -1,13 +1,22 @@
 import { useState, useEffect, useRef } from 'react';
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Server, Monitor, CloudUpload, Globe, Play, Box, CheckCircle } from 'lucide-react';
+import { CloudUpload } from 'lucide-react'; // Mantido apenas para o botão se necessário
 import ModuleIntro from '../../components/ModuleIntro';
 import LabHeader from '../../components/LabHeader';
 import Quiz from '../../components/Quiz';
 import GlassPanel from '../../components/GlassPanel';
 import Mascot from '../../components/Mascot';
 import styles from './DeployModule.module.css';
+
+// Importações dos assets de imagens da pasta labs conforme a árvore de arquivos
+import deployBuild from '../../labs/deploy_build.png';
+import deployIcon from '../../labs/deploy_icon.png';
+import deployMonitorIntro from '../../labs/deploy_monitor_intro.png';
+import deployRede from '../../labs/deploy_rede.png';
+import deploySubir from '../../labs/deploy_subir.png';
+import deployMonitor from '../../labs/depoly_monitor.png'; // Mantendo a grafia exata do arquivo: depoly_monitor
+import allServer from '../../labs/all_server.png';
 
 import bonzi1 from '../../bonzi/bonzi_upscaled_0.png';
 import bonzi2 from '../../bonzi/bonzi_upscaled_1.png';
@@ -57,7 +66,6 @@ const DeployModule = () => {
   
   const [showCastor, setShowCastor] = useState(false);
   const [castorStep, setCastorStep] = useState(0);
-  const [hasStarted, setHasStarted] = useState(false);
   const [quizFinished, setQuizFinished] = useState(false);
   const [quizFocus, setQuizFocus] = useState(false); 
   
@@ -84,7 +92,7 @@ const DeployModule = () => {
 
   useEffect(() => {
     if (showLab) {
-      const endScreen = setTimeout(() => {
+      setTimeout(() => {
         slowScrollTo(300, 1000)
       }, 800);
     }
@@ -167,7 +175,6 @@ const DeployModule = () => {
     setStatus('IDLE');
     setShowQuiz(false);
     setShowCastor(false);
-    setHasStarted(false);
     setLogs([]);
   };
 
@@ -176,15 +183,27 @@ const DeployModule = () => {
       <ModuleIntro 
         title="DEPLOY & CLOUD"
         color="var(--secondary)"
-        icon={CloudUpload}
+        icon={() => <img src={deployIcon} alt="Deploy Icon" style={{ width: '24px', height: '24px', objectFit: 'contain' }} />}
         description="Colocando sua ideia no ar."
         analogy="Seu computador é como a cozinha da sua casa. Você pode fazer um bolo lá, mas só você e sua família vão comer. O Servidor em Nuvem é como alugar uma loja no shopping: lá, qualquer pessoa do mundo pode entrar e experimentar o que você criou. O processo de levar o bolo da cozinha para a loja é o que chamamos de Deploy."
         onStart={() => setShowLab(true)}
       >
         <div className={styles.introContainer}>
-          <Monitor size={50} color="var(--primary)" />
+          <motion.img 
+            src={deployMonitorIntro} 
+            alt="Monitor Dev" 
+            style={{ width: '55px', height: '55px', objectFit: 'contain' }}
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+          />
           <div className={styles.introArrow}>➔</div>
-          <Server size={60} color="var(--secondary)" />
+          <motion.img 
+            src={allServer} 
+            alt="Servidor" 
+            style={{ width: '65px', height: '65px', objectFit: 'contain' }}
+            animate={{ y: [0, -4, 0] }}
+            transition={{ repeat: Infinity, duration: 3.5, ease: 'easeInOut' }}
+          />
         </div>
       </ModuleIntro>
     );
@@ -247,35 +266,53 @@ const DeployModule = () => {
 
               <div className={styles.arenaContainer}>
                 
-                {/* Local Machine */}
+                {/* LOCAL MACHINE - MÁQUINA DE DESENVOLVIMENTO */}
                 <div className={styles.localContainer}>
-                  <div className={styles.localIcon}>
-                    <Monitor size={40} color="var(--primary)" />
-                  </div>
+                  <motion.div 
+                    className={styles.localIcon}
+                    animate={{ y: [0, -2, 0] }}
+                    transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+                    style={{ display: 'flex', alignItems: 'center', justifycontent: 'center' }}
+                  >
+                    {/* Alterado de Monitor para a imagem do laboratório */}
+                    <img src={deployMonitor} alt="Monitor Local" style={{ width: '50px', height: '50px', objectFit: 'contain' }} />
+                  </motion.div>
                   <div className="mono secondary-text">LOCAL (DEV)</div>
                   
                   <AnimatePresence>
                     {status === 'READY_TO_DEPLOY' && (
                       <motion.div 
-                        initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
+                        initial={{ scale: 0, y: 10 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0 }}
                         className={styles.packageBox}
-                        style={{ marginTop: '1rem' }}
+                        style={{ marginTop: '1rem', display: 'flex', alignItems: 'center', gap: '6px' }}
                       >
-                        <Box size={20} color="var(--primary)" />
+                        <img src={deployBuild} alt="Arquivo Compactado" style={{ width: '22px', height: '22px', objectFit: 'contain' }} />
                         <span className="mono text-xs">build.zip</span>
                       </motion.div>
                     )}
                   </AnimatePresence>
                 </div>
 
-                {/* Network Path */}
+                {/* NETWORK PATH - INFRAESTRUTURA DE REDE */}
                 <div className={styles.pathContainer}>
                   <div className={styles.pathLine} />
                   
-                  <div className={styles.cloudIconWrapper}>
-                    <Globe size={30} color="rgba(255, 255, 255, 0.4)" />
+                  <div className={styles.cloudIconWrapper} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {/* Alterado de Globe para deployRede com rotação contínua sutil */}
+                    <motion.img 
+                      src={deployRede} 
+                      alt="Infraestrutura Rede" 
+                      style={{ width: '45px', height: '45px', objectFit: 'contain' }}
+                      animate={{ rotate: status === 'DEPLOYING' ? 360 : [0, 5, -5, 0] }}
+                      transition={{ 
+                        repeat: Infinity, 
+                        duration: status === 'DEPLOYING' ? 1.5 : 4, 
+                        ease: status === 'DEPLOYING' ? "linear" : "easeInOut" 
+                      }}
+                    />
                   </div>
 
+                  {/* PACOTE DE ARQUIVOS VIAJANDO EM REDE DURANTE O DEPLOY */}
                   <AnimatePresence>
                     {status === 'DEPLOYING' && (
                       <motion.div
@@ -285,17 +322,23 @@ const DeployModule = () => {
                         className={styles.packageWrapper}
                       >
                         <div className={styles.packageBox}>
-                          <Box size={20} color="var(--secondary)" />
+                          <img src={deploySubir} alt="Subindo Pacote" style={{ width: '24px', height: '24px', objectFit: 'contain' }} />
                         </div>
                       </motion.div>
                     )}
                   </AnimatePresence>
                 </div>
 
-                {/* Server */}
+                {/* SERVER - SERVIDOR DE PRODUÇÃO EM NUVEM */}
                 <div className={styles.serverContainer}>
                   <div className={`${styles.serverPanel} ${status === 'ONLINE' ? styles.serverActive : ''}`}>
-                    <Server size={50} color={status === 'ONLINE' ? 'var(--success)' : 'var(--secondary)'} />
+                    <motion.img 
+                      src={allServer} 
+                      alt="Servidor Nuvem" 
+                      style={{ width: '60px', height: '60px', objectFit: 'contain', marginBottom: '8px' }}
+                      animate={status === 'ONLINE' ? { scale: [1, 1.03, 1] } : {}}
+                      transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
+                    />
                     <div className={`${styles.statusBadge} ${status === 'ONLINE' ? styles.statusOnline : styles.statusOffline}`}>
                       {status === 'ONLINE' ? 'ONLINE' : 'OFFLINE'}
                     </div>
@@ -305,6 +348,7 @@ const DeployModule = () => {
 
               </div>
 
+              {/* GRIDS DE INTERAÇÕES E CONSOLE */}
               <div className={styles.controlsGrid}>
                 <div className={styles.controlSection}>
                   <div className={`mono ${styles.sectionTitle}`}>AÇÕES DO DESENVOLVEDOR</div>
@@ -321,8 +365,9 @@ const DeployModule = () => {
                       className={`btn-404 ${styles.btnDeploy}`} 
                       onClick={handleDeploy}
                       disabled={status !== 'READY_TO_DEPLOY'}
+                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                     >
-                      <CloudUpload size={18} style={{ marginRight: '8px' }} />
+                      <img src={deploySubir} alt="Upload" style={{ width: '18px', height: '18px', marginRight: '8px', objectFit: 'contain' }} />
                       2. FAZER DEPLOY
                     </button>
                   </div>
@@ -353,7 +398,7 @@ const DeployModule = () => {
                 moduleId="deploy" 
                 questions={deployQuestions} 
                 onFinishQuiz={() => {
-                setQuizFinished(true); 
+                  setQuizFinished(true); 
                 }} 
               />
             </motion.div>

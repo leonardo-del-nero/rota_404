@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Fingerprint, FileText, Zap, Moon, User, Server } from 'lucide-react';
+import { User } from 'lucide-react'; 
 import ModuleIntro from '../../components/ModuleIntro';
 import LabHeader from '../../components/LabHeader';
 import Quiz from '../../components/Quiz';
@@ -9,6 +9,15 @@ import { useAchievement } from '../../context/AchievementContext';
 import GlassPanel from '../../components/GlassPanel';
 import Mascot from '../../components/Mascot';
 import styles from './HashModule.module.css';
+
+// Importações dos laboratórios
+import hashIcon from '../../labs/hash_icon.png'; 
+import hashFolha from '../../labs/hash_folha.png';
+import hashDesligado from '../../labs/hash_deligado.png'; 
+import hashLigado from '../../labs/hash_ligado.png';
+import hashFuncSleep from '../../labs/hash_func_sleep.png';
+import hashFunc from '../../labs/hash_func.png';
+import allServer from '../../labs/all_server.png';
 
 import bonzi1 from '../../bonzi/bonzi_upscaled_0.png';
 import bonzi2 from '../../bonzi/bonzi_upscaled_1.png';
@@ -80,7 +89,6 @@ const HashModule = () => {
   const [showCastor, setShowCastor] = useState(false);
   const [castorStep, setCastorStep] = useState(0); 
   const [generations, setGenerations] = useState(0);
-  const [hashGenerations, setHashGenerations] = useState(0);
   const [isButtonFlashing, setIsButtonFlashing] = useState(false);
   const { unlockAchievement } = useAchievement();
   const [quizFocus, setQuizFocus] = useState(false);
@@ -106,7 +114,7 @@ const HashModule = () => {
 
   useEffect(() => {
     if (showLab) {
-      const endScreen = setTimeout(() => {
+      setTimeout(() => {
         slowScrollTo(300, 1000)
       }, 800);
     }
@@ -202,7 +210,6 @@ const HashModule = () => {
     } else if (castorStep === 5) {
       setCastorStep(6); 
       setQuizFocus(true); 
-      
       slowScrollTo(0, 1000); 
     } else if (castorStep === 6) {
       setShowCastor(false);
@@ -235,19 +242,42 @@ const HashModule = () => {
       <ModuleIntro 
         title="DNA DIGITAL"
         color="var(--primary)"
-        icon={Fingerprint}
+        icon={() => <img src={hashIcon} alt="Hash Icon" style={{ width: '24px', height: '24px' }} />}
         description="A prova de que nada foi alterado."
         analogy="O Hash é como a impressão digital de um arquivo. Se você mudar um único milímetro no seu dedo, a digital muda completamente. Na internet, se você mudar uma única letra num arquivo, o Hash muda e você sabe na hora que ele foi mexido."
         onStart={() => setShowLab(true)}
       >
         <div className={styles.introContainer}>
-          <motion.div animate={{ rotate: [0, 5, -5, 0] }} transition={{ repeat: Infinity, duration: 2 }} className={styles.introIconWrapper}>
-            <FileText size={80} color="var(--primary)" />
+          <motion.div 
+            animate={{ rotate: [0, 5, -5, 0] }} 
+            transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }} 
+            className={styles.introIconWrapper}
+          >
+            <img 
+              src={hashFolha} 
+              alt="Hash Folha" 
+              style={{ width: '70px', height: '70px', objectFit: 'contain' }} 
+            />
           </motion.div>
+          
           <div className={styles.introArrow}>➔</div>
-          <motion.div initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.8, type: 'spring' }} className={styles.circleIcon}>
-            <Fingerprint size={60} />
-          </motion.div>
+          
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
+            <motion.img 
+              src={hashIcon} 
+              alt="Hash Icon" 
+              style={{ width: '80px', height: '80px', objectFit: 'contain' }}
+              animate={{ 
+                scale: [1, 1.08, 1],
+                rotate: [0, 10, -10, 0]
+              }}
+              transition={{ 
+                repeat: Infinity, 
+                duration: 3, 
+                ease: "easeInOut" 
+              }}
+            />
+          </div>
         </div>
       </ModuleIntro>
     );
@@ -335,8 +365,16 @@ const HashModule = () => {
                     }
                   }}
                   disabled={status !== 'IDLE' && status !== 'DONE'}
+                  style={{ display: 'flex', alignItems: 'center', gap: '10px' }}
                 >
-                  {isHashingOn ? <Zap size={18} /> : <Moon size={18} />}
+                  {/* ÍCONE DO TOGGLE ANIMADO: Pulsa levemente para chamar atenção */}
+                  <motion.img 
+                    src={isHashingOn ? hashLigado : hashDesligado} 
+                    alt={isHashingOn ? "Hashing Ligado" : "Hashing Desligado"} 
+                    style={{ width: '22px', height: '22px', objectFit: 'contain' }} 
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                  />
                   HASHING: {isHashingOn ? 'LIGADO' : 'DESLIGADO'}
                 </button>
               </div>
@@ -366,8 +404,9 @@ const HashModule = () => {
                   </AnimatePresence>
                 </div>
 
+                {/* NÓ DO USUÁRIO: Respira levemente */}
                 <div className={styles.nodeItem}>
-                  <div 
+                  <motion.div 
                     className={`node-icon ${styles.nodeIcon} ${styles.nodePrimary}`} 
                     style={{ 
                       overflow: 'hidden', 
@@ -377,6 +416,8 @@ const HashModule = () => {
                       alignItems: 'center',
                       justifyContent: 'center'
                     }}
+                    animate={{ y: [0, -2, 0] }}
+                    transition={{ repeat: Infinity, duration: 3.5, ease: "easeInOut" }}
                   >
                     {playerData.avatar ? (
                       <img 
@@ -391,27 +432,61 @@ const HashModule = () => {
                     ) : (
                       <User size={40} className={styles.nodePrimaryIcon} />
                     )}
-                  </div>
+                  </motion.div>
                   <div className={styles.nodeLabel}>USUÁRIO</div>
                 </div>
 
+                {/* NÓ CENTRAL DA FUNÇÃO HASH */}
                 <div className={styles.nodeItem}>
                   <div className={`node-icon ${styles.nodeIcon} ${styles.processingNode} ${isHashingOn ? (status === 'PROCESSING' ? styles.activeProcessing : styles.activeIdle) : styles.inactiveNode}`}>
                     {isHashingOn ? (
-                      <motion.div animate={{ rotate: status === 'PROCESSING' ? 360 : 0, scale: status === 'PROCESSING' ? 1.2 : 1 }} transition={{ repeat: status === 'PROCESSING' ? Infinity : 0, duration: 1 }}>
-                        <Fingerprint size={50} color="var(--primary)" />
+                      <motion.div 
+                        animate={{ 
+                          rotate: status === 'PROCESSING' ? 360 : [0, 8, -8, 0], 
+                          scale: status === 'PROCESSING' ? 1.15 : 1 
+                        }} 
+                        transition={{ 
+                          repeat: Infinity, 
+                          duration: status === 'PROCESSING' ? 0.8 : 4, 
+                          ease: status === 'PROCESSING' ? "linear" : "easeInOut" 
+                        }}
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      >
+                        <img src={hashFunc} alt="Hash Ativo" style={{ width: '48px', height: '48px', objectFit: 'contain' }} />
                       </motion.div>
                     ) : (
-                      <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}>
-                        <Moon size={40} color="#555" />
+                      // Animação sutil de ronco/sono enquanto desligado
+                      <motion.div 
+                        animate={{ 
+                          y: [0, -4, 0],
+                          scale: [1, 0.96, 1]
+                        }} 
+                        transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                      >
+                        <img src={hashFuncSleep} alt="Hash Dormindo" style={{ width: '48px', height: '48px', objectFit: 'contain' }} />
                       </motion.div>
                     )}
                   </div>
                   <div className={styles.nodeLabel}>FUNÇÃO HASH</div>
                 </div>
 
+                {/* NÓ DO DESTINO: Flutuação sutil de servidor ativo */}
                 <div className={styles.nodeItem}>
-                  <div className={`node-icon ${styles.nodeIcon} ${styles.nodePrimary}`}><Server size={40} className={styles.nodePrimaryIcon} /></div>
+                  <motion.div 
+                    className={`node-icon ${styles.nodeIcon} ${styles.nodePrimary}`}
+                    style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center',
+                      background: 'rgba(0, 0, 0, 0.3)',
+                      padding: '6px'
+                    }}
+                    animate={{ y: [0, -3, 0] }}
+                    transition={{ repeat: Infinity, duration: 4, ease: "easeInOut", delay: 0.5 }}
+                  >
+                    <img src={allServer} alt="Destino Server" style={{ width: '40px', height: '100%', objectFit: 'contain' }} />
+                  </motion.div>
                   <div className={styles.nodeLabel}>DESTINO</div>
                 </div>
               </div>

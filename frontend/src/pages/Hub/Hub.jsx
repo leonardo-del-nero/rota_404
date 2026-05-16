@@ -20,7 +20,6 @@ import piabaImg from '../../avatars/piaba_upscaled_0.png';
 import pipocaImg from '../../avatars/tigrinho_upscaled_0.png';
 import castorImg from '../../avatars/castor_upscaled_0.png';
 
-// Novos assets V2
 import shipFrame0 from '../../assets/v2/foguete/foguete_png_0.png';
 import shipFrame1 from '../../assets/v2/foguete/foguete_png_1.png';
 import shipFrame2 from '../../assets/v2/foguete/foguete_png_2.png';
@@ -32,7 +31,6 @@ const SHIP_FRAMES = [shipFrame0, shipFrame1, shipFrame2, shipFrame3, shipFrame4,
 
 import planetHash from '../../assets/v2/planetas/hashing_upscaled.png';
 import planetApi from '../../assets/v2/planetas/api_upscaled.png';
-import planetDns from '../../assets/v2/planetas/dns_upscaled.png';
 import planetHttps from '../../assets/v2/planetas/https_upscaled.png';
 import planetError404 from '../../assets/v2/planetas/erro404_upscaled.png';
 import planetDeploy from '../../assets/v2/planetas/deploy_upscaled.png';
@@ -94,7 +92,7 @@ const Hub = () => {
   const modules = useMemo(() => [
     {
       id: 'hash',
-      title: 'DNA DIGITAL',
+      title: 'HASH',
       desc: 'Como saber se um arquivo foi mexido? O Hash cria uma assinatura única que dedura qualquer mudança!',
       path: '/hash',
       color: 'var(--primary)',
@@ -104,7 +102,7 @@ const Hub = () => {
     },
     {
       id: 'api',
-      title: 'GARÇOM DIGITAL',
+      title: 'API',
       desc: 'Descubra como o seu computador faz "pedidos" para os sites e recebe as informações de volta.',
       path: '/api-concept',
       color: 'var(--secondary)',
@@ -113,23 +111,14 @@ const Hub = () => {
       x: 700, y: 450
     },
     {
-      id: 'dns',
-      title: 'DNS LOOKUP',
-      desc: 'A lista telefônica da internet que traduz nomes em IPs.',
-      path: '/dns',
-      color: '#ff6b00',
-      image: planetDns,
-      x: 300, y: 650
-    },
-    {
       id: 'https',
-      title: 'HTTPS & SSL',
+      title: 'HTTPS X HTTP',
       desc: 'Como seus dados viajam protegidos por um cofre digital.',
       path: '/https',
       color: '#00ff88',
       image: planetHttps,
       sprite: spriteCadeado,
-      x: 700, y: 850
+      x: 300, y: 650
     },
     {
       id: 'deploy',
@@ -138,7 +127,7 @@ const Hub = () => {
       path: '/deploy',
       color: '#00f3ff',
       image: planetDeploy,
-      x: 300, y: 1050
+      x: 700, y: 850
     },
     {
       id: 'error404',
@@ -147,7 +136,7 @@ const Hub = () => {
       path: '/404-lab',
       color: '#ff3b3b',
       image: planetError404,
-      x: 700, y: 1250
+      x: 300, y: 1050
     }
   ], []);
 
@@ -184,7 +173,7 @@ const Hub = () => {
 
     const progress = JSON.parse(localStorage.getItem('rota404_quiz_progress') || '{}');
     const completedModules = Object.keys(progress).filter(key => progress[key].score);
-    if (completedModules.length >= 6) {
+    if (completedModules.length >= 5) {
       unlockAchievement('COMPLETAR_PERCURSO', 'CONQUISTADOR DO SISTEMA', 'Você completou todo o percurso da Rota 404!', 'RARO');
       const journeyStart = parseInt(localStorage.getItem('rota404_journey_start') || '0');
       const journeyDuration = (Date.now() - journeyStart) / 1000;
@@ -193,7 +182,6 @@ const Hub = () => {
       }
     }
 
-    // Milestones de pontuação
     if (currentScore >= 30000) unlockAchievement('PONTUACAO_300', 'HACKER APRENDIZ', 'Você atingiu 30.000 pontos ou mais!', 'COMUM');
     if (currentScore >= 70000) unlockAchievement('PONTUACAO_700', 'HACKER AVANÇADO', 'Você atingiu 70.000 pontos ou mais!', 'RARO');
     if (currentScore >= 90000) unlockAchievement('PONTUACAO_900', 'DEUS DO CÓDIGO', 'Você atingiu 90.000 pontos ou mais!', 'LENDÁRIO');
@@ -235,12 +223,11 @@ const Hub = () => {
     
     let currIndex = shipIndex;
     
-    // Construct the path by traveling node by node
     while (currIndex !== targetIndex) {
       const nextIndex = currIndex + direction;
       
-      const startNode = Math.min(currIndex, nextIndex) === -1 ? INITIAL_SHIP_POS : modules[Math.min(currIndex, nextIndex)];
-      const endNode = modules[Math.max(currIndex, nextIndex)];
+      const startNode = (direction === 1 ? currIndex : nextIndex) === -1 ? INITIAL_SHIP_POS : modules[direction === 1 ? currIndex : nextIndex];
+      const endNode = modules[direction === 1 ? nextIndex : currIndex];
       
       const cMidY = (startNode.y + endNode.y) / 2;
       const cP0 = startNode;
@@ -276,7 +263,6 @@ const Hub = () => {
         tangent = pathRotations[i-1] || 0;
       }
       
-      // Unwrap against the previous rotation, starting with shipRot
       let prev = i > 0 ? pathRotations[i-1] : shipRot;
       while (tangent - prev > 180) tangent -= 360;
       while (tangent - prev < -180) tangent += 360;
@@ -284,21 +270,19 @@ const Hub = () => {
       pathRotations.push(tangent);
     }
     
-    // Blend rotations to start at shipRot and end at nearest multiple of 360
     let finalRotations = pathRotations.map((rot, i) => {
       let progress = i / (totalPoints - 1);
-      
       let blendFactor = 1;
       let targetZero;
       
       if (progress < 0.15) {
         blendFactor = progress / 0.15;
-        targetZero = shipRot; // Blend from current rotation
+        targetZero = shipRot;
       } else if (progress > 0.85) {
         blendFactor = (1 - progress) / 0.15;
-        targetZero = Math.round(rot / 360) * 360; // Blend to nearest upright
+        targetZero = Math.round(rot / 360) * 360;
       } else {
-        return rot; // middle of flight
+        return rot;
       }
       
       blendFactor = Math.sin(blendFactor * Math.PI / 2);
@@ -307,7 +291,7 @@ const Hub = () => {
     
     for (let i = 0; i < totalPoints; i++) {
       let progress = i / (totalPoints - 1);
-      let scale = 1 + Math.sin(progress * Math.PI) * 0.5; // peaks at 1.5
+      let scale = 1 + Math.sin(progress * Math.PI) * 0.5;
       pathScales.push(scale);
     }
     
@@ -370,7 +354,6 @@ const Hub = () => {
     });
     totalScore = Math.min(Math.floor(totalScore), 100000);
 
-    // Milestones de pontuação (também checados no useEffect, mas mantidos aqui para segurança no envio)
     if (totalScore >= 30000) unlockAchievement('PONTUACAO_300', 'HACKER APRENDIZ', 'Você atingiu 30.000 pontos ou mais!', 'COMUM');
     if (totalScore >= 70000) unlockAchievement('PONTUACAO_700', 'HACKER AVANÇADO', 'Você atingiu 70.000 pontos ou mais!', 'RARO');
     if (totalScore >= 90000) unlockAchievement('PONTUACAO_900', 'DEUS DO CÓDIGO', 'Você atingiu 90.000 pontos ou mais!', 'LENDÁRIO');
@@ -413,7 +396,7 @@ const Hub = () => {
   const stars = useMemo(() => {
     return Array.from({ length: 40 }).map((_, i) => ({
       x: Math.random() * 1000,
-      y: Math.random() * 1500,
+      y: Math.random() * 1300,
       size: Math.random() * 10 + 5,
       delay: Math.random() * 3
     }));
@@ -480,8 +463,8 @@ const Hub = () => {
       </div>
 
       <div className={styles.scrollArea} onScroll={handleScroll}>
-        <svg viewBox="0 0 1000 1400" className={styles.mapSvg} preserveAspectRatio="xMidYMin slice">
-          {/* Background Stars (Diamonds) */}
+        <svg viewBox="0 0 1000 1200" className={styles.mapSvg} preserveAspectRatio="xMidYMin slice">
+          {/* Background Stars */}
           {stars.map((star, i) => (
             <motion.polygon 
               key={`star-${i}`}
@@ -520,7 +503,6 @@ const Hub = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.5 }}
               >
-                {/* Enhanced background glow - ALWAYS THERE */}
                 <motion.circle 
                   cx={mod.x} 
                   cy={mod.y} 
@@ -532,7 +514,6 @@ const Hub = () => {
                   style={{ filter: 'blur(20px)' }}
                 />
 
-                {/* Rotating orbit ring - ONLY FOR CURRENT MODULE */}
                 {shipIndex === idx && (
                   <motion.circle
                     cx={mod.x}
@@ -548,7 +529,6 @@ const Hub = () => {
                   />
                 )}
 
-                {/* Inner pulse - only for completed or current */}
                 {(isCompleted || shipIndex === idx) && (
                   <motion.circle
                     cx={mod.x}
@@ -562,9 +542,6 @@ const Hub = () => {
                   />
                 )}
 
-
-
-                {/* Planet Image - Colorful by default, dim if not completed */}
                 <image 
                   href={mod.image}
                   x={mod.x - 60}
@@ -577,7 +554,6 @@ const Hub = () => {
                   }}
                 />
                 
-                {/* Completion Badge (Small checkmark or star) */}
                 {isCompleted && (
                   <motion.g
                     initial={{ scale: 0 }}
@@ -589,7 +565,6 @@ const Hub = () => {
                   </motion.g>
                 )}
 
-                {/* Selection Ring */}
                 {isSelected && (
                   <circle 
                     cx={mod.x} 
@@ -602,7 +577,6 @@ const Hub = () => {
                   />
                 )}
                 
-                {/* Label */}
                 <text 
                   x={mod.x} 
                   y={mod.y + 100} 
@@ -620,7 +594,6 @@ const Hub = () => {
                   {mod.title} {isCompleted ? '[OK]' : ''}
                 </text>
 
-                {/* Floating Sprite (Top Left) - MOVIDO PARA CIMA DE TUDO */}
                 {mod.sprite && (
                   <motion.g
                     animate={{ y: [-5, 5, -5] }}
@@ -641,7 +614,6 @@ const Hub = () => {
 
           {/* The Ship */}
           <motion.g animate={controls}>
-            {/* Animated Ship Sprite */}
             <image 
               href={SHIP_FRAMES[shipFrame]}
               x={-50}
@@ -653,7 +625,7 @@ const Hub = () => {
         </svg>
       </div>
 
-      {/* Bonzi Mascot overlay from modules */}
+      {/* Bonzi Mascot overlay */}
       <Mascot 
         show={showDialog && selectedNode}
         step={0}

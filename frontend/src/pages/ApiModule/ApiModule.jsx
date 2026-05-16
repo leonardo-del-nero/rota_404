@@ -1,7 +1,7 @@
 import { useState, useEffect  } from 'react';
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Server, Utensils, Package, XCircle, ShieldCheck, ShieldAlert } from 'lucide-react';
+import { User } from 'lucide-react';
 import ModuleIntro from '../../components/ModuleIntro';
 import LabHeader from '../../components/LabHeader';
 import Quiz from '../../components/Quiz';
@@ -10,6 +10,14 @@ import Mascot from '../../components/Mascot';
 import styles from './ApiModule.module.css';
 import bonzi4 from '../../bonzi/bonzi_upscaled_4.png';
 import Typewriter from '../../components/Typewriter';
+
+import allServer from '../../labs/all_server.png';
+import apiCaixaNull from '../../labs/api_caixa_null.png';
+import apiCaixa from '../../labs/api_caixa.png';
+import apiGarcom from '../../labs/api_garcom.png';
+import apiPortaoAberto from '../../labs/api_portao_aberto.png';
+import apiPortaoFechado from '../../labs/api_portao_fechado.png';
+import apiUser from '../../labs/api_user.png';
 
 import neoImg from '../../avatars/ghost_spec_upscaled_0.png';
 import trinityImg from '../../avatars/pucca_upscaled_0.png';
@@ -97,7 +105,7 @@ const ApiModule = () => {
 
   useEffect(() => {
     if (showLab) {
-      const endScreen = setTimeout(() => {
+      setTimeout(() => {
         slowScrollTo(300, 1000)
       }, 800);
     }
@@ -133,7 +141,7 @@ const ApiModule = () => {
     setTimeout(async () => {
       if (isMalicious) {
         setStatus('BLOCKED');
-        setResponse({ error: "403 Forbidden: Tentativa de acesso direto bloqueada." });
+        setResponse({ error: "403 Forbidden: Tentativa de acesso direto bloqueada pelo Firewall." });
         setCastorStep(3); 
         setShowCastor(true);
         setTimeout(() => {
@@ -151,7 +159,7 @@ const ApiModule = () => {
             setTimeout(() => {
               const isNotFound = !res.ok || parseInt(idToSearch) > 5;
               if (isNotFound) {
-                setResponse({ error: "A requisição não existe." });
+                setResponse({ error: "404 Not Found: A requisição não existe no estoque de dados." });
                 setCastorStep(2);
                 setApiStep(prev => Math.max(prev, 2));
               } else {
@@ -164,7 +172,7 @@ const ApiModule = () => {
               setTimeout(() => setStatus('IDLE'), 2000);
             }, 1500);
           } catch (err) {
-            setResponse({ error: "Falha na conexão" });
+            setResponse({ error: "Falha na conexão com o servidor de dados." });
             setStatus('WALKING_BACK');
             setTimeout(() => setStatus('IDLE'), 2000);
           }
@@ -208,21 +216,35 @@ const ApiModule = () => {
       <ModuleIntro 
         title="API"
         color="var(--secondary)"
-        icon={Utensils}
+        icon={() => <img src={apiGarcom} alt="Garçom Icon" style={{ width: '24px', height: '24px', objectFit: 'contain' }} />}
         description="O garçom que conecta você aos dados."
         analogy="Num restaurante, você não entra na cozinha. Você chama o GARÇOM (API), diz o que quer, e ele leva o pedido e traz a comida pronta. A API faz exatamente isso entre o seu celular e o servidor do site."
         onStart={() => setShowLab(true)}
       >
         <div className={styles.introContainer}>
-          <User size={40} color="white" />
+          <motion.img 
+            src={apiUser} 
+            alt="Usuário" 
+            style={{ width: '50px', height: '50px', objectFit: 'contain' }}
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+          />
           <motion.div
-            animate={{ x: [-100, 100, -100] }}
+            animate={{ x: [-80, 80, -80], y: [0, -5, 0] }}
             transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
             className={styles.introUtensils}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
-            <Utensils size={30} />
+            <img src={apiGarcom} alt="API Garçom" style={{ width: '45px', height: '45px', objectFit: 'contain' }} />
           </motion.div>
-          <Server size={40} color="var(--secondary)" className={styles.introServer} />
+          <motion.img 
+            src={allServer} 
+            alt="Servidor" 
+            style={{ width: '55px', height: '55px', objectFit: 'contain' }}
+            className={styles.introServer}
+            animate={{ y: [0, -3, 0] }}
+            transition={{ repeat: Infinity, duration: 3.5, ease: 'easeInOut' }}
+          />
         </div>
       </ModuleIntro>
     );
@@ -288,47 +310,60 @@ const ApiModule = () => {
 
               <div className={`animation-arena ${styles.arenaContainer}`}>
                 <div className={styles.stockroom}>
-                <GlassPanel className={styles.shelfPanel}>
-                  <div className={styles.boxGroup}>
-                    {boxes.filter(id => id <= 5).map(id => (
-                      <motion.button 
-                        key={id} 
-                        onClick={() => handleBoxClick(id)}
-                        disabled={status !== 'IDLE'}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        className={`${styles.boxItem} ${status === 'SEARCHING' && parseInt(userId) === id ? styles.boxActive : styles.boxGreen}`}
-                      >
-                        <Package size={20} />
-                        <span className={`mono ${styles.boxLabel}`}>#{id}</span>
-                      </motion.button>
-                    ))}
-                  </div>
+                  <GlassPanel className={styles.shelfPanel}>
+                    <div className={styles.boxGroup}>
+                      {boxes.filter(id => id <= 5).map(id => (
+                        <motion.button 
+                          key={id} 
+                          onClick={() => handleBoxClick(id)}
+                          disabled={status !== 'IDLE'}
+                          whileHover={{ scale: 1.1, rotate: [0, -2, 2, 0] }}
+                          whileTap={{ scale: 0.95 }}
+                          className={`${styles.boxItem} ${status === 'SEARCHING' && parseInt(userId) === id ? styles.boxActive : styles.boxGreen}`}
+                        >
+                          <img src={apiCaixa} alt="Caixa do Dado" style={{ width: '22px', height: '22px', objectFit: 'contain' }} />
+                          <span className={`mono ${styles.boxLabel}`}>#{id}</span>
+                        </motion.button>
+                      ))}
+                    </div>
 
-                  <div className={styles.boxGroup}>
-                    {boxes.filter(id => id > 5).map(id => (
-                      <motion.button 
-                        key={id} 
-                        onClick={() => handleBoxClick(id)}
-                        disabled={status !== 'IDLE'}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        className={`${styles.boxItem} ${status === 'SEARCHING' && parseInt(userId) === id ? styles.boxActive : styles.boxRed}`}
-                      >
-                        <Package size={20} />
-                        <span className={`mono ${styles.boxLabel}`}>#{id}</span>
-                      </motion.button>
-                    ))}
-                  </div>
-                </GlassPanel>
-                  <div className="node-label secondary-text">PRODUTOS (CLIQUE)</div>
-              </div>
+                    <div className={styles.boxGroup}>
+                      {boxes.filter(id => id > 5).map(id => (
+                        <motion.button 
+                          key={id} 
+                          onClick={() => handleBoxClick(id)}
+                          disabled={status !== 'IDLE'}
+                          whileHover={{ scale: 1.1, rotate: [0, 2, -2, 0] }}
+                          whileTap={{ scale: 0.95 }}
+                          className={`${styles.boxItem} ${status === 'SEARCHING' && parseInt(userId) === id ? styles.boxActive : styles.boxRed}`}
+                        >
+                          <img src={apiCaixaNull} alt="Caixa Vazia" style={{ width: '22px', height: '22px', objectFit: 'contain' }} />
+                          <span className={`mono ${styles.boxLabel}`}>#{id}</span>
+                        </motion.button>
+                      ))}
+                    </div>
+                  </GlassPanel>
+                  <div className="node-label secondary-text">ESTOQUE (CLIQUE)</div>
+                </div>
 
                 <div className={styles.pathContainer}>
                   <div className={styles.pathLine} />
+                  
                   <div className={styles.firewallHub}>
-                    {status === 'BLOCKED' ? <ShieldAlert size={35} color="var(--danger)" /> : <ShieldCheck size={30} color="rgba(0,243,255,0.3)" />}
-                    <div className={styles.firewallLabel}>API FIREWALL</div>
+                    <motion.div
+                      animate={status === 'BLOCKED' ? { scale: [1, 1.2, 1], x: [0, -5, 5, 0] } : { y: [0, -2, 0] }}
+                      transition={{ duration: status === 'BLOCKED' ? 0.4 : 3, repeat: status === 'BLOCKED' ? 2 : Infinity }}
+                      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    >
+                      <img 
+                        src={status === 'BLOCKED' ? apiPortaoFechado : apiPortaoAberto} 
+                        alt="API Firewall Portão" 
+                        style={{ width: '50px', height: '50px', objectFit: 'contain' }} 
+                      />
+                    </motion.div>
+                    <div className={styles.firewallLabel} style={{ color: status === 'BLOCKED' ? 'var(--danger)' : 'var(--text-bright)' }}>
+                      {status === 'BLOCKED' ? 'ACESSO BLOQUEADO' : 'API FIREWALL'}
+                    </div>
                   </div>
 
                   <motion.div
@@ -337,26 +372,33 @@ const ApiModule = () => {
                               (status === 'WALKING_TO_FIREWALL') ? '50%' : 
                               (status === 'WALKING_TO_STOCK' || status === 'SEARCHING') ? '0%' : '95%' 
                     }}
-                    transition={{ duration: 1.5 }}
+                    transition={{ duration: 1.5, ease: "easeInOut" }}
                     className={styles.clerkWrapper}
                   >
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                      <GlassPanel className={styles.clerkPanel}>
-                        <Server size={35} color="var(--secondary)" />
+                      <GlassPanel className={styles.clerkPanel} style={{ background: 'rgba(0,0,0,0.4)', padding: '5px' }}>
+                        <motion.img 
+                          src={apiGarcom} 
+                          alt="API Garçom Servidor" 
+                          style={{ width: '45px', height: '45px', objectFit: 'contain' }}
+                          animate={status !== 'IDLE' ? { y: [0, -6, 0] } : { y: [0, -2, 0] }}
+                          transition={{ repeat: Infinity, duration: status !== 'IDLE' ? 0.4 : 2.5, ease: "easeInOut" }}
+                        />
+                        
                         <AnimatePresence>
                           {status === 'WALKING_BACK' && response && !response.error && (
-                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className={`${styles.clerkBadge} ${styles.clerkBadgeSuccess}`}>
-                              <Package size={20} color="var(--success)" />
+                            <motion.div initial={{ scale: 0, y: 10 }} animate={{ scale: 1, y: 0 }} className={`${styles.clerkBadge} ${styles.clerkBadgeSuccess}`}>
+                              <img src={apiCaixa} alt="Levando Dado" style={{ width: '18px', height: '18px', objectFit: 'contain' }} />
                             </motion.div>
                           )}
                           {(status === 'WALKING_BACK' || (status === 'BLOCKED' && !isMaliciousAction)) && response && response.error && (
-                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className={`${styles.clerkBadge} ${styles.clerkBadgeError}`}>
-                              <XCircle size={20} color="var(--danger)" />
+                            <motion.div initial={{ scale: 0, y: 10 }} animate={{ scale: 1, y: 0 }} className={`${styles.clerkBadge} ${styles.clerkBadgeError}`}>
+                              <img src={apiCaixaNull} alt="Sem Conteúdo" style={{ width: '18px', height: '18px', objectFit: 'contain' }} />
                             </motion.div>
                           )}
                         </AnimatePresence>
                       </GlassPanel>
-                      <div className={`mono ${styles.clerkLabel}`}>SERVIDOR</div>
+                      <div className={`mono ${styles.clerkLabel}`}>GARÇOM (API)</div>
                     </div>
                   </motion.div>
                 </div>
@@ -367,34 +409,37 @@ const ApiModule = () => {
                   animate={{ 
                     x: (isMaliciousAction && (status === 'WALKING_TO_FIREWALL' || status === 'BLOCKED')) ? '-275%' : 0 
                   }}
-                  transition={{ duration: 1.5 }}
+                  transition={{ duration: 1.5, ease: "backIn" }}
                 >
                   <div className={styles.nodeItem}>
-                    <div 
-                    className={`node-icon ${styles.nodeIcon} ${styles.nodePrimary}`} 
-                    style={{ 
-                      overflow: 'hidden', 
-                      padding: 0, 
-                      background: 'rgba(0,0,0,0.5)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
-                    >
-                    {playerData.avatar ? (
-                      <img 
-                      src={playerData.avatar} 
-                      alt="Avatar" 
+                    <motion.div 
+                      className={`node-icon ${styles.nodeIcon} ${styles.nodePrimary}`} 
                       style={{ 
-                        width: '100%', 
-                        height: '100%', 
-                        objectFit: 'cover'
-                      }} 
-                      />
-                    ) : (
-                      <User size={40} className={styles.nodePrimaryIcon} />
-                    )}
-                    </div>
+                        overflow: 'hidden', 
+                        padding: 0, 
+                        background: 'rgba(0,0,0,0.5)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        border: '2px solid var(--secondary)'
+                      }}
+                      animate={{ y: [0, -3, 0] }}
+                      transition={{ repeat: Infinity, duration: 3.2, ease: "easeInOut" }}
+                    >
+                      {playerData.avatar ? (
+                        <img 
+                          src={playerData.avatar} 
+                          alt="Avatar" 
+                          style={{ 
+                            width: '100%', 
+                            height: '100%', 
+                            objectFit: 'cover'
+                          }} 
+                        />
+                      ) : (
+                        <img src={apiUser} alt="Fallback User" style={{ width: '80%', height: '80%', objectFit: 'contain' }} />
+                      )}
+                    </motion.div>
                     <div className={styles.nodeLabel}>USUÁRIO</div>
                   </div>
                 </motion.div>
@@ -422,7 +467,7 @@ const ApiModule = () => {
                     onClick={() => handleSend(false)} 
                     disabled={status !== 'IDLE'}
                   >
-                    {status === 'IDLE' ? 'FAZER REQUISIÇÃO' : 'PROCESSANDO...'}
+                    {status === 'IDLE' ? 'FAZER REQUISIÇÃO' : 'BUSCANDO...'}
                   </button>
 
                   <button 
@@ -438,7 +483,7 @@ const ApiModule = () => {
                   {response && status === 'IDLE' && (
                     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
                       <div className={styles.outputLabel} style={{ color: response.error ? 'var(--danger)' : 'var(--success)' }}>
-                        LOG_DO_SERVIDOR // {response.error ? 'ERRO_DETECTADO' : 'JSON'}
+                        LOG_DO_SERVIDOR // {response.error ? 'ERRO_DETECTADO' : 'JSON_RECEBIDO'}
                       </div>
                       <GlassPanel className={`${styles.outputPanel} ${response.error ? styles.outputError : styles.outputSuccess}`}>
                         {response.error ? (
